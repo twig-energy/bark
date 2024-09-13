@@ -22,11 +22,12 @@ include(cmake/dev-mode.cmake)
 # ---- Dependencies ----
 
 find_package(absl CONFIG REQUIRED)
+find_package(asio CONFIG REQUIRED)
 find_package(fmt REQUIRED)
 
 # ---- Declare library ----
 
-add_library(twig-cpp-datadog-client source/udp_client.cpp)
+add_library(twig-cpp-datadog-client source/udp_client.cpp source/udp_server.cpp)
 add_library(twig::cpp-datadog-client ALIAS twig-cpp-datadog-client)
 
 include(GenerateExportHeader)
@@ -62,7 +63,10 @@ target_compile_features(twig-cpp-datadog-client PUBLIC cxx_std_20)
 
 target_link_libraries(
     twig-cpp-datadog-client
-    PUBLIC absl::civil_time absl::container_memory absl::time
+    PUBLIC absl::civil_time
+           absl::container_memory
+           absl::time
+           asio::asio
     PRIVATE fmt::fmt
 )
 

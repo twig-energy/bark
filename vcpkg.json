@@ -8,6 +8,7 @@
         "cxx17"
       ]
     },
+    "asio",
     "fmt"
   ],
   "default-features": [],
