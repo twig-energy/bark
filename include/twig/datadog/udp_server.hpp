@@ -6,7 +6,10 @@
 #include <system_error>
 #include <vector>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnull-dereference"
 #include <asio/io_context.hpp>
+#pragma GCC diagnostic pop
 #include <asio/ip/udp.hpp>
 #include <fmt/core.h>
 

@@ -7,7 +7,10 @@
 #include "twig/datadog/udp_client.hpp"
 
 #include <asio/buffer.hpp>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnull-dereference"
 #include <asio/io_context.hpp>
+#pragma GCC diagnostic pop
 #include <asio/ip/udp.hpp>
 #include <fmt/base.h>
 
