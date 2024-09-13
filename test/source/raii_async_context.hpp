@@ -30,7 +30,7 @@ class RAIIAsyncContext
             // at the io_context.run() call when the constructor is completed.
             [this, &server_creator_func, &is_initialized, &cond_var]
             {
-                asio::io_service::work work(this->_io_context);
+                const auto work = asio::io_service::work(this->_io_context);
                 auto server = server_creator_func(this->_io_context);
                 is_initialized = true;
                 cond_var.notify_one();  // now we can let the main thread continue

@@ -108,6 +108,8 @@ CheckOptions:
     value: "lower_case"
   - key: "readability-identifier-naming.ParameterCase"
     value: "lower_case"
+  - key: "readability-identifier-naming.ParameterIgnoredRegexp"
+    value: ".*_"
   - key: "readability-identifier-naming.ParameterPackCase"
     value: "lower_case"
   - key: "readability-identifier-naming.PointerParameterCase"

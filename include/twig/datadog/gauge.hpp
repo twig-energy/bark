@@ -17,11 +17,14 @@ struct Gauge
     std::span<const std::string_view> tags;
 
     // NOLINTNEXTLINE - consecutive parameters with same type
-    Gauge(std::string_view metric, double value, double rate = 1.0, std::span<const std::string_view> tags = no_tags)
-        : metric(metric)
-        , value(value)
-        , rate(rate)
-        , tags(tags)
+    Gauge(std::string_view metric_,
+          double value_,
+          double rate_ = 1.0,
+          std::span<const std::string_view> tags_ = no_tags)
+        : metric(metric_)
+        , value(value_)
+        , rate(rate_)
+        , tags(tags_)
     {
     }
 };
