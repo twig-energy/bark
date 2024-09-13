@@ -16,7 +16,7 @@ find_package(doctest REQUIRED)
 
 # ---- Tests ----
 
-add_executable(twig-cpp-datadog-client_test source/main.cpp source/udp_tests.cpp)
+add_executable(twig-cpp-datadog-client_test source/gauge_tests.cpp source/main.cpp source/udp_tests.cpp)
 target_link_libraries(twig-cpp-datadog-client_test PRIVATE twig::cpp-datadog-client doctest::doctest)
 target_compile_features(twig-cpp-datadog-client_test PRIVATE cxx_std_20)
 

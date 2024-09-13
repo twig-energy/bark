@@ -11,7 +11,7 @@
       "hidden": true,
       "cacheVariables": {
         "TWIG_CPP_DATADOG_CLIENT_DEVELOPER_MODE": "ON",
-        "VCPKG_MANIFEST_FEATURES": "test"
+        "VCPKG_MANIFEST_FEATURES": "benchmarks;test"
       }
     },
     {

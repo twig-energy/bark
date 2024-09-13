@@ -13,9 +13,6 @@ project(
 include(cmake/project-is-top-level.cmake)
 include(cmake/variables.cmake)
 
-# ---- Global Code definitions ----
-add_compile_definitions(TWIG_ENABLE_STACKTRACE=1)
-
 # ---- Developer mode ----
 include(cmake/dev-mode.cmake)
 
@@ -83,6 +80,7 @@ if (PROJECT_IS_TOP_LEVEL)
     if (BUILD_EXAMPLES)
         add_subdirectory(example)
     endif ()
+    add_subdirectory(benchmarks)
 endif ()
 
 # ---- Code coverage ----
