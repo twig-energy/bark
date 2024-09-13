@@ -56,7 +56,7 @@ target_include_directories(twig-cpp-datadog-client ${warning_guard} PUBLIC "\$<B
 
 target_include_directories(twig-cpp-datadog-client SYSTEM PUBLIC "\$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/export>")
 
-target_compile_features(twig-cpp-datadog-client PUBLIC cxx_std_20)
+target_compile_features(twig-cpp-datadog-client PUBLIC cxx_std_23)
 
 target_link_libraries(
     twig-cpp-datadog-client

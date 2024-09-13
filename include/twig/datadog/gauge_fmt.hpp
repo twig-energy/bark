@@ -11,7 +11,7 @@ template<>
 struct fmt::formatter<twig::datadog::Gauge> : formatter<string_view>
 {
     template<typename FormatContext>
-    auto format(const twig::datadog::Gauge& gauge, FormatContext& ctx) const
+    constexpr auto format(const twig::datadog::Gauge& gauge, FormatContext& ctx) const
     {
         auto out = fmt::format_to(ctx.out(), "{}:{}|g", gauge.metric, gauge.value);
 #pragma GCC diagnostic push
