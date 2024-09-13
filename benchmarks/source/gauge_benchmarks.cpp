@@ -42,6 +42,7 @@ auto benchmark_serialize_gauge(benchmark::State& state) -> void
     for (auto _ : state) {
         auto gauge = Gauge("metric_name", values[iteration % values.size()], rates[iteration % rates.size()], tags);
         benchmark::DoNotOptimize(fmt::format("{}", gauge));
+        iteration++;
     }
 }
 
