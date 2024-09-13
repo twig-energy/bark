@@ -1,0 +1,7 @@
+[codespell]
+builtin = clear,rare,en-GB_to_en-US,names,informal,code
+check-filenames =
+check-hidden =
+skip = */.git,*/.venv,*/build,*/prefix,*/llvm,cmake-format.yaml,settings.json
+quiet-level = 2
+ignore-words-list = cancelled,deque,dur,ELES,RO

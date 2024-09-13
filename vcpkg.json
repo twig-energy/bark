@@ -1,0 +1,23 @@
+{
+  "name": "twig-cpp-datadog-client",
+  "version-semver": "0.1.0",
+  "dependencies": [
+    {
+      "name": "abseil",
+      "features": [
+        "cxx17"
+      ]
+    },
+    "fmt"
+  ],
+  "default-features": [],
+  "features": {
+    "test": {
+      "description": "Dependencies for testing",
+      "dependencies": [
+        "doctest"
+      ]
+    }
+  },
+  "builtin-baseline": "9a6da16845eca8d6ed70be416c1acbd206894c7f"
+}

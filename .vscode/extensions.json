@@ -1,0 +1,16 @@
+{
+    "recommendations": [
+        "aaron-bond.better-comments",
+        "cheshirekow.cmake-format",
+        "cschlosser.doxdocgen",
+        "llvm-vs-code-extensions.vscode-clangd",
+        "matepek.vscode-catch2-test-adapter",
+        "ms-python.python",
+        "MS-SarifVSCode.sarif-viewer",
+        "ms-vscode.cpptools-extension-pack",
+        "SonarSource.sonarlint-vscode",
+        "streetsidesoftware.code-spell-checker",
+        "xaver.clang-format",
+    ],
+    "unwantedRecommendations": []
+}
