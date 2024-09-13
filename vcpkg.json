@@ -13,15 +13,10 @@
   ],
   "default-features": [],
   "features": {
-    "benchmarks": {
-      "description": "Dependencies for benchmarks",
-      "dependencies": [
-        "benchmark"
-      ]
-    },
     "test": {
       "description": "Dependencies for testing",
       "dependencies": [
+        "benchmark",
         "doctest"
       ]
     }

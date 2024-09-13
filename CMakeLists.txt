@@ -80,7 +80,6 @@ if (PROJECT_IS_TOP_LEVEL)
     if (BUILD_EXAMPLES)
         add_subdirectory(example)
     endif ()
-    add_subdirectory(benchmarks)
 endif ()
 
 # ---- Code coverage ----
