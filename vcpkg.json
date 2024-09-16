@@ -16,6 +16,7 @@
     "test": {
       "description": "Dependencies for testing",
       "dependencies": [
+        "benchmark",
         "doctest"
       ]
     }

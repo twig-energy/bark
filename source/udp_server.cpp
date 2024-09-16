@@ -36,7 +36,7 @@ auto UDPServer::start_receive() -> void
 
 auto UDPServer::handle_receive(const std::error_code& error, std::size_t bytes_transferred) -> void
 {
-    // UDP we dont care about errors.
+    // UDP we don't care about errors.
     if (!error) [[likely]] {
         this->_receive_msg_callback(std::string_view(this->_recv_buffer.data(), bytes_transferred));
     } else {

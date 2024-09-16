@@ -4,7 +4,7 @@ include(cmake/prelude.cmake)
 
 project(
     twig-cpp-datadog-client
-    VERSION 0.4.1
+    VERSION 0.0.1
     DESCRIPTION "Datadog Agent client for C++"
     HOMEPAGE_URL "https://github.com/twig-energy/cpp-datadog-client"
     LANGUAGES CXX
@@ -12,9 +12,6 @@ project(
 
 include(cmake/project-is-top-level.cmake)
 include(cmake/variables.cmake)
-
-# ---- Global Code definitions ----
-add_compile_definitions(TWIG_ENABLE_STACKTRACE=1)
 
 # ---- Developer mode ----
 include(cmake/dev-mode.cmake)
@@ -59,7 +56,7 @@ target_include_directories(twig-cpp-datadog-client ${warning_guard} PUBLIC "\$<B
 
 target_include_directories(twig-cpp-datadog-client SYSTEM PUBLIC "\$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/export>")
 
-target_compile_features(twig-cpp-datadog-client PUBLIC cxx_std_20)
+target_compile_features(twig-cpp-datadog-client PUBLIC cxx_std_23)
 
 target_link_libraries(
     twig-cpp-datadog-client
