@@ -7,11 +7,11 @@ concurrency:
 on:
   push:
     branches:
-    - main
+      - main
 
   pull_request:
     branches:
-    - main
+      - main
 
   workflow_dispatch:
 
@@ -24,146 +24,146 @@ jobs:
     runs-on: ubuntu22_4c_16gb
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-        lfs: true
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
 
-    - uses: actions/setup-python@v5
-      with:
-        python-version: "3.11"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
-    - name: Install codespell
-      run: pip3 install codespell
+      - name: Install codespell
+        run: pip3 install codespell
 
-    - name: Install LLVM and Clang
-      uses: ./.github/actions/install-clang
-      with:
-        version: "18"
+      - name: Install LLVM and Clang
+        uses: ./.github/actions/install-clang
+        with:
+          version: "18"
 
-    - name: Format Check
-      run: cmake -D FORMAT_COMMAND=clang-format-18 -P cmake/lint.cmake
+      - name: Format Check
+        run: cmake -D FORMAT_COMMAND=clang-format-18 -P cmake/lint.cmake
 
-    - name: Dependency Setup Check
-      run: python3 ./tools/check_install_packages_match.py
+      - name: Dependency Setup Check
+        run: python3 ./tools/check_install_packages_match.py
 
-    - name: Spell check
-      if: ${{ !cancelled() }}
-      run: cmake -P cmake/spell.cmake
+      - name: Spell check
+        if: ${{ !cancelled() }}
+        run: cmake -P cmake/spell.cmake
 
-    - name: Test version bumped
-      if: github.ref != 'refs/heads/main'
-      run: echo "$(git diff HEAD origin/main -- CMakeLists.txt)" | grep VERSION -wq
+      - name: Test version bumped
+        if: github.ref != 'refs/heads/main'
+        run: echo "$(git diff HEAD origin/main -- CMakeLists.txt)" | grep VERSION -wq
 
   sanitize:
     needs: lint
-    if: ${{ !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') }}  # Don't skip on main build, even though lint is skipped.
+    if: ${{ !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') }} # Don't skip on main build, even though lint is skipped.
 
     runs-on: ubuntu22_4c_16gb
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        lfs: true
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
 
-    - name: General Build Dependencies
-      run: >-
-        sudo apt-get update -q && sudo apt-get install nasm yasm -y -q
+      - name: General Build Dependencies
+        run: >-
+          sudo apt-get update -q && sudo apt-get install nasm yasm -y -q
 
-    - name: Install LLVM and Clang
-      uses: ./.github/actions/install-clang
-      with:
-        version: "18"
+      - name: Install LLVM and Clang
+        uses: ./.github/actions/install-clang
+        with:
+          version: "18"
 
-    - name: Install vcpkg
-      uses: friendlyanon/setup-vcpkg@v1
-      with:
-        committish: "${{ env.VCPKG_COMMIT }}"
-        cache-version: "sanitize-clang-18"
-        cache-restore-keys: |
-          vcpkg-Linux-sanitize-clang-18-
-          vcpkg-Linux-test-clang-18-
+      - name: Install vcpkg
+        uses: friendlyanon/setup-vcpkg@v1
+        with:
+          committish: "${{ env.VCPKG_COMMIT }}"
+          cache-version: "sanitize-clang-18"
+          cache-restore-keys: |
+            vcpkg-Linux-sanitize-clang-18-
+            vcpkg-Linux-test-clang-18-
 
-    - name: Configure
-      env:
-        GH_TOKEN: ${{ secrets.ANDERS_WIND_REPO_ACCESS_TOKEN }}
-      run: |
-        gh auth setup-git
-        cmake --preset=ci-sanitize
+      - name: Configure
+        env:
+          GH_TOKEN: ${{ secrets.ANDERS_WIND_REPO_ACCESS_TOKEN }}
+        run: |
+          gh auth setup-git
+          cmake --preset=ci-sanitize
 
-    - name: Build
-      run: cmake --build build/sanitize -j 4
+      - name: Build
+        run: cmake --build build/sanitize -j 4
 
-    - name: Test
-      working-directory: build/sanitize
-      env:
-        ASAN_OPTIONS: "strict_string_checks=1:\
-          detect_stack_use_after_return=1:\
-          check_initialization_order=1:\
-          strict_init_order=1:\
-          detect_leaks=1"
-        UBSAN_OPTIONS: print_stacktrace=1
-      run: ctest --output-on-failure --no-tests=error -j 2
+      - name: Test
+        working-directory: build/sanitize
+        env:
+          ASAN_OPTIONS: "strict_string_checks=1:\
+            detect_stack_use_after_return=1:\
+            check_initialization_order=1:\
+            strict_init_order=1:\
+            detect_leaks=1"
+          UBSAN_OPTIONS: print_stacktrace=1
+        run: ctest --output-on-failure --no-tests=error -j 2
 
   sonar:
     needs: lint
-    if: ${{ !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') }}  # Don't skip on main build, even though lint is skipped.
+    if: ${{ !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') }} # Don't skip on main build, even though lint is skipped.
 
     runs-on: ubuntu22_4c_16gb
     env:
       BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-        lfs: true
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
 
-    - name: General Build Dependencies
-      run: >-
-        sudo apt-get update -q && sudo apt-get install nasm yasm -y -q
+      - name: General Build Dependencies
+        run: >-
+          sudo apt-get update -q && sudo apt-get install nasm yasm -y -q
 
-    - name: Install LLVM and Clang
-      uses: ./.github/actions/install-clang
-      with:
-        version: "18"
+      - name: Install LLVM and Clang
+        uses: ./.github/actions/install-clang
+        with:
+          version: "18"
 
-    - name: Install sonar-scanner and build-wrapper
-      uses: SonarSource/sonarcloud-github-c-cpp@v3
+      - name: Install sonar-scanner and build-wrapper
+        uses: SonarSource/sonarcloud-github-c-cpp@v3
 
-    - name: Install vcpkg
-      uses: friendlyanon/setup-vcpkg@v1
-      with:
-        committish: "${{ env.VCPKG_COMMIT }}"
-        cache-version: "sonar-clang-18"
-        cache-restore-keys: |
-          vcpkg-Linux-sonar-clang-18-
-          vcpkg-Linux-test-clang-18-
+      - name: Install vcpkg
+        uses: friendlyanon/setup-vcpkg@v1
+        with:
+          committish: "${{ env.VCPKG_COMMIT }}"
+          cache-version: "sonar-clang-18"
+          cache-restore-keys: |
+            vcpkg-Linux-sonar-clang-18-
+            vcpkg-Linux-test-clang-18-
 
-    - name: Configure
-      env:
-        GH_TOKEN: ${{ secrets.ANDERS_WIND_REPO_ACCESS_TOKEN }}
-      run: |
-        gh auth setup-git
-        cmake --preset=ci-coverage
+      - name: Configure
+        env:
+          GH_TOKEN: ${{ secrets.ANDERS_WIND_REPO_ACCESS_TOKEN }}
+        run: |
+          gh auth setup-git
+          cmake --preset=ci-coverage
 
-    - name: Build with build-wrapper
-      run: |
-        build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build build/coverage -j 4
+      - name: Build with build-wrapper
+        run: |
+          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build build/coverage -j 4
 
-    - name: Run include what you use check.
-      run: ./tools/check_include_what_you_use.sh # if this fails you can run the script locally.
+      - name: Run include what you use check.
+        run: ./tools/check_include_what_you_use.sh # if this fails you can run the script locally.
 
-    - name: Test and code coverage
-      run: cmake --build build/coverage -t ccov-all -j 4
+      - name: Test and code coverage
+        run: cmake --build build/coverage -t ccov-all -j 4
 
-    - name: Run sonar-scanner
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: |
-        sonar-scanner \
-          --define sonar.cfamily.compile-commands=${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json
+      - name: Run sonar-scanner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          sonar-scanner \
+            --define sonar.cfamily.compile-commands=${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json
 
   vcpkg-build:
     needs: [lint]
@@ -171,37 +171,37 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        lfs: true
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
 
-    - name: Install vcpkg
-      uses: friendlyanon/setup-vcpkg@v1
-      with:
-        committish: "${{ env.VCPKG_COMMIT }}"
-        cache-version: "vcpkg-build-clang-18"
-        cache-restore-keys: |
-          vcpkg-Linux-vcpkg-build-clang-18-
-          vcpkg-Linux-test-clang-18-
+      - name: Install vcpkg
+        uses: friendlyanon/setup-vcpkg@v1
+        with:
+          committish: "${{ env.VCPKG_COMMIT }}"
+          cache-version: "vcpkg-build-clang-18"
+          cache-restore-keys: |
+            vcpkg-Linux-vcpkg-build-clang-18-
+            vcpkg-Linux-test-clang-18-
 
-    - name: Install LLVM and Clang
-      uses: ./.github/actions/install-clang
-      with:
-        version: "18"
+      - name: Install LLVM and Clang
+        uses: ./.github/actions/install-clang
+        with:
+          version: "18"
 
-    - name: Configure
-      env:
-        GH_TOKEN: ${{ secrets.ANDERS_WIND_REPO_ACCESS_TOKEN }}
-      run: |
-        gh auth setup-git
-        cmake --preset=ci-vcpkg
+      - name: Configure
+        env:
+          GH_TOKEN: ${{ secrets.ANDERS_WIND_REPO_ACCESS_TOKEN }}
+        run: |
+          gh auth setup-git
+          cmake --preset=ci-vcpkg
 
-    - name: Build
-      run: cmake --build build/ci-vcpkg -j 2
+      - name: Build
+        run: cmake --build build/ci-vcpkg -j 2
 
   test:
     needs: lint
-    if: ${{ !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') }}  # Don't skip on main build, even though lint is skipped.
+    if: ${{ !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') }} # Don't skip on main build, even though lint is skipped.
 
     strategy:
       matrix:
@@ -210,49 +210,52 @@ jobs:
     runs-on: ubuntu22_4c_16gb
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        lfs: true
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
 
-    - name: General Build Dependencies
-      run: |
-        sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-        sudo apt-get update -q
-        sudo apt-get install nasm yasm -y -q
+      - name: General Build Dependencies
+        run: |
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+          sudo apt-get update -q
+          sudo apt-get install nasm yasm -y -q
 
-    - name: Install GCC
-      if: matrix.compiler == 'gcc-13'
-      run: >-
-        sudo apt-get install gcc-13 g++-13 g++-13-multilib -y -q
+      - name: Install GCC
+        if: matrix.compiler == 'gcc-13'
+        run: >-
+          sudo apt-get install gcc-13 g++-13 g++-13-multilib -y -q
 
-    - name: Install LLVM and Clang
-      if: matrix.compiler == 'clang-18'
-      uses: ./.github/actions/install-clang
-      with:
-        version: "18"
+      - name: Install LLVM and Clang
+        if: matrix.compiler == 'clang-18'
+        uses: ./.github/actions/install-clang
+        with:
+          version: "18"
 
-    - name: Install vcpkg
-      uses: friendlyanon/setup-vcpkg@v1
-      with:
-        committish: "${{ env.VCPKG_COMMIT }}"
-        cache-version: "test-${{ matrix.compiler }}"
-        cache-restore-keys: |
-          vcpkg-Linux-test-${{ matrix.compiler }}-
+      - name: Install vcpkg
+        uses: friendlyanon/setup-vcpkg@v1
+        with:
+          committish: "${{ env.VCPKG_COMMIT }}"
+          cache-version: "test-${{ matrix.compiler }}"
+          cache-restore-keys: |
+            vcpkg-Linux-test-${{ matrix.compiler }}-
 
-    - name: Configure
-      env:
-        GH_TOKEN: ${{ secrets.ANDERS_WIND_REPO_ACCESS_TOKEN }}
-      shell: pwsh
-      run: |
-        gh auth setup-git
-        cmake "--preset=ci-ubuntu-${{ matrix.compiler }}"
+      - name: Configure
+        env:
+          GH_TOKEN: ${{ secrets.ANDERS_WIND_REPO_ACCESS_TOKEN }}
+        shell: pwsh
+        run: |
+          gh auth setup-git
+          cmake "--preset=ci-ubuntu-${{ matrix.compiler }}"
 
-    - name: Build
-      run: cmake --build build --config Release -j 4
+      - name: Build
+        run: cmake --build build --config Release -j 4
 
-    - name: Install
-      run: cmake --install build --config Release --prefix prefix
+      - name: Install
+        run: cmake --install build --config Release --prefix prefix
 
-    - name: Test
-      working-directory: build
-      run: ctest --output-on-failure --no-tests=error -C Release -j 4
+      - name: Test
+        working-directory: build
+        run: ctest --output-on-failure --no-tests=error -C Release -j 4
+
+      - name: Benchmarks
+        run: ./build/benchmarks/twig-cpp-datadog-client_benchmarks
