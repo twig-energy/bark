@@ -1,15 +1,13 @@
-#include <algorithm>
 #include <array>
 #include <cstddef>
-#include <random>
 #include <string_view>
-#include <vector>
 
 #include "twig/datadog/gauge.hpp"
 
 #include <benchmark/benchmark.h>
 #include <fmt/format.h>
 
+#include "./benchmark_helpers.hpp"
 #include "twig/datadog/gauge_fmt.hpp"
 
 namespace twig::datadog
@@ -18,19 +16,7 @@ namespace twig::datadog
 namespace
 {
 
-auto random_double_vector(std::size_t elements, double min, double max) -> std::vector<double>
-{
-    static auto rd = std::random_device();
-    static auto gen = std::mt19937(rd());
-
-    auto values = std::vector<double>(elements);
-    auto dis = std::uniform_real_distribution<>(min, max);
-    std::ranges::generate(values, [&]() { return dis(gen); });
-
-    return values;
-}
-
-auto benchmark_serialize_gauge(benchmark::State& state) -> void
+auto benchmark_gauge_serialize(benchmark::State& state) -> void
 {
     auto values = random_double_vector(100, 0.0, 1'000'000.0);
     auto rates = random_double_vector(99, 0.0, 1.0);
@@ -46,6 +32,6 @@ auto benchmark_serialize_gauge(benchmark::State& state) -> void
 
 }  // namespace
 
-BENCHMARK(benchmark_serialize_gauge);
+BENCHMARK(benchmark_gauge_serialize);
 
 }  // namespace twig::datadog
