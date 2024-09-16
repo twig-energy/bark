@@ -32,7 +32,6 @@ add_library(
     source/mpmc_client.cpp
     source/spsc_client.cpp
     source/udp_client.cpp
-    source/udp_server.cpp
 )
 add_library(twig::cpp-datadog-client ALIAS twig-cpp-datadog-client)
 
