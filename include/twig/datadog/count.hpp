@@ -12,6 +12,8 @@ namespace twig::datadog
 
 struct Count
 {
+    constexpr static std::string_view metric_type_indicator = "c";
+
     std::string metric;
     int32_t value;
     double sample_rate = 1.0;

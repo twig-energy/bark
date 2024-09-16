@@ -7,7 +7,7 @@
 #include <doctest/doctest.h>
 #include <fmt/format.h>
 
-#include "twig/datadog/histogram_fmt.hpp"
+#include "twig/datadog/detail/fmt.hpp"
 #include "twig/datadog/tags.hpp"
 
 namespace twig::datadog

@@ -11,6 +11,8 @@ namespace twig::datadog
 
 struct Histogram
 {
+    constexpr static std::string_view metric_type_indicator = "h";
+
     std::string metric;
     double value;
     double sample_rate = 1.0;

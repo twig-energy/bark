@@ -10,6 +10,8 @@ namespace twig::datadog
 
 struct Gauge
 {
+    constexpr static std::string_view metric_type_indicator = "g";
+
     std::string metric;
     double value;
     Tags tags;

@@ -8,11 +8,9 @@
 
 #include "./benchmark_helpers.hpp"
 #include "twig/datadog/count.hpp"
-#include "twig/datadog/count_fmt.hpp"
+#include "twig/datadog/detail/fmt.hpp"
 #include "twig/datadog/gauge.hpp"
-#include "twig/datadog/gauge_fmt.hpp"
 #include "twig/datadog/histogram.hpp"
-#include "twig/datadog/histogram_fmt.hpp"
 #include "twig/datadog/tags.hpp"
 
 namespace twig::datadog
