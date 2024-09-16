@@ -13,11 +13,5 @@ endif ()
 
 find_package(benchmark CONFIG REQUIRED)
 
-add_executable(
-    twig-cpp-datadog-client_benchmarks
-    source/client_benchmarks.cpp
-    source/gauge_benchmarks.cpp
-    source/mpmc_client_benchmarks.cpp
-    source/spsc_client_benchmarks.cpp
-)
+add_executable(twig-cpp-datadog-client_benchmarks source/client_benchmarks.cpp source/gauge_benchmarks.cpp)
 target_link_libraries(twig-cpp-datadog-client_benchmarks twig::cpp-datadog-client benchmark::benchmark_main)
