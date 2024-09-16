@@ -18,6 +18,7 @@ find_package(doctest REQUIRED)
 
 add_executable(
     twig-cpp-datadog-client_test
+    source/count_tests.cpp
     source/gauge_tests.cpp
     source/main.cpp
     source/tags_tests.cpp
