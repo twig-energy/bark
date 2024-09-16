@@ -4,13 +4,10 @@
 #include <thread>
 
 // TODO(mikael): Keep an eye on https://github.com/rigtorp/MPMCQueue/issues/49 to see if this is still needed
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #pragma GCC diagnostic push
 #include <rigtorp/MPMCQueue.h>
 #pragma GCC diagnostic pop
-#pragma clang diagnostic pop
 
 #include "twig/datadog/client.hpp"
 #include "twig/datadog/metric.hpp"
