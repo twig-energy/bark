@@ -1,3 +1,7 @@
+#include <array>
+#include <string_view>
+#include <utility>
+
 #include "twig/datadog/tags.hpp"
 
 #include <doctest/doctest.h>
