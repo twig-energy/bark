@@ -9,7 +9,9 @@
       ]
     },
     "asio",
-    "fmt"
+    "fmt",
+    "mpmcqueue",
+    "spscqueue"
   ],
   "default-features": [],
   "features": {
