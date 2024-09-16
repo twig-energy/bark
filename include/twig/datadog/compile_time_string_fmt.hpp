@@ -1,7 +1,6 @@
 #pragma once
 
 #include <fmt/base.h>
-#include <fmt/format.h>
 
 #include "twig/datadog/compile_time_string.hpp"
 

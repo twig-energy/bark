@@ -2,7 +2,6 @@
 
 #include <array>
 #include <span>
-#include <string_view>
 
 #include "twig/datadog/compile_time_string.hpp"
 

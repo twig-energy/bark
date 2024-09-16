@@ -22,24 +22,22 @@ namespace
 
 auto random_double_vector(std::size_t elements, double min, double max) -> std::vector<double>
 {
-    std::random_device rd;
-    std::mt19937 gen(rd());
+    static auto rd = std::random_device();
+    static auto gen = std::mt19937(rd());
 
-    std::vector<double> values(elements);
-    std::uniform_real_distribution<> dis(min, max);
+    auto values = std::vector<double>(elements);
+    auto dis = std::uniform_real_distribution<>(min, max);
     std::generate(values.begin(), values.end(), [&]() { return dis(gen); });
 
     return values;
 }
 
-}  // namespace
-
 auto benchmark_serialize_gauge(benchmark::State& state) -> void
 {
     auto values = random_double_vector(100, 0.0, 1'000'000.0);
     auto rates = random_double_vector(99, 0.0, 1.0);
-
     auto tags = std::array<CompileTimeString, 2> {"tag1:hello", "tag2:world"};
+
     auto iteration = std::size_t {0};
     for (auto _ : state) {
         auto gauge = Gauge("metric_name", values[iteration % values.size()], rates[iteration % rates.size()], tags);
@@ -47,6 +45,8 @@ auto benchmark_serialize_gauge(benchmark::State& state) -> void
         iteration++;
     }
 }
+
+}  // namespace
 
 BENCHMARK(benchmark_serialize_gauge);
 
