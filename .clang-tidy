@@ -160,4 +160,5 @@ CheckOptions:
     value: "\
       ;twig/datadog/count_fmt.hpp\
       ;twig/datadog/gauge_fmt.hpp\
+      ;twig/datadog/histogram_fmt.hpp\
       "
