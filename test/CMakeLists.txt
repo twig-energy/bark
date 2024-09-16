@@ -21,6 +21,7 @@ add_executable(
     source/gauge_tests.cpp
     source/main.cpp
     source/tags_tests.cpp
+    source/udp_server.cpp
     source/udp_tests.cpp
 )
 target_link_libraries(twig-cpp-datadog-client_test PRIVATE twig::cpp-datadog-client doctest::doctest)

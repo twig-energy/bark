@@ -4,7 +4,7 @@ include(cmake/prelude.cmake)
 
 project(
     twig-cpp-datadog-client
-    VERSION 0.0.1
+    VERSION 0.0.2
     DESCRIPTION "Datadog Agent client for C++"
     HOMEPAGE_URL "https://github.com/twig-energy/cpp-datadog-client"
     LANGUAGES CXX
@@ -21,10 +21,18 @@ include(cmake/dev-mode.cmake)
 find_package(absl CONFIG REQUIRED)
 find_package(asio CONFIG REQUIRED)
 find_package(fmt REQUIRED)
+find_package(MPMCQueue CONFIG REQUIRED)
+find_package(SPSCQueue CONFIG REQUIRED)
 
 # ---- Declare library ----
 
-add_library(twig-cpp-datadog-client source/udp_client.cpp source/udp_server.cpp)
+add_library(
+    twig-cpp-datadog-client
+    source/client.cpp
+    source/mpmc_client.cpp
+    source/spsc_client.cpp
+    source/udp_client.cpp
+)
 add_library(twig::cpp-datadog-client ALIAS twig-cpp-datadog-client)
 
 include(GenerateExportHeader)
@@ -64,6 +72,8 @@ target_link_libraries(
            absl::container_memory
            absl::time
            asio::asio
+           MPMCQueue::MPMCQueue
+           SPSCQueue::SPSCQueue
     PRIVATE fmt::fmt
 )
 
