@@ -1,31 +1,26 @@
 #pragma once
 
-#include <array>
-#include <span>
+#include <string>
+#include <utility>
 
-#include "twig/datadog/compile_time_string.hpp"
+#include "twig/datadog/tags.hpp"
 
 namespace twig::datadog
 {
 
-constexpr const auto no_tags = std::array<CompileTimeString, 0> {};
-
 struct Gauge
 {
-    CompileTimeString metric;
+    std::string metric;
     double value;
     double rate;
-    std::span<const CompileTimeString> tags;
+    Tags tags;
 
     // NOLINTNEXTLINE - consecutive parameters with same type
-    Gauge(CompileTimeString metric_,
-          double value_,
-          double rate_ = 1.0,
-          std::span<const CompileTimeString> tags_ = no_tags)
-        : metric(metric_)
+    constexpr Gauge(std::string metric_, double value_, double rate_ = 1.0, Tags tags_ = no_tags)
+        : metric(std::move(metric_))
         , value(value_)
         , rate(rate_)
-        , tags(tags_)
+        , tags(std::move(tags_))
     {
     }
 };

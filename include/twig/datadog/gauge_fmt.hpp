@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cstddef>
-
 #include <fmt/base.h>
 #include <fmt/format.h>
 
@@ -20,11 +18,8 @@ struct fmt::formatter<twig::datadog::Gauge> : formatter<string_view>
             out = fmt::format_to(out, "|@{}", gauge.rate);
         }
 #pragma GCC diagnostic pop
-        if (!gauge.tags.empty()) {
-            out = fmt::format_to(out, "|#{}", gauge.tags[0]);
-            for (size_t i = 1; i < gauge.tags.size(); ++i) {
-                out = fmt::format_to(out, ",{}", gauge.tags[i]);
-            }
+        if (!gauge.tags.str().empty()) {
+            out = fmt::format_to(out, "|#{}", gauge.tags.str());
         }
 
         return out;
