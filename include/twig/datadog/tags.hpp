@@ -38,41 +38,51 @@ class Tags
 
   public:
     constexpr Tags() = default;
+    constexpr explicit Tags(std::string tags)
+        : _tags(std::move(tags))
+    {
+    }
 
-    constexpr explicit Tags(std::span<const std::pair<std::string_view, std::string_view>> tags)
+    constexpr static auto create(std::span<const std::pair<std::string_view, std::string_view>> tags) -> Tags
     {
         if (tags.empty()) {
-            return;
+            return Tags {};
         }
 
-        this->_tags.reserve(tags_str_length(tags) + 1);
+        auto tags_string = std::string {};
+        tags_string.reserve(tags_str_length(tags) + 1);
 
         for (auto i = std::size_t {0}; i < tags.size(); i++) {
             const auto& [key, value] = tags[i];
-            this->_tags.append(key);
-            this->_tags.push_back(':');
-            this->_tags.append(value);
-            this->_tags.push_back(',');
+            tags_string.append(key);
+            tags_string.push_back(':');
+            tags_string.append(value);
+            tags_string.push_back(',');
         }
 
-        this->_tags.pop_back();  // Remove trailing comma.
+        tags_string.pop_back();  // Remove trailing comma.
+
+        return Tags {std::move(tags_string)};
     }
 
-    constexpr explicit Tags(std::span<const std::string_view> tags)
+    constexpr static auto create(std::span<const std::string_view> tags) -> Tags
     {
         if (tags.empty()) {
-            return;
+            return Tags {};
         }
 
-        this->_tags.reserve(tags_str_length(tags) + 1);
+        auto tags_string = std::string {};
+        tags_string.reserve(tags_str_length(tags) + 1);
 
         for (auto i = std::size_t {0}; i < tags.size(); i++) {
             const auto& tag = tags[i];
-            this->_tags.append(tag);
-            this->_tags.push_back(',');
+            tags_string.append(tag);
+            tags_string.push_back(',');
         }
 
-        this->_tags.pop_back();  // Remove trailing comma.
+        tags_string.pop_back();  // Remove trailing comma.
+
+        return Tags {std::move(tags_string)};
     }
 
     constexpr auto str() const -> const std::string&
