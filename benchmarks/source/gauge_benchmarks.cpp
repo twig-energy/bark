@@ -2,7 +2,6 @@
 #include <array>
 #include <cstddef>
 #include <random>
-#include <string_view>
 #include <vector>
 
 #include "twig/datadog/gauge.hpp"
