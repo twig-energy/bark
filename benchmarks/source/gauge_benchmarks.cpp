@@ -25,7 +25,7 @@ auto random_double_vector(std::size_t elements, double min, double max) -> std::
 
     auto values = std::vector<double>(elements);
     auto dis = std::uniform_real_distribution<>(min, max);
-    std::generate(values.begin(), values.end(), [&]() { return dis(gen); });
+    std::ranges::generate(values, [&]() { return dis(gen); });
 
     return values;
 }
