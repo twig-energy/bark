@@ -22,20 +22,23 @@ namespace
 template<typename T>
 auto create_metric(std::size_t iteration) -> T
 {
-    static auto values = random_double_vector(100, 0.0, 1'000'000.0);
-    static auto rates = random_double_vector(99, 0.0, 1.0);
-
     auto tags = Tags::create(std::array<std::string_view, 2> {"tag1:hello", "tag2:world"});
 
     if constexpr (std::is_same_v<T, Count>) {
-        static auto values_integer = random_int32_t_vector(100, 0, 1'000'000);
+        static const auto values = random_int32_t_vector(100, 0, 1'000'000);
+        static const auto rates = random_double_vector(99, 0.0, 1.0);
 
-        return T("count_metric", values_integer[iteration % values_integer.size()])
+        return T("count_metric", values[iteration % values.size()])
             .with_sample_rate(rates[iteration % rates.size()])
             .with_tags(std::move(tags));
     } else if constexpr (std::is_same_v<T, Gauge>) {
+        static const auto values = random_double_vector(100, 0.0, 1'000'000.0);
+
         return T("gauge_metric", values[iteration % values.size()]).with_tags(std::move(tags));
     } else if constexpr (std::is_same_v<T, Histogram>) {
+        static const auto values = random_double_vector(100, 0.0, 1'000'000.0);
+        static const auto rates = random_double_vector(99, 0.0, 1.0);
+
         return T("histogram_metric", values[iteration % values.size()])
             .with_sample_rate(rates[iteration % rates.size()])
             .with_tags(std::move(tags));
