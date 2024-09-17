@@ -3,7 +3,7 @@
 A modern, low latency datadog stats library for c++
 
 ## Getting Started
-```cpp :file=./example/getting_started.cpp
+```cpp :file=./example/getting_started.cpp:line_start=2:line_end=-2
 #include "twig/datadog/datadog-client.hpp"
 
 auto main() -> int
@@ -35,6 +35,9 @@ We provide a number of Client implementations for different use cases:
 - `MPMCClient` which adds metrics to a Multiple Producer Multiple Consumer queue.
 - `NoOpClient` which ignores the metrics (useful for testing)
 
+## Benchmarks
+```
+```
 
 ## Building and installing
 

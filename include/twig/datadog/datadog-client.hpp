@@ -5,6 +5,7 @@
  *
  */
 
+// NOLINTBEGIN(misc-include-cleaner)
 #include "twig/datadog/client.hpp"
 #include "twig/datadog/count.hpp"
 #include "twig/datadog/datagram.hpp"
@@ -17,3 +18,4 @@
 #include "twig/datadog/spsc_client.hpp"
 #include "twig/datadog/tags.hpp"
 #include "twig/datadog/udp_client.hpp"
+// NOLINTEND(misc-include-cleaner)

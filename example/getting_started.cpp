@@ -1,3 +1,5 @@
+// NOLINTBEGIN(misc-include-cleaner)
+
 #include "twig/datadog/datadog-client.hpp"
 
 auto main() -> int
@@ -21,3 +23,5 @@ auto main() -> int
 
     return 0;
 }
+
+// NOLINTEND(misc-include-cleaner)

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.27)
 
 project(twig-cpp-datadog-clientExamples CXX)
 
@@ -15,6 +15,8 @@ function (add_example NAME)
     add_executable("${NAME}" "${NAME}.cpp")
     target_link_libraries("${NAME}" PRIVATE twig::cpp-datadog-client)
     target_compile_features("${NAME}" PRIVATE cxx_std_20)
+    set_source_files_properties("${NAME}.cpp" PROPERTIES SKIP_LINTING ON)
+
     add_custom_target(
         "run_${NAME}"
         COMMAND "${NAME}"
