@@ -47,7 +47,7 @@ auto benchmark_client_send_async(benchmark::State& state) -> void
 
     auto iteration = std::size_t {0};
     for (auto _ : state) {
-        auto tags = Tags::from_tags({{"tag1:hello", "tag2:world"}});
+        auto tags = Tags::from_tags({"tag1:hello", "tag2:world"});
 
         client.send_async(
             std::move(Gauge("metric_name", values[iteration % values.size()]).with_tags(std::move(tags))));
