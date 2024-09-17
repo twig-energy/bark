@@ -41,6 +41,8 @@ struct Count
         this->tags = std::move(tags_);
         return *this;
     }
+
+    auto serialize() const -> std::string;
 };
 
 }  // namespace twig::datadog

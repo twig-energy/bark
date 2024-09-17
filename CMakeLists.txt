@@ -29,6 +29,9 @@ find_package(SPSCQueue CONFIG REQUIRED)
 add_library(
     twig-cpp-datadog-client
     source/client.cpp
+    source/count.cpp
+    source/gauge.cpp
+    source/histogram.cpp
     source/mpmc_client.cpp
     source/spsc_client.cpp
     source/udp_client.cpp

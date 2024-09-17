@@ -2,11 +2,9 @@
 #include <utility>
 
 #include <benchmark/benchmark.h>
-#include <fmt/format.h>
 
 #include "./benchmark_helpers.hpp"
 #include "twig/datadog/count.hpp"
-#include "twig/datadog/detail/fmt.hpp"
 #include "twig/datadog/gauge.hpp"
 #include "twig/datadog/histogram.hpp"
 #include "twig/datadog/tags.hpp"
@@ -51,7 +49,7 @@ auto benchmark_metric_serialize(benchmark::State& state) -> void
     auto iteration = std::size_t {0};
     for (auto _ : state) {
         auto metric = create_metric<T>(iteration);
-        benchmark::DoNotOptimize(fmt::format("{}", metric));
+        benchmark::DoNotOptimize(metric.serialize());
         iteration++;
     }
 }

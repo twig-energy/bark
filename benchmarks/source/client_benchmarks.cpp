@@ -10,6 +10,7 @@
 #include <benchmark/benchmark.h>
 
 #include "./benchmark_helpers.hpp"
+#include "twig/datadog/gauge.hpp"
 #include "twig/datadog/mpmc_client.hpp"
 #include "twig/datadog/spsc_client.hpp"
 #include "twig/datadog/tags.hpp"

@@ -3,9 +3,6 @@
 
 #include "twig/datadog/client.hpp"
 
-#include <fmt/format.h>
-
-#include "twig/datadog/detail/fmt.hpp"
 #include "twig/datadog/metric.hpp"
 #include "twig/datadog/udp_client.hpp"
 
@@ -20,7 +17,7 @@ Client::Client(UDPClient udp_client)
 auto Client::send_async(const Metric& metric) -> void
 {
     this->_udp_client.send_async(
-        std::visit([](const auto& formattable_metric) { return fmt::format("{}", formattable_metric); }, metric));
+        std::visit([](const auto& serializable_metric) { return serializable_metric.serialize(); }, metric));
 }
 
 }  // namespace twig::datadog
