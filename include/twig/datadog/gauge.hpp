@@ -4,6 +4,7 @@
 #include <string_view>
 #include <utility>
 
+#include "twig/datadog/sample_rate.hpp"
 #include "twig/datadog/tags.hpp"
 
 namespace twig::datadog
@@ -23,7 +24,7 @@ struct Gauge
     {
     }
 
-    constexpr auto with_tags(Tags tags_) -> Gauge&
+    constexpr auto with(Tags tags_) -> Gauge&
     {
         this->tags = std::move(tags_);
         return *this;

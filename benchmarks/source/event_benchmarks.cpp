@@ -20,8 +20,8 @@ auto benchmark_event_serialize(benchmark::State& state) -> void
         auto event =
             Event("title",
                   "some long kind of description here - could probably also have some formatting if really wanted")
-                .with_tags(std::move(tags))
-                .with_alert_type(AlertType::ERROR);
+                .with(std::move(tags))
+                .with(AlertType::ERROR);
 
         benchmark::DoNotOptimize(event.serialize());
     }

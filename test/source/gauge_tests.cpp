@@ -21,7 +21,7 @@ TEST_SUITE("Gauge")
     {
         auto tags = Tags::from_tags({"tag1:hello", "tag2:world"});
 
-        auto gauge = Gauge("metric", 42.0).with_tags(std::move(tags));
+        auto gauge = Gauge("metric", 42.0).with(std::move(tags));
         CHECK_EQ("metric:42|g|#tag1:hello,tag2:world", gauge.serialize());
     }
 }

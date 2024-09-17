@@ -41,19 +41,19 @@ struct Event
     {
     }
 
-    constexpr auto with_tags(Tags tags_) -> Event&
+    constexpr auto with(Tags tags_) -> Event&
     {
         tags = std::move(tags_);
         return *this;
     }
 
-    constexpr auto with_priority(Priority priority_) -> Event&
+    constexpr auto with(Priority priority_) -> Event&
     {
         priority = priority_;
         return *this;
     }
 
-    constexpr auto with_alert_type(AlertType alert_type_) -> Event&
+    constexpr auto with(AlertType alert_type_) -> Event&
     {
         alert_type = alert_type_;
         return *this;

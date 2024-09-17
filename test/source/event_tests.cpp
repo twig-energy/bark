@@ -21,7 +21,7 @@ TEST_SUITE("Event")
     {
         auto tags = Tags::from_tags({"tag1:hello", "tag2:world"});
 
-        auto event = Event("event", "a description here").with_tags(std::move(tags));
+        auto event = Event("event", "a description here").with(std::move(tags));
         CHECK_EQ("_e{5,18}:event|a description here|#tag1:hello,tag2:world", event.serialize());
     }
 
@@ -29,13 +29,13 @@ TEST_SUITE("Event")
     {
         auto tags = Tags::from_tags({"tag1:hello", "tag2:world"});
 
-        auto event = Event("event", "a description here").with_tags(std::move(tags)).with_alert_type(AlertType::ERROR);
+        auto event = Event("event", "a description here").with(std::move(tags)).with(AlertType::ERROR);
         CHECK_EQ("_e{5,18}:event|a description here|t:error|#tag1:hello,tag2:world", event.serialize());
     }
 
     TEST_CASE("Can format event with priority")
     {
-        auto event = Event("event", "a description here").with_priority(Priority::LOW);
+        auto event = Event("event", "a description here").with(Priority::LOW);
         CHECK_EQ("_e{5,18}:event|a description here|p:low", event.serialize());
     }
 }

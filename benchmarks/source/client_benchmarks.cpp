@@ -51,8 +51,7 @@ auto benchmark_client_send_metric_async(benchmark::State& state) -> void
     for (auto _ : state) {
         auto tags = Tags::from_tags({"tag1:hello", "tag2:world"});
 
-        client.send_async(
-            std::move(Gauge("metric_name", values[iteration % values.size()]).with_tags(std::move(tags))));
+        client.send_async(std::move(Gauge("metric_name", values[iteration % values.size()]).with(std::move(tags))));
         iteration++;
     }
 }
@@ -66,7 +65,7 @@ auto benchmark_client_send_event_async(benchmark::State& state) -> void
     for (auto _ : state) {
         auto tags = Tags::from_tags({"tag1:hello", "tag2:world"});
 
-        client.send_async(std::move(Event("event", "text").with_tags(std::move(tags))));
+        client.send_async(std::move(Event("event", "text").with(std::move(tags))));
     }
 }
 
