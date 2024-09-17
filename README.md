@@ -1,8 +1,8 @@
 # twig-cpp-datadog-client
 
-This library contains our European power product list.
+A modern, low latency datadog stats library for c++
 
-## Examples
+## Getting Started
 ```cpp :file=./example/getting_started.cpp
 #include "twig/datadog/client.hpp"
 #include "twig/datadog/count.hpp"
@@ -29,6 +29,13 @@ auto main() -> int
     return 0;
 }
 ```
+
+We provide a number of Client implementations for different use cases:
+- `Client` which eagerly sends metrics
+- `SPSCClient` which adds metrics to a Single Producer Single Consumer queue.
+- `MPMCClient` which adds metrics to a Multiple Producer Multiple Consumer queue.
+- `NoOpClient` which ignores the metrics (useful for testing)
+
 
 ## Building and installing
 
