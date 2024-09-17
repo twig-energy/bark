@@ -6,7 +6,6 @@
 
 #include "twig/datadog/client.hpp"
 
-#include <asio/io_context.hpp>
 #include <benchmark/benchmark.h>
 
 #include "./benchmark_helpers.hpp"
@@ -24,18 +23,18 @@ namespace
 {
 
 template<typename T>
-auto create_client(asio::io_context& context) -> T
+auto create_client() -> T
 {
     constexpr static auto hostname = std::string_view {"localhost"};
     constexpr static auto port = int16_t {18125};
     constexpr static auto queue_size = std::size_t {1'000'000};
 
     if constexpr (std::is_same_v<T, Client>) {
-        return Client(UDPClient(context, hostname, port));
+        return Client(UDPClient(hostname, port));
     } else if constexpr (std::is_same_v<T, SPSCClient>) {
-        return SPSCClient(Client(UDPClient(context, hostname, port)), queue_size);
+        return SPSCClient(UDPClient(hostname, port), queue_size);
     } else if constexpr (std::is_same_v<T, MPMCClient>) {
-        return MPMCClient(Client(UDPClient(context, hostname, port)), queue_size);
+        return MPMCClient(UDPClient(hostname, port), queue_size);
     }
 }
 
@@ -44,8 +43,7 @@ auto benchmark_client_send_metric_async(benchmark::State& state) -> void
 {
     auto values = random_double_vector(100, 0.0, 1'000'000.0);
 
-    auto context = asio::io_context();
-    auto client = create_client<T>(context);
+    auto client = create_client<T>();
 
     auto iteration = std::size_t {0};
     for (auto _ : state) {
@@ -59,8 +57,7 @@ auto benchmark_client_send_metric_async(benchmark::State& state) -> void
 template<typename T>
 auto benchmark_client_send_event_async(benchmark::State& state) -> void
 {
-    auto context = asio::io_context();
-    auto client = create_client<T>(context);
+    auto client = create_client<T>();
 
     for (auto _ : state) {
         auto tags = Tags::from_tags({"tag1:hello", "tag2:world"});

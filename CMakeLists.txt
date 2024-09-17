@@ -4,7 +4,7 @@ include(cmake/prelude.cmake)
 
 project(
     twig-cpp-datadog-client
-    VERSION 0.0.4
+    VERSION 0.0.5
     DESCRIPTION "Datadog Agent client for C++"
     HOMEPAGE_URL "https://github.com/twig-energy/cpp-datadog-client"
     LANGUAGES CXX
@@ -45,7 +45,7 @@ generate_export_header(
     BASE_NAME
     twig-cpp-datadog-client
     EXPORT_FILE_NAME
-    export/twig-cpp-datadog-client/twig-cpp-datadog-client_export.hpp
+    export/twig/datadog/export.hpp
     CUSTOM_CONTENT_FROM_VARIABLE
     pragma_suppress_c4251
 )

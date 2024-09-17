@@ -1,7 +1,10 @@
 #pragma once
 
 #include <cstddef>
+#include <memory>
 #include <thread>
+
+#include "twig/datadog/udp_client.hpp"
 
 // TODO(mikael): Keep an eye on https://github.com/rigtorp/MPMCQueue/issues/49 to see if this is still needed
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -9,27 +12,22 @@
 #include <rigtorp/MPMCQueue.h>
 #pragma GCC diagnostic pop
 
-#include "twig/datadog/client.hpp"
 #include "twig/datadog/datagram.hpp"
+#include "twig/datadog/i_datadog_client.hpp"
 
 namespace twig::datadog
 {
 
-class MPMCClient
+class MPMCClient : public IDatadogClient
 {
-    rigtorp::MPMCQueue<Datagram> _queue;
-    Client _client;
+    std::unique_ptr<rigtorp::MPMCQueue<Datagram>> _queue;
     std::jthread _worker;
 
   public:
-    MPMCClient(Client udp_client, std::size_t queue_size);
+    MPMCClient(UDPClient&& udp_client, std::size_t queue_size);
 
-    template<typename T>
-    auto send_async(T&& value) -> void
-    {
-        // NOTE: try_emplace means that the metric will not be submitted if the queue is full.
-        this->_queue.try_emplace(std::forward<T>(value));
-    }
+    auto send_async(const Datagram& datagram) -> void override;
+    auto send_async(Datagram&& datagram) -> void override;
 };
 
 }  // namespace twig::datadog
