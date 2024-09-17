@@ -30,6 +30,7 @@ add_library(
     twig-cpp-datadog-client
     source/client.cpp
     source/count.cpp
+    source/event.cpp
     source/gauge.cpp
     source/histogram.cpp
     source/mpmc_client.cpp

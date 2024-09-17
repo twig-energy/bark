@@ -1,3 +1,5 @@
+#include <string>
+
 #include "twig/datadog/count.hpp"
 
 #include <fmt/format.h>

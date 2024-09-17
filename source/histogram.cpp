@@ -1,3 +1,5 @@
+#include <string>
+
 #include "twig/datadog/histogram.hpp"
 
 #include <fmt/format.h>

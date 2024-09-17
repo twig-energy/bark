@@ -6,14 +6,14 @@
 #include <rigtorp/SPSCQueue.h>
 
 #include "twig/datadog/client.hpp"
-#include "twig/datadog/metric.hpp"
+#include "twig/datadog/datagram.hpp"
 
 namespace twig::datadog
 {
 
 class SPSCClient
 {
-    rigtorp::SPSCQueue<Metric> _queue;
+    rigtorp::SPSCQueue<Datagram> _queue;
     Client _client;
     std::jthread _worker;
 

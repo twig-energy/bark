@@ -1,6 +1,6 @@
 #include <string>
 
-#include "twig/datadog/gauge.hpp"
+#include "twig/datadog/event.hpp"
 
 #include <fmt/format.h>
 
@@ -9,7 +9,7 @@
 namespace twig::datadog
 {
 
-auto Gauge::serialize() const -> std::string
+auto Event::serialize() const -> std::string
 {
     return fmt::format("{}", *this);
 }

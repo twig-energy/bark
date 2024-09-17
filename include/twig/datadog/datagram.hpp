@@ -2,12 +2,13 @@
 #include <variant>
 
 #include "twig/datadog/count.hpp"
+#include "twig/datadog/event.hpp"
 #include "twig/datadog/gauge.hpp"
 #include "twig/datadog/histogram.hpp"
 
 namespace twig::datadog
 {
 
-using Metric = std::variant<Count, Gauge, Histogram>;
+using Datagram = std::variant<Count, Event, Gauge, Histogram>;
 
 }  // namespace twig::datadog

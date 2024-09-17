@@ -3,7 +3,7 @@
 
 #include "twig/datadog/client.hpp"
 
-#include "twig/datadog/metric.hpp"
+#include "twig/datadog/datagram.hpp"
 #include "twig/datadog/udp_client.hpp"
 
 namespace twig::datadog
@@ -14,10 +14,10 @@ Client::Client(UDPClient udp_client)
 {
 }
 
-auto Client::send_async(const Metric& metric) -> void
+auto Client::send_async(const Datagram& datagram) -> void
 {
     this->_udp_client.send_async(
-        std::visit([](const auto& serializable_metric) { return serializable_metric.serialize(); }, metric));
+        std::visit([](const auto& serializable_datagram) { return serializable_datagram.serialize(); }, datagram));
 }
 
 }  // namespace twig::datadog

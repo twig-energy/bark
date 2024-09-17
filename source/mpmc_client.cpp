@@ -19,7 +19,7 @@ MPMCClient::MPMCClient(Client client, std::size_t queue_size)
           [this](const std::stop_token& stop_token)
           {
               try {
-                  auto popped = Metric {Gauge("", 0)};  // Default value only present to avoid compilation error
+                  auto popped = Datagram {Gauge("", 0)};  // Default value only present to avoid compilation error
                   do {
                       while (!this->_queue.empty()) {
                           if (!this->_queue.try_pop(popped)) {
