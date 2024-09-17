@@ -44,16 +44,16 @@ MPMCClient::MPMCClient(UDPClient&& client, std::size_t queue_size)
 {
 }
 
-auto MPMCClient::send_async(const Datagram& value) -> void
+auto MPMCClient::send_async(const Datagram& datagram) -> void
 {
     // NOTE: try_emplace means that the datagram will not be submitted if the queue is full.
     // unfortunately we have to copy datagram because std::variant is not nothrow copy constructible
-    this->_queue->try_emplace(auto(value));
+    this->_queue->try_emplace(auto(datagram));
 }
-auto MPMCClient::send_async(Datagram&& value) -> void
+auto MPMCClient::send_async(Datagram&& datagram) -> void
 {
     // NOTE: try_emplace means that the datagram will not be submitted if the queue is full.
-    this->_queue->try_emplace(std::move(value));
+    this->_queue->try_emplace(std::move(datagram));
 }
 
 }  // namespace twig::datadog

@@ -40,14 +40,14 @@ SPSCClient::SPSCClient(UDPClient&& client_, std::size_t queue_size)
 {
 }
 
-auto SPSCClient::send_async(Datagram&& value) -> void
+auto SPSCClient::send_async(Datagram&& datagram) -> void
 {
     // NOTE: try_emplace means that the datagram will not be submitted if the queue is full.
-    this->_queue->try_emplace(std::move(value));
+    this->_queue->try_emplace(std::move(datagram));
 }
-auto SPSCClient::send_async(const Datagram& value) -> void
+auto SPSCClient::send_async(const Datagram& datagram) -> void
 {
     // NOTE: try_emplace means that the datagram will not be submitted if the queue is full.
-    this->_queue->try_emplace(value);
+    this->_queue->try_emplace(datagram);
 }
 }  // namespace twig::datadog

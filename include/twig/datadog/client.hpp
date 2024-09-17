@@ -14,8 +14,8 @@ class Client : public IDatadogClient
   public:
     explicit Client(UDPClient&& udp_client);
 
-    auto send_async(const Datagram& metric) -> void override;
-    auto send_async(Datagram&& metric) -> void override;
+    auto send_async(const Datagram& datagram) -> void override;
+    auto send_async(Datagram&& datagram) -> void override;
 };
 
 }  // namespace twig::datadog
