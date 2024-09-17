@@ -25,7 +25,7 @@ jobs:
       - name: Get version from CMakeLists.txt
         id: get_version
         run: |
-          echo "version=$(grep -Po '(?<=VERSION\s)\d+\.\d+\.\d+' CMakeLists.txt)\n" >> $GITHUB_OUTPUT
+          echo "version=$(grep -Po '(?<=VERSION\s)\d+\.\d+\.\d+' CMakeLists.txt)" >> $GITHUB_OUTPUT
 
       - name: Create release
         uses: crowbarmaster/GH-Automatic-Releases@v1.6.0
