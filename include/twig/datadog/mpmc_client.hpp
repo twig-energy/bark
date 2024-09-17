@@ -12,7 +12,6 @@
 #include <rigtorp/MPMCQueue.h>
 #pragma GCC diagnostic pop
 
-#include "twig/datadog/client.hpp"
 #include "twig/datadog/datagram.hpp"
 #include "twig/datadog/i_datadog_client.hpp"
 

@@ -2,7 +2,7 @@
 
 auto main() -> int
 {
-    using namespace twig::datadog;  // NOLINT for brevity
+    using namespace twig::datadog;
 
     // make an none-async client which sends to the local DogStatsD agent
     auto client = Client(UDPClient::make_local_udp_client());

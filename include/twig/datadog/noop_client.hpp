@@ -2,7 +2,6 @@
 
 #include "twig/datadog/datagram.hpp"
 #include "twig/datadog/i_datadog_client.hpp"
-#include "twig/datadog/udp_client.hpp"
 
 namespace twig::datadog
 {

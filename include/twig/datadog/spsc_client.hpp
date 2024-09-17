@@ -6,7 +6,6 @@
 
 #include <rigtorp/SPSCQueue.h>
 
-#include "twig/datadog/client.hpp"
 #include "twig/datadog/datagram.hpp"
 #include "twig/datadog/i_datadog_client.hpp"
 #include "twig/datadog/udp_client.hpp"
