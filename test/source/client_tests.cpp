@@ -27,7 +27,7 @@ TEST_SUITE("Client")
                                                      [&received, &expected_msg, &barrier](std::string_view recv_msg)
                                                      {
                                                          received = recv_msg == expected_msg;
-                                                         barrier.arrive_and_wait();
+                                                         barrier.arrive_and_drop();
                                                      });
 
             auto client = Client(UDPClient::make_local_udp_client(port));
@@ -49,7 +49,7 @@ TEST_SUITE("Client")
                                                      [&received, &expected_msg, &barrier](std::string_view recv_msg)
                                                      {
                                                          received = recv_msg == expected_msg;
-                                                         barrier.arrive_and_wait();
+                                                         barrier.arrive_and_drop();
                                                      });
 
             auto client = Client(UDPClient::make_local_udp_client(port));

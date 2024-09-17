@@ -28,7 +28,7 @@ TEST_SUITE("MPMCClient")
                                                      [&received, &expected_msg, &barrier](std::string_view recv_msg)
                                                      {
                                                          received = recv_msg == expected_msg;
-                                                         barrier.arrive_and_wait();
+                                                         barrier.arrive_and_drop();
                                                      });
 
             auto queue_size = size_t {1};
@@ -51,7 +51,7 @@ TEST_SUITE("MPMCClient")
                                                      [&received, &expected_msg, &barrier](std::string_view recv_msg)
                                                      {
                                                          received = recv_msg == expected_msg;
-                                                         barrier.arrive_and_wait();
+                                                         barrier.arrive_and_drop();
                                                      });
             auto queue_size = size_t {1};
             auto client = MPMCClient(UDPClient::make_local_udp_client(port), queue_size);

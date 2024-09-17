@@ -26,7 +26,7 @@ TEST_SUITE("UDPClient")
                                                      [&received, &sent_msg, &barrier](std::string_view recv_msg)
                                                      {
                                                          received = recv_msg == sent_msg;
-                                                         barrier.arrive_and_wait();
+                                                         barrier.arrive_and_drop();
                                                      });
 
             auto client = UDPClient("localhost", port);
@@ -80,7 +80,7 @@ TEST_SUITE("UDPClient")
                                                      {
                                                          received += static_cast<int>(recv_msg == sent_msg);
                                                          if (received == 2) {
-                                                             barrier.arrive_and_wait();
+                                                             barrier.arrive_and_drop();
                                                          }
                                                      });
 
