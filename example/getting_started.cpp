@@ -6,7 +6,7 @@ auto main() -> int
 {
     using namespace twig::datadog;
 
-    // make an none-async client which sends to the local DogStatsD agent
+    // make a none-async client which sends to the local DogStatsD agent
     auto client = Client(UDPClient::make_local_udp_client());
 
     // Sending a gauge datagram

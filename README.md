@@ -11,7 +11,7 @@ auto main() -> int
 {
     using namespace twig::datadog;
 
-    // make an none-async client which sends to the local DogStatsD agent
+    // make a none-async client which sends to the local DogStatsD agent
     auto client = Client(UDPClient::make_local_udp_client());
 
     // Sending a gauge datagram
@@ -35,6 +35,8 @@ We provide a number of Client implementations for different use cases:
 - `SPSCClient` which adds metrics to a Single Producer Single Consumer queue.
 - `MPMCClient` which adds metrics to a Multiple Producer Multiple Consumer queue.
 - `NoOpClient` which ignores the metrics (useful for testing)
+
+All of these clients implement the `IDatadogClient` interface. You are not required to use it, but it is there to allow mocking and ease of use for those that need it.
 
 ## Requirements
 We use modern C++ features and as such you are required to use a newish compiler. We test the library in CI with GCC-13 and Clang-18. We are open for PRs adding Mac and Windows CI checks as well.
@@ -106,5 +108,5 @@ benchmark_metric_serialize<Histogram>                                    314 ns 
 
 Create a copy of `CMakeUserPresets.template.json` called `CMakeUserPreset.json`. Fix the `VCPKG_ROOT` environment variable in the new preset file, to point to somewhere on your system where you have vcpkg installed. Now you can run with presets `dev` etc.
 
-You might want too remove the `clang-tidy` preset inherit from `dev-common` while developing to **greatly** speed up compilation time.
+You might want to remove the `clang-tidy` preset inherit from `dev-common` while developing to **greatly** speed up compilation time.
 
