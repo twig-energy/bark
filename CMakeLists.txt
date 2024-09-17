@@ -45,7 +45,7 @@ generate_export_header(
     BASE_NAME
     twig-cpp-datadog-client
     EXPORT_FILE_NAME
-    export/twig-cpp-datadog-client/twig-cpp-datadog-client_export.hpp
+    export/twig/datadog/export.hpp
     CUSTOM_CONTENT_FROM_VARIABLE
     pragma_suppress_c4251
 )
