@@ -1,5 +1,6 @@
 #include <cstdint>
 #include <cstring>
+#include <memory>
 #include <string>
 #include <string_view>
 #include <system_error>
@@ -17,10 +18,11 @@
 namespace twig::datadog
 {
 
-UDPClient::UDPClient(asio::io_context& io_context, std::string_view host, uint16_t port)
-    : _socket(io_context)
+UDPClient::UDPClient(std::string_view host, uint16_t port)
+    : _io_context(std::make_unique<asio::io_context>())
+    , _socket(*this->_io_context)
     , _receiver_endpoint(
-          *asio::ip::udp::resolver(io_context).resolve(asio::ip::udp::v4(), host, std::to_string(port)).begin())
+          *asio::ip::udp::resolver(*this->_io_context).resolve(asio::ip::udp::v4(), host, std::to_string(port)).begin())
 {
     this->_socket.open(asio::ip::udp::v4());
 }
@@ -43,4 +45,8 @@ auto UDPClient::send_async(std::string_view msg) -> void
                                 });
 }
 
+auto UDPClient::make_local_udp_client(uint16_t port) -> UDPClient
+{
+    return {"localhost", port};
+}
 }  // namespace twig::datadog

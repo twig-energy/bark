@@ -18,14 +18,17 @@ find_package(doctest REQUIRED)
 
 add_executable(
     twig-cpp-datadog-client_test
+    source/client_tests.cpp
     source/count_tests.cpp
+    source/details/udp_server.cpp
     source/event_tests.cpp
     source/gauge_tests.cpp
     source/histogram_tests.cpp
     source/main.cpp
+    source/mpmc_client_tests.cpp
+    source/spsc_client_tests.cpp
     source/tags_tests.cpp
-    source/udp_server.cpp
-    source/udp_tests.cpp
+    source/udp_client_tests.cpp
 )
 target_link_libraries(twig-cpp-datadog-client_test PRIVATE twig::cpp-datadog-client doctest::doctest)
 target_compile_features(twig-cpp-datadog-client_test PRIVATE cxx_std_20)
