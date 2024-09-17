@@ -1,0 +1,37 @@
+---
+name: Release
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+jobs:
+  release:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          fetch-depth: "0"
+
+      - name: Get version from CMakeLists.txt
+        id: get_version
+        run: |
+          echo "version=$(grep -Po '(?<=VERSION\s)\d+\.\d+\.\d+' CMakeLists.txt)\n" >> $GITHUB_OUTPUT
+
+      - name: Create release
+        uses: crowbarmaster/GH-Automatic-Releases@v1.6.0
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: ${{ steps.get_version.outputs.version }}
+          generate_notes: true
+          prerelease: false
+          overwrite_tag: false
