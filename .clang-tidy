@@ -158,5 +158,5 @@ CheckOptions:
     value: "lower_case"
   - key: "misc-include-cleaner.IgnoreHeaders"
     value: "\
-      ;twig/datadog/gauge_fmt.hpp\
+      ;twig/datadog/detail/fmt.hpp\
       "

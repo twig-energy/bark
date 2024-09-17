@@ -1,6 +1,3 @@
-#include <array>
-#include <string_view>
-#include <utility>
 
 #include "twig/datadog/tags.hpp"
 
@@ -16,30 +13,28 @@ TEST_SUITE("Tags")
         auto tags = Tags {};
         CHECK_EQ("", tags.str());
 
-        tags = Tags::create(std::array<std::string_view, 0> {});
+        tags = Tags::from_tags({});
         CHECK_EQ("", tags.str());
 
-        tags = Tags::create(std::array<std::pair<std::string_view, std::string_view>, 0> {});
+        tags = Tags::from_pairs({});
         CHECK_EQ("", tags.str());
     }
 
     TEST_CASE("Can serialize single tag")
     {
-        auto tags = Tags::create(std::array<std::string_view, 1> {"tag:value"});
+        auto tags = Tags::from_tags({"tag:value"});
         CHECK_EQ("tag:value", tags.str());
 
-        tags = Tags::create(std::array<std::pair<std::string_view, std::string_view>, 1> {
-            std::pair<std::string_view, std::string_view> {"tag", "value"}});
+        tags = Tags::from_pairs({{"tag", "value"}});
         CHECK_EQ("tag:value", tags.str());
     }
 
     TEST_CASE("Can serialize two tags")
     {
-        auto tags = Tags::create(std::array<std::string_view, 2> {"tag:value", "other_tag:other_value"});
+        auto tags = Tags::from_tags({"tag:value", "other_tag:other_value"});
         CHECK_EQ("tag:value,other_tag:other_value", tags.str());
 
-        tags = Tags::create(std::array<std::pair<std::string_view, std::string_view>, 2> {
-            std::pair<std::string_view, std::string_view> {"tag", "value"}, {"other_tag", "other_value"}});
+        tags = Tags::from_pairs({{"tag", "value"}, {"other_tag", "other_value"}});
         CHECK_EQ("tag:value,other_tag:other_value", tags.str());
     }
 }

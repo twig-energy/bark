@@ -5,7 +5,7 @@
 
 #include <fmt/format.h>
 
-#include "twig/datadog/gauge_fmt.hpp"
+#include "twig/datadog/detail/fmt.hpp"
 #include "twig/datadog/metric.hpp"
 #include "twig/datadog/udp_client.hpp"
 

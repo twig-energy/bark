@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <initializer_list>
 #include <span>
 #include <string>
 #include <string_view>
@@ -43,7 +44,12 @@ class Tags
     {
     }
 
-    constexpr static auto create(std::span<const std::pair<std::string_view, std::string_view>> tags) -> Tags
+    constexpr static auto from_pairs(std::initializer_list<std::pair<std::string_view, std::string_view>> tags) -> Tags
+    {
+        return from_pairs(std::span(tags));
+    }
+
+    constexpr static auto from_pairs(std::span<const std::pair<std::string_view, std::string_view>> tags) -> Tags
     {
         if (tags.empty()) {
             return Tags {};
@@ -65,7 +71,12 @@ class Tags
         return Tags {std::move(tags_string)};
     }
 
-    constexpr static auto create(std::span<const std::string_view> tags) -> Tags
+    constexpr static auto from_tags(std::initializer_list<std::string_view> tags) -> Tags
+    {
+        return from_tags(std::span(tags));
+    }
+
+    constexpr static auto from_tags(std::span<const std::string_view> tags) -> Tags
     {
         if (tags.empty()) {
             return Tags {};

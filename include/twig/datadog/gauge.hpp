@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 #include <utility>
 
 #include "twig/datadog/tags.hpp"
@@ -10,6 +11,8 @@ namespace twig::datadog
 
 struct Gauge
 {
+    constexpr static std::string_view metric_type_indicator = "g";
+
     std::string metric;
     double value;
     Tags tags;
