@@ -1,13 +1,9 @@
-#include "twig/datadog/client.hpp"
-#include "twig/datadog/count.hpp"
-#include "twig/datadog/gauge.hpp"
-#include "twig/datadog/histogram.hpp"
-#include "twig/datadog/tags.hpp"
-#include "twig/datadog/udp_client.hpp"
+#include "twig/datadog/datadog-client.hpp"
 
 auto main() -> int
 {
-    using namespace twig::datadog;  // NOLINT
+    using namespace twig::datadog;  // NOLINT for brevity
+
     // make an none-async client which sends to the local DogStatsD agent
     auto client = Client(UDPClient::make_local_udp_client());
 

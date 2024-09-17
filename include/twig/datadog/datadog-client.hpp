@@ -7,10 +7,10 @@
 
 #include "twig/datadog/client.hpp"
 #include "twig/datadog/count.hpp"
+#include "twig/datadog/datagram.hpp"
 #include "twig/datadog/gauge.hpp"
 #include "twig/datadog/histogram.hpp"
 #include "twig/datadog/i_datadog_client.hpp"
-#include "twig/datadog/metric.hpp"
 #include "twig/datadog/noop_client.hpp"
 #include "twig/datadog/spsc_client.hpp"
 #include "twig/datadog/tags.hpp"
