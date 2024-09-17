@@ -1,6 +1,6 @@
 #pragma once
 
-#include "twig/datadog/metric.hpp"
+#include "twig/datadog/datagram.hpp"
 #include "twig/datadog/udp_client.hpp"
 
 namespace twig::datadog
@@ -13,7 +13,7 @@ class Client
   public:
     explicit Client(UDPClient udp_client);
 
-    auto send_async(const Metric& metric) -> void;
+    auto send_async(const Datagram& datagram) -> void;
 };
 
 }  // namespace twig::datadog

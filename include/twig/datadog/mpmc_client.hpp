@@ -10,14 +10,14 @@
 #pragma GCC diagnostic pop
 
 #include "twig/datadog/client.hpp"
-#include "twig/datadog/metric.hpp"
+#include "twig/datadog/datagram.hpp"
 
 namespace twig::datadog
 {
 
 class MPMCClient
 {
-    rigtorp::MPMCQueue<Metric> _queue;
+    rigtorp::MPMCQueue<Datagram> _queue;
     Client _client;
     std::jthread _worker;
 

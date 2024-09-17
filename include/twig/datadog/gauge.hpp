@@ -23,11 +23,13 @@ struct Gauge
     {
     }
 
-    constexpr auto with_tags(Tags tags_) -> Gauge&
+    constexpr auto with(Tags tags_) -> Gauge&
     {
         this->tags = std::move(tags_);
         return *this;
     }
+
+    auto serialize() const -> std::string;
 };
 
 }  // namespace twig::datadog

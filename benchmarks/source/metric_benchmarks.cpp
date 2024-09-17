@@ -2,13 +2,12 @@
 #include <utility>
 
 #include <benchmark/benchmark.h>
-#include <fmt/format.h>
 
 #include "./benchmark_helpers.hpp"
 #include "twig/datadog/count.hpp"
-#include "twig/datadog/detail/fmt.hpp"
 #include "twig/datadog/gauge.hpp"
 #include "twig/datadog/histogram.hpp"
+#include "twig/datadog/sample_rate.hpp"
 #include "twig/datadog/tags.hpp"
 
 namespace twig::datadog
@@ -27,19 +26,19 @@ auto create_metric(std::size_t iteration) -> T
         static const auto rates = random_double_vector(99, 0.0, 1.0);
 
         return T("count_metric", values[iteration % values.size()])
-            .with_sample_rate(rates[iteration % rates.size()])
-            .with_tags(std::move(tags));
+            .with(SampleRate {rates[iteration % rates.size()]})
+            .with(std::move(tags));
     } else if constexpr (std::is_same_v<T, Gauge>) {
         static const auto values = random_double_vector(100, 0.0, 1'000'000.0);
 
-        return T("gauge_metric", values[iteration % values.size()]).with_tags(std::move(tags));
+        return T("gauge_metric", values[iteration % values.size()]).with(std::move(tags));
     } else if constexpr (std::is_same_v<T, Histogram>) {
         static const auto values = random_double_vector(100, 0.0, 1'000'000.0);
         static const auto rates = random_double_vector(99, 0.0, 1.0);
 
         return T("histogram_metric", values[iteration % values.size()])
-            .with_sample_rate(rates[iteration % rates.size()])
-            .with_tags(std::move(tags));
+            .with(SampleRate {rates[iteration % rates.size()]})
+            .with(std::move(tags));
     } else {
         static_assert(false, "Unsupported metric type");
     }
@@ -51,7 +50,7 @@ auto benchmark_metric_serialize(benchmark::State& state) -> void
     auto iteration = std::size_t {0};
     for (auto _ : state) {
         auto metric = create_metric<T>(iteration);
-        benchmark::DoNotOptimize(fmt::format("{}", metric));
+        benchmark::DoNotOptimize(metric.serialize());
         iteration++;
     }
 }
