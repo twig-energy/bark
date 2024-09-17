@@ -67,7 +67,7 @@ jobs:
 
     - name: Test that readme is up to date
       if: github.ref != 'refs/heads/main'
-      run: echo "$(git diff HEAD origin/main README.md)"
+      run: echo "$(git diff HEAD -- README.md)"
 
   sanitize:
     needs: lint
