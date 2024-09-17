@@ -55,6 +55,20 @@ jobs:
         if: github.ref != 'refs/heads/main'
         run: echo "$(git diff HEAD origin/main -- CMakeLists.txt)" | grep VERSION -wq
 
+  check-readme:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref }}
+
+    - name: Update Readme
+      run: python tools/embed_code.py -i --file ./README.md
+
+    - name: Test that readme is up to date
+      if: github.ref != 'refs/heads/main'
+      run: echo "$(git diff HEAD origin/main README.md)"
+
   sanitize:
     needs: lint
     if: ${{ !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') }} # Don't skip on main build, even though lint is skipped.
