@@ -53,7 +53,7 @@ jobs:
 
       - name: Test version bumped
         if: github.ref != 'refs/heads/main'
-        run: echo "$(git diff HEAD origin/main -- CMakeLists.txt)" | grep VERSION -wq
+        run: echo "$(git diff HEAD origin/main -- CMakeLists.txt)" | grep VERSION -wq || (echo "version is not bumped. Please update it in ./CMakeLists.txt and commit the changes." && exit 1)
 
   check-readme:
     runs-on: ubuntu-latest
@@ -67,7 +67,7 @@ jobs:
 
     - name: Test that readme is up to date
       if: github.ref != 'refs/heads/main'
-      run: echo "$(git diff HEAD -- README.md)"
+      run: git diff --exit-code HEAD -- README.md || (echo "README.md is not up to date. Please update it with tools/embed_code.py and commit the changes." && exit 1)
 
   sanitize:
     needs: lint
