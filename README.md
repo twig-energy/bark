@@ -3,7 +3,7 @@
 This library contains our European power product list.
 
 ## Examples
-```cpp :file=./examples/getting_started.cpp
+```cpp :file=./example/getting_started.cpp
 ```
 
 ## Building and installing
