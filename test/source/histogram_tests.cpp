@@ -1,5 +1,3 @@
-#include <array>
-#include <string_view>
 #include <utility>
 
 #include "twig/datadog/histogram.hpp"
@@ -23,7 +21,7 @@ TEST_SUITE("Histogram")
 
     TEST_CASE("Can format histogram with tags")
     {
-        auto tags = Tags::create(std::array<std::string_view, 2> {"tag1:hello", "tag2:world"});
+        auto tags = Tags::from_tags({"tag1:hello", "tag2:world"});
 
         auto histogram = Histogram("metric", 42.654).with_tags(std::move(tags));
         CHECK_EQ("metric:42.654|h|#tag1:hello,tag2:world", fmt::format("{}", histogram));
@@ -37,7 +35,7 @@ TEST_SUITE("Histogram")
 
     TEST_CASE("Can format histogram with sample_rate and tags")
     {
-        auto tags = Tags::create(std::array<std::string_view, 2> {"tag1:hello", "tag2:world"});
+        auto tags = Tags::from_pairs({{"tag1", "hello"}, {"tag2", "world"}});
 
         auto histogram = Histogram("metric", 40.1).with_sample_rate(0.2).with_tags(std::move(tags));
         CHECK_EQ("metric:40.1|h|@0.2|#tag1:hello,tag2:world", fmt::format("{}", histogram));
