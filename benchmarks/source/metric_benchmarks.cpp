@@ -7,6 +7,7 @@
 #include "twig/datadog/count.hpp"
 #include "twig/datadog/gauge.hpp"
 #include "twig/datadog/histogram.hpp"
+#include "twig/datadog/sample_rate.hpp"
 #include "twig/datadog/tags.hpp"
 
 namespace twig::datadog

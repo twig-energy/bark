@@ -4,6 +4,7 @@
 
 #include <doctest/doctest.h>
 
+#include "twig/datadog/sample_rate.hpp"
 #include "twig/datadog/tags.hpp"
 
 namespace twig::datadog

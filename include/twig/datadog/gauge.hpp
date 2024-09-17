@@ -4,7 +4,6 @@
 #include <string_view>
 #include <utility>
 
-#include "twig/datadog/sample_rate.hpp"
 #include "twig/datadog/tags.hpp"
 
 namespace twig::datadog
