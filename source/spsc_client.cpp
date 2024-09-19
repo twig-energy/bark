@@ -29,12 +29,12 @@ SPSCClient::SPSCClient(UDPClient&& udp_client, std::size_t queue_size, Tags glob
           {
               try {
                   while (!stop_token.stop_requested()) {
+                      std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
                       while (!queue_ptr->empty()) {
                           client.send(*queue_ptr->front());
                           queue_ptr->pop();
                       }
-
-                      std::this_thread::sleep_for(std::chrono::milliseconds(1));
                   }
               } catch (const std::exception& ex) {
                   std::cerr << ex.what() << '\n' << std::flush;
