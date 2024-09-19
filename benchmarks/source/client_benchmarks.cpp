@@ -1,7 +1,6 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <string_view>
 #include <utility>
 
 #include "twig/datadog/client.hpp"
@@ -14,7 +13,6 @@
 #include "twig/datadog/mpmc_client.hpp"
 #include "twig/datadog/spsc_client.hpp"
 #include "twig/datadog/tags.hpp"
-#include "twig/datadog/udp_client.hpp"
 
 namespace twig::datadog
 {
