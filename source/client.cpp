@@ -19,14 +19,14 @@ Client::Client(UDPClient&& udp_client, Tags global_tags)
 
 auto Client::send(const Datagram& datagram) -> void
 {
-    this->_udp_client.send_async(std::visit([this](const auto& serializable_datagram)
+    this->_udp_client.send(std::visit([this](const auto& serializable_datagram)
                                             { return serializable_datagram.serialize(this->_global_tags); },
                                             datagram));
 }
 
 auto Client::send(Datagram&& datagram) -> void
 {
-    this->_udp_client.send_async(std::visit([this]<typename T>(const T& formattable_datagram)
+    this->_udp_client.send(std::visit([this]<typename T>(const T& formattable_datagram)
                                             { return formattable_datagram.serialize(this->_global_tags); },
                                             std::move(datagram)));
 }
