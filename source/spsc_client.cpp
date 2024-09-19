@@ -31,7 +31,7 @@ SPSCClient::SPSCClient(UDPClient&& udp_client, std::size_t queue_size)
                       }
 
                       std::this_thread::sleep_for(std::chrono::milliseconds(1));
-                  };
+                  }
               } catch (const std::runtime_error& ex) {
                   std::cerr << ex.what() << '\n' << std::flush;
                   // TODO(mikael): Log error
