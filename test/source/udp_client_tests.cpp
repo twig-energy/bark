@@ -19,7 +19,7 @@ TEST_SUITE("UDPClient")
         auto received = false;
         {
             auto barrier = std::barrier<>(2);
-            auto port = uint16_t {18127};  // NOLINT
+            auto port = uint16_t {18127};
             constexpr std::string_view sent_msg = "hello:42|g";
             auto server =
                 twig::datadog::make_local_udp_server(port,
@@ -42,7 +42,7 @@ TEST_SUITE("UDPClient")
         auto received = 0;
         {
             auto barrier = std::barrier<>(5);
-            auto port = uint16_t {18127};  // NOLINT
+            auto port = uint16_t {18127};
             constexpr std::string_view sent_msg = "hello:42|g";
             auto server =
                 twig::datadog::make_local_udp_server(port,
@@ -72,7 +72,7 @@ TEST_SUITE("UDPClient")
         auto received = 0;
         {
             auto barrier = std::barrier<>(2);
-            auto port = uint16_t {18127};  // NOLINT
+            auto port = uint16_t {18127};
             constexpr std::string_view sent_msg = "hello:42|g";
             auto server =
                 twig::datadog::make_local_udp_server(port,

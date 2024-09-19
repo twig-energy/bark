@@ -19,7 +19,7 @@ namespace
 template<typename T>
 auto create_metric(std::size_t iteration) -> T
 {
-    auto tags = Tags::from_tags({"tag1:hello", "tag2:world"});
+    auto tags = Tags::from_list({"tag1:hello", "tag2:world"});
 
     if constexpr (std::is_same_v<T, Count>) {
         static const auto values = random_int32_t_vector(100, 0, 1'000'000);
@@ -50,7 +50,7 @@ auto benchmark_metric_serialize(benchmark::State& state) -> void
     auto iteration = std::size_t {0};
     for (auto _ : state) {
         auto metric = create_metric<T>(iteration);
-        benchmark::DoNotOptimize(metric.serialize());
+        benchmark::DoNotOptimize(metric.serialize(no_tags));
         iteration++;
     }
 }

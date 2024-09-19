@@ -1,8 +1,9 @@
 #include <chrono>
 #include <cstddef>
+#include <cstdint>
+#include <exception>
 #include <iostream>
 #include <memory>
-#include <stdexcept>
 #include <stop_token>
 #include <thread>
 #include <utility>
@@ -13,41 +14,49 @@
 
 #include "twig/datadog/client.hpp"
 #include "twig/datadog/datagram.hpp"
+#include "twig/datadog/tags.hpp"
 #include "twig/datadog/udp_client.hpp"
 
 namespace twig::datadog
 {
 
-SPSCClient::SPSCClient(UDPClient&& client_, std::size_t queue_size)
+SPSCClient::SPSCClient(UDPClient&& udp_client, std::size_t queue_size, Tags global_tags)
     : _queue(std::make_unique<rigtorp::SPSCQueue<Datagram>>(queue_size))
     , _worker(
-          [queue_ptr = _queue.get(), client = Client(std::move(client_))](const std::stop_token& stop_token) mutable
+          [queue_ptr = _queue.get(),
+           client = Client {std::move(udp_client), std::move(global_tags)}](const std::stop_token& stop_token) mutable
           {
               try {
-                  do {
+                  while (!stop_token.stop_requested()) {
                       while (!queue_ptr->empty()) {
-                          client.send_async(*queue_ptr->front());
+                          client.send(*queue_ptr->front());
                           queue_ptr->pop();
                       }
 
                       std::this_thread::sleep_for(std::chrono::milliseconds(1));
-                  } while (!stop_token.stop_requested());
-              } catch (const std::runtime_error& ex) {
-                  std::cerr << ex.what() << std::endl;
+                  }
+              } catch (const std::exception& ex) {
+                  std::cerr << ex.what() << '\n' << std::flush;
                   // TODO(mikael): Log error
               }
           })
 {
 }
 
-auto SPSCClient::send_async(Datagram&& datagram) -> void
+auto SPSCClient::send(Datagram&& datagram) -> void
 {
     // NOTE: try_emplace means that the datagram will not be submitted if the queue is full.
     this->_queue->try_emplace(std::move(datagram));
 }
-auto SPSCClient::send_async(const Datagram& datagram) -> void
+auto SPSCClient::send(const Datagram& datagram) -> void
 {
     // NOTE: try_emplace means that the datagram will not be submitted if the queue is full.
     this->_queue->try_emplace(datagram);
 }
+
+auto SPSCClient::make_local_client(std::size_t queue_size, Tags global_tags, uint16_t port) -> SPSCClient
+{
+    return {UDPClient::make_local_udp_client(port), queue_size, std::move(global_tags)};
+}
+
 }  // namespace twig::datadog

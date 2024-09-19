@@ -15,7 +15,7 @@ namespace
 auto benchmark_event_serialize(benchmark::State& state) -> void
 {
     for (auto _ : state) {
-        auto tags = Tags::from_tags({"tag1:hello", "tag2:world"});
+        auto tags = Tags::from_list({"tag1:hello", "tag2:world"});
 
         auto event =
             Event("title",
@@ -23,7 +23,7 @@ auto benchmark_event_serialize(benchmark::State& state) -> void
                 .with(std::move(tags))
                 .with(AlertType::ERROR);
 
-        benchmark::DoNotOptimize(event.serialize());
+        benchmark::DoNotOptimize(event.serialize(no_tags));
     }
 }
 

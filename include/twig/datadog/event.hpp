@@ -59,7 +59,7 @@ struct Event
         return *this;
     }
 
-    auto serialize() const -> std::string;
+    auto serialize(const Tags& global_tags) const -> std::string;
 };
 
 }  // namespace twig::datadog

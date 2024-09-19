@@ -1,5 +1,6 @@
 #include <barrier>
 #include <cstddef>
+#include <cstdint>
 #include <string_view>
 #include <utility>
 
@@ -9,7 +10,6 @@
 
 #include "./details/raii_async_context.hpp"
 #include "twig/datadog/tags.hpp"
-#include "twig/datadog/udp_client.hpp"
 
 namespace twig::datadog
 {
@@ -21,7 +21,7 @@ TEST_SUITE("SPSCClient")
         auto received = false;
         {
             auto barrier = std::barrier<>(2);
-            auto port = uint16_t {18127};  // NOLINT
+            auto port = uint16_t {18127};
             constexpr std::string_view expected_msg = "gauge.name:43|g|#tag1:hello,tag2:world";
             auto server =
                 twig::datadog::make_local_udp_server(port,
@@ -32,8 +32,8 @@ TEST_SUITE("SPSCClient")
                                                      });
 
             auto queue_size = size_t {1};
-            auto client = SPSCClient(UDPClient::make_local_udp_client(port), queue_size);
-            client.send_async(Gauge("gauge.name", 43.0).with(Tags::from_tags({"tag1:hello", "tag2:world"})));
+            auto client = SPSCClient::make_local_client(queue_size, no_tags, port);
+            client.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
             barrier.arrive_and_wait();
         }
         CHECK(received);
@@ -44,7 +44,7 @@ TEST_SUITE("SPSCClient")
         auto received = false;
         {
             auto barrier = std::barrier<>(2);
-            auto port = uint16_t {18127};  // NOLINT
+            auto port = uint16_t {18127};
             constexpr std::string_view expected_msg = "gauge.name:43|g|#tag1:hello,tag2:world";
             auto server =
                 twig::datadog::make_local_udp_server(port,
@@ -54,9 +54,9 @@ TEST_SUITE("SPSCClient")
                                                          barrier.arrive_and_drop();
                                                      });
             auto queue_size = size_t {1};
-            auto client = SPSCClient(UDPClient::make_local_udp_client(port), queue_size);
+            auto client = SPSCClient::make_local_client(queue_size, no_tags, port);
             auto moved = std::move(client);
-            moved.send_async(Gauge("gauge.name", 43.0).with(Tags::from_tags({"tag1:hello", "tag2:world"})));
+            moved.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
             barrier.arrive_and_wait();
         }
         CHECK(received);

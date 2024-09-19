@@ -14,6 +14,8 @@
 namespace twig::datadog
 {
 
+constexpr static const uint16_t dogstatsd_udp_port = 8125;
+
 class UDPClient
 {
     std::unique_ptr<asio::io_context> _io_context;
@@ -26,7 +28,7 @@ class UDPClient
     auto send(std::string_view msg) -> bool;
     auto send_async(std::string_view msg) -> void;
 
-    static auto make_local_udp_client(uint16_t port = uint16_t {8125}) -> UDPClient;
+    static auto make_local_udp_client(uint16_t port = dogstatsd_udp_port) -> UDPClient;
 };
 
 }  // namespace twig::datadog
