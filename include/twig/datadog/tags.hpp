@@ -10,29 +10,6 @@
 namespace twig::datadog
 {
 
-namespace
-{
-
-constexpr auto tags_str_length(std::span<const std::pair<std::string_view, std::string_view>> tags) -> std::size_t
-{
-    auto length = std::size_t {tags.size() - 1};  // commas between tags
-    for (const auto& [key, value] : tags) {
-        length += key.size() + value.size() + 1;  // +1 for colons between key-value-pairs
-    }
-    return length;
-}
-
-constexpr auto tags_str_length(std::span<const std::string_view> tags) -> std::size_t
-{
-    auto length = std::size_t {tags.size() - 1};  // commas between tags
-    for (const auto& tag : tags) {
-        length += tag.size();
-    }
-    return length;
-}
-
-}  // namespace
-
 class Tags
 {
     std::string _tags;
@@ -55,8 +32,12 @@ class Tags
             return Tags {};
         }
 
+        auto length = std::size_t {tags.size()};  // commas between tags
+        for (const auto& [key, value] : tags) {
+            length += key.size() + value.size() + 1;  // +1 for colons between key-value-pairs
+        }
         auto tags_string = std::string {};
-        tags_string.reserve(tags_str_length(tags) + 1);
+        tags_string.reserve(length);
 
         for (auto i = std::size_t {0}; i < tags.size(); i++) {
             const auto& [key, value] = tags[i];
@@ -82,8 +63,12 @@ class Tags
             return Tags {};
         }
 
+        auto length = std::size_t {tags.size()};  // commas between tags
+        for (const auto& tag : tags) {
+            length += tag.size();
+        }
         auto tags_string = std::string {};
-        tags_string.reserve(tags_str_length(tags) + 1);
+        tags_string.reserve(length);
 
         for (auto i = std::size_t {0}; i < tags.size(); i++) {
             const auto& tag = tags[i];

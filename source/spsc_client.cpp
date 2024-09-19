@@ -18,22 +18,22 @@
 namespace twig::datadog
 {
 
-SPSCClient::SPSCClient(UDPClient&& client_, std::size_t queue_size)
+SPSCClient::SPSCClient(UDPClient&& udp_client, std::size_t queue_size)
     : _queue(std::make_unique<rigtorp::SPSCQueue<Datagram>>(queue_size))
     , _worker(
-          [queue_ptr = _queue.get(), client = Client(std::move(client_))](const std::stop_token& stop_token) mutable
+          [queue_ptr = _queue.get(), client = Client(std::move(udp_client))](const std::stop_token& stop_token) mutable
           {
               try {
-                  do {
+                  while (!stop_token.stop_requested()) {
                       while (!queue_ptr->empty()) {
                           client.send(*queue_ptr->front());
                           queue_ptr->pop();
                       }
 
                       std::this_thread::sleep_for(std::chrono::milliseconds(1));
-                  } while (!stop_token.stop_requested());
+                  };
               } catch (const std::runtime_error& ex) {
-                  std::cerr << ex.what() << std::endl;
+                  std::cerr << ex.what() << '\n' << std::flush;
                   // TODO(mikael): Log error
               }
           })

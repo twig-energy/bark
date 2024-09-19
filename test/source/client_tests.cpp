@@ -1,4 +1,5 @@
 #include <barrier>
+#include <cstdint>
 #include <string_view>
 #include <utility>
 
@@ -20,7 +21,7 @@ TEST_SUITE("Client")
         auto received = false;
         {
             auto barrier = std::barrier<>(2);
-            auto port = uint16_t {18127};  // NOLINT
+            auto port = uint16_t {18127};
             constexpr std::string_view expected_msg = "gauge.name:43|g|#tag1:hello,tag2:world";
             auto server =
                 twig::datadog::make_local_udp_server(port,
@@ -42,7 +43,7 @@ TEST_SUITE("Client")
         auto received = false;
         {
             auto barrier = std::barrier<>(2);
-            auto port = uint16_t {18127};  // NOLINT
+            auto port = uint16_t {18127};
             constexpr std::string_view expected_msg = "gauge.name:43|g|#tag1:hello,tag2:world";
             auto server =
                 twig::datadog::make_local_udp_server(port,

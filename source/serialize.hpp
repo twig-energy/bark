@@ -40,6 +40,7 @@ template<is_metric_like T>
 constexpr auto serialize(const T& metric, const Tags& global_tags) -> std::string
 {
     auto out = fmt::memory_buffer {};
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
     if constexpr (has_sample_rate<T>) {
         out.reserve(metric.metric.size() + 1 +                               // metric_name:
                     23 +                                                     // value|<indicator>
@@ -52,6 +53,7 @@ constexpr auto serialize(const T& metric, const Tags& global_tags) -> std::strin
                     metric.tags.str().size() + global_tags.str().size() + 2  // |#<tags>
         );
     }
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
     auto iterator = fmt::appender {out};
 
@@ -74,12 +76,14 @@ constexpr auto serialize(const T& metric, const Tags& global_tags) -> std::strin
 constexpr auto serialize(const Event& event, const Tags& global_tags) -> std::string
 {
     auto out = fmt::memory_buffer {};
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
     out.reserve(3 + 10 + 1 + 10 + 2 +                                            // _e{<title size>,<text size>}:
                 event.title.size() + 1 + event.text.size() +                     // <title>|<text>
                 (event.priority == twig::datadog::Priority::LOW ? 5 : 0) +       // |p:low
                 (event.alert_type != twig::datadog::AlertType::INFO ? 10 : 0) +  // |t:<type>
                 event.tags.str().size() + global_tags.str().size() + 2           // |#<tags>
     );
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
     auto iterator = fmt::appender {out};
 
     iterator = fmt::format_to(
