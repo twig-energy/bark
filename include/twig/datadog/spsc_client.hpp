@@ -15,7 +15,7 @@
 namespace twig::datadog
 {
 
-class SPSCClient : public IDatadogClient
+class SPSCClient final : public IDatadogClient
 {
     std::unique_ptr<rigtorp::SPSCQueue<Datagram>> _queue;
     std::jthread _worker;

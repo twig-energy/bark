@@ -20,7 +20,7 @@
 namespace twig::datadog
 {
 
-class MPMCClient : public IDatadogClient
+class MPMCClient final : public IDatadogClient
 {
     std::unique_ptr<rigtorp::MPMCQueue<Datagram>> _queue;
     std::jthread _worker;

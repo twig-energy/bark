@@ -10,7 +10,7 @@
 namespace twig::datadog
 {
 
-class Client : public IDatadogClient
+class Client final : public IDatadogClient
 {
     UDPClient _udp_client;
     Tags _global_tags;

@@ -30,15 +30,11 @@ MPMCClient::MPMCClient(UDPClient&& udp_client, std::size_t queue_size, Tags glob
               try {
                   auto popped = Datagram {Gauge("", 0)};  // Default value only present to avoid compilation error
                   while (!stop_token.stop_requested()) {
-                      while (!queue_ptr->empty()) {
-                          if (!queue_ptr->try_pop(popped)) {
-                              continue;
-                          }
+                      std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
+                      while (queue_ptr->try_pop(popped)) {
                           client.send(popped);
                       }
-
-                      std::this_thread::sleep_for(std::chrono::milliseconds(1));
                   }
               } catch (const std::exception& ex) {
                   std::cerr << ex.what() << '\n' << std::flush;
