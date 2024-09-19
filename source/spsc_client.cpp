@@ -1,8 +1,8 @@
 #include <chrono>
 #include <cstddef>
+#include <exception>
 #include <iostream>
 #include <memory>
-#include <stdexcept>
 #include <stop_token>
 #include <thread>
 #include <utility>
@@ -32,7 +32,7 @@ SPSCClient::SPSCClient(UDPClient&& udp_client, std::size_t queue_size)
 
                       std::this_thread::sleep_for(std::chrono::milliseconds(1));
                   }
-              } catch (const std::runtime_error& ex) {
+              } catch (const std::exception& ex) {
                   std::cerr << ex.what() << '\n' << std::flush;
                   // TODO(mikael): Log error
               }
