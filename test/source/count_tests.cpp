@@ -39,6 +39,23 @@ TEST_SUITE("Count")
         auto count = Count("metric", 40).with(SampleRate {0.2}).with(std::move(tags));
         CHECK_EQ("metric:40|c|@0.2|#tag1:hello,tag2:world", count.serialize(no_tags));
     }
+
+    TEST_CASE("Can format count with tags and global_tags")
+    {
+        auto tags = Tags::from_pairs({{"tag1", "hello"}, {"tag2", "world"}});
+        auto global_tags = Tags::from_pairs({{"language", "cpp"}, {"foo", "bar"}});
+
+        auto count = Count("metric", 1).with(tags);
+        CHECK_EQ("metric:1|c|#tag1:hello,tag2:world,language:cpp,foo:bar", count.serialize(global_tags));
+    }
+
+    TEST_CASE("Can format count with global_tags")
+    {
+        auto global_tags = Tags::from_pairs({{"language", "cpp"}, {"foo", "bar"}});
+
+        auto count = Count("metric", 1);
+        CHECK_EQ("metric:1|c|#language:cpp,foo:bar", count.serialize(global_tags));
+    }
 }
 
 }  // namespace twig::datadog

@@ -60,6 +60,23 @@ TEST_SUITE("Client")
         }
         CHECK(received);
     }
+
+    TEST_CASE("Correctly sends gauge metrics with global tags added")
+    {
+        auto barrier = std::barrier<>(2);
+        auto port = uint16_t {18127};
+        constexpr std::string_view expected_msg = "gauge.name:43|g|#tag1:hello,tag2:world,language:cpp,foo:bar";
+        auto server = twig::datadog::make_local_udp_server(port,
+                                                           [&expected_msg, &barrier](std::string_view recv_msg)
+                                                           {
+                                                               CHECK_EQ(recv_msg, expected_msg);
+                                                               barrier.arrive_and_drop();
+                                                           });
+
+        auto client = Client(UDPClient::make_local_udp_client(port), Tags::from_tags({"language:cpp", "foo:bar"}));
+        client.send(Gauge("gauge.name", 43.0).with(Tags::from_tags({"tag1:hello", "tag2:world"})));
+        barrier.arrive_and_wait();
+    }
 }
 
 }  // namespace twig::datadog

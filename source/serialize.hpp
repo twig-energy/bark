@@ -66,8 +66,14 @@ constexpr auto serialize(const T& metric, const Tags& global_tags) -> std::strin
         }
 #pragma GCC diagnostic pop
     }
-    if (!metric.tags.str().empty() || !global_tags.str().empty()) {
-        iterator = fmt::format_to(iterator, "|#{}{}", metric.tags.str(), global_tags.str());
+    if (!metric.tags.str().empty()) {
+        iterator = fmt::format_to(iterator, "|#{}", metric.tags.str());
+
+        if (!global_tags.str().empty()) {
+            iterator = fmt::format_to(iterator, ",{}", global_tags.str());
+        }
+    } else if (!global_tags.str().empty()) {
+        iterator = fmt::format_to(iterator, "|#{}", global_tags.str());
     }
 
     return fmt::to_string(out);
@@ -109,8 +115,14 @@ constexpr auto serialize(const Event& event, const Tags& global_tags) -> std::st
             break;
     }
 
-    if (!event.tags.str().empty() || !global_tags.str().empty()) {
-        iterator = fmt::format_to(iterator, "|#{}{}", event.tags.str(), global_tags.str());
+    if (!event.tags.str().empty()) {
+        iterator = fmt::format_to(iterator, "|#{}", event.tags.str());
+
+        if (!global_tags.str().empty()) {
+            iterator = fmt::format_to(iterator, ",{}", global_tags.str());
+        }
+    } else if (!global_tags.str().empty()) {
+        iterator = fmt::format_to(iterator, "|#{}", global_tags.str());
     }
 
     return fmt::to_string(out);
