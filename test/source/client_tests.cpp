@@ -32,7 +32,7 @@ TEST_SUITE("Client")
                                                      });
 
             auto client = Client(UDPClient::make_local_udp_client(port));
-            client.send(Gauge("gauge.name", 43.0).with(Tags::from_tags({"tag1:hello", "tag2:world"})));
+            client.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
             barrier.arrive_and_wait();
         }
         CHECK(received);
@@ -55,7 +55,7 @@ TEST_SUITE("Client")
 
             auto client = Client(UDPClient::make_local_udp_client(port));
             auto moved = std::move(client);
-            moved.send(Gauge("gauge.name", 43.0).with(Tags::from_tags({"tag1:hello", "tag2:world"})));
+            moved.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
             barrier.arrive_and_wait();
         }
         CHECK(received);
@@ -73,8 +73,8 @@ TEST_SUITE("Client")
                                                                barrier.arrive_and_drop();
                                                            });
 
-        auto client = Client(UDPClient::make_local_udp_client(port), Tags::from_tags({"language:cpp", "foo:bar"}));
-        client.send(Gauge("gauge.name", 43.0).with(Tags::from_tags({"tag1:hello", "tag2:world"})));
+        auto client = Client(UDPClient::make_local_udp_client(port), Tags::from_list({"language:cpp", "foo:bar"}));
+        client.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
         barrier.arrive_and_wait();
     }
 }

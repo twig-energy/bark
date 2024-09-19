@@ -52,12 +52,12 @@ class Tags
         return Tags {std::move(tags_string)};
     }
 
-    constexpr static auto from_tags(std::initializer_list<std::string_view> tags) -> Tags
+    constexpr static auto from_list(std::initializer_list<std::string_view> tags) -> Tags
     {
-        return from_tags(std::span(tags));
+        return from_list(std::span(tags));
     }
 
-    constexpr static auto from_tags(std::span<const std::string_view> tags) -> Tags
+    constexpr static auto from_list(std::span<const std::string_view> tags) -> Tags
     {
         if (tags.empty()) {
             return Tags {};

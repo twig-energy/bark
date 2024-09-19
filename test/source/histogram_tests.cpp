@@ -20,7 +20,7 @@ TEST_SUITE("Histogram")
 
     TEST_CASE("Can format histogram with tags")
     {
-        auto tags = Tags::from_tags({"tag1:hello", "tag2:world"});
+        auto tags = Tags::from_list({"tag1:hello", "tag2:world"});
 
         auto histogram = Histogram("metric", 42.654).with(std::move(tags));
         CHECK_EQ("metric:42.654|h|#tag1:hello,tag2:world", histogram.serialize(no_tags));

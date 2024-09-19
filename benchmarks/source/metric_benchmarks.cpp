@@ -19,7 +19,7 @@ namespace
 template<typename T>
 auto create_metric(std::size_t iteration) -> T
 {
-    auto tags = Tags::from_tags({"tag1:hello", "tag2:world"});
+    auto tags = Tags::from_list({"tag1:hello", "tag2:world"});
 
     if constexpr (std::is_same_v<T, Count>) {
         static const auto values = random_int32_t_vector(100, 0, 1'000'000);

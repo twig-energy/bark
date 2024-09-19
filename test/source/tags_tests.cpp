@@ -13,7 +13,7 @@ TEST_SUITE("Tags")
         auto tags = Tags {};
         CHECK_EQ("", tags.str());
 
-        tags = Tags::from_tags({});
+        tags = Tags::from_list({});
         CHECK_EQ("", tags.str());
 
         tags = Tags::from_pairs({});
@@ -22,7 +22,7 @@ TEST_SUITE("Tags")
 
     TEST_CASE("Can serialize single tag")
     {
-        auto tags = Tags::from_tags({"tag:value"});
+        auto tags = Tags::from_list({"tag:value"});
         CHECK_EQ("tag:value", tags.str());
 
         tags = Tags::from_pairs({{"tag", "value"}});
@@ -31,7 +31,7 @@ TEST_SUITE("Tags")
 
     TEST_CASE("Can serialize two tags")
     {
-        auto tags = Tags::from_tags({"tag:value", "other_tag:other_value"});
+        auto tags = Tags::from_list({"tag:value", "other_tag:other_value"});
         CHECK_EQ("tag:value,other_tag:other_value", tags.str());
 
         tags = Tags::from_pairs({{"tag", "value"}, {"other_tag", "other_value"}});

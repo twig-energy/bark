@@ -19,7 +19,7 @@ TEST_SUITE("Event")
 
     TEST_CASE("Can format event with tags")
     {
-        auto tags = Tags::from_tags({"tag1:hello", "tag2:world"});
+        auto tags = Tags::from_list({"tag1:hello", "tag2:world"});
 
         auto event = Event("event", "a description here").with(std::move(tags));
         CHECK_EQ("_e{5,18}:event|a description here|#tag1:hello,tag2:world", event.serialize(no_tags));
@@ -27,7 +27,7 @@ TEST_SUITE("Event")
 
     TEST_CASE("Can format event with tags and alert type")
     {
-        auto tags = Tags::from_tags({"tag1:hello", "tag2:world"});
+        auto tags = Tags::from_list({"tag1:hello", "tag2:world"});
 
         auto event = Event("event", "a description here").with(std::move(tags)).with(AlertType::ERROR);
         CHECK_EQ("_e{5,18}:event|a description here|t:error|#tag1:hello,tag2:world", event.serialize(no_tags));

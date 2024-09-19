@@ -34,7 +34,7 @@ TEST_SUITE("MPMCClient")
 
             auto queue_size = size_t {1};
             auto client = MPMCClient(UDPClient::make_local_udp_client(port), queue_size);
-            client.send(Gauge("gauge.name", 43.0).with(Tags::from_tags({"tag1:hello", "tag2:world"})));
+            client.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
             barrier.arrive_and_wait();
         }
         CHECK(received);
@@ -57,7 +57,7 @@ TEST_SUITE("MPMCClient")
             auto queue_size = size_t {1};
             auto client = MPMCClient(UDPClient::make_local_udp_client(port), queue_size);
             auto moved = std::move(client);
-            moved.send(Gauge("gauge.name", 43.0).with(Tags::from_tags({"tag1:hello", "tag2:world"})));
+            moved.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
             barrier.arrive_and_wait();
         }
         CHECK(received);
