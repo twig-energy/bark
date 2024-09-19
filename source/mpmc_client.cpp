@@ -1,5 +1,6 @@
 #include <chrono>
 #include <cstddef>
+#include <cstdint>
 #include <exception>
 #include <iostream>
 #include <memory>
@@ -14,15 +15,17 @@
 
 #include "twig/datadog/client.hpp"
 #include "twig/datadog/datagram.hpp"
+#include "twig/datadog/tags.hpp"
 #include "twig/datadog/udp_client.hpp"
 
 namespace twig::datadog
 {
 
-MPMCClient::MPMCClient(UDPClient&& udp_client, std::size_t queue_size)
+MPMCClient::MPMCClient(UDPClient&& udp_client, std::size_t queue_size, Tags global_tags)
     : _queue(std::make_unique<rigtorp::MPMCQueue<Datagram>>(queue_size))
     , _worker(
-          [queue_ptr = _queue.get(), client = Client(std::move(udp_client))](const std::stop_token& stop_token) mutable
+          [queue_ptr = _queue.get(),
+           client = Client {std::move(udp_client), std::move(global_tags)}](const std::stop_token& stop_token) mutable
           {
               try {
                   auto popped = Datagram {Gauge("", 0)};  // Default value only present to avoid compilation error
@@ -55,6 +58,11 @@ auto MPMCClient::send(Datagram&& datagram) -> void
 {
     // NOTE: try_emplace means that the datagram will not be submitted if the queue is full.
     this->_queue->try_emplace(std::move(datagram));
+}
+
+auto MPMCClient::make_local_client(std::size_t queue_size, Tags global_tags, uint16_t port) -> MPMCClient
+{
+    return {UDPClient::make_local_udp_client(port), queue_size, std::move(global_tags)};
 }
 
 }  // namespace twig::datadog

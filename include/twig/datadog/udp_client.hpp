@@ -14,10 +14,10 @@
 namespace twig::datadog
 {
 
+constexpr static const uint16_t dogstatsd_udp_port = 8125;
+
 class UDPClient
 {
-    constexpr static const uint16_t dogstatsd_udp_port = 8125;
-
     std::unique_ptr<asio::io_context> _io_context;
     asio::ip::udp::socket _socket;
     asio::ip::udp::endpoint _receiver_endpoint;

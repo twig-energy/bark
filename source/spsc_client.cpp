@@ -1,5 +1,6 @@
 #include <chrono>
 #include <cstddef>
+#include <cstdint>
 #include <exception>
 #include <iostream>
 #include <memory>
@@ -13,15 +14,17 @@
 
 #include "twig/datadog/client.hpp"
 #include "twig/datadog/datagram.hpp"
+#include "twig/datadog/tags.hpp"
 #include "twig/datadog/udp_client.hpp"
 
 namespace twig::datadog
 {
 
-SPSCClient::SPSCClient(UDPClient&& udp_client, std::size_t queue_size)
+SPSCClient::SPSCClient(UDPClient&& udp_client, std::size_t queue_size, Tags global_tags)
     : _queue(std::make_unique<rigtorp::SPSCQueue<Datagram>>(queue_size))
     , _worker(
-          [queue_ptr = _queue.get(), client = Client(std::move(udp_client))](const std::stop_token& stop_token) mutable
+          [queue_ptr = _queue.get(),
+           client = Client {std::move(udp_client), std::move(global_tags)}](const std::stop_token& stop_token) mutable
           {
               try {
                   while (!stop_token.stop_requested()) {
@@ -50,4 +53,10 @@ auto SPSCClient::send(const Datagram& datagram) -> void
     // NOTE: try_emplace means that the datagram will not be submitted if the queue is full.
     this->_queue->try_emplace(datagram);
 }
+
+auto SPSCClient::make_local_client(std::size_t queue_size, Tags global_tags, uint16_t port) -> SPSCClient
+{
+    return {UDPClient::make_local_udp_client(port), queue_size, std::move(global_tags)};
+}
+
 }  // namespace twig::datadog

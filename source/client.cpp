@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <utility>
 #include <variant>
 
@@ -9,11 +10,6 @@
 
 namespace twig::datadog
 {
-
-Client::Client(UDPClient&& udp_client)
-    : _udp_client(std::move(udp_client))
-{
-}
 
 Client::Client(UDPClient&& udp_client, Tags global_tags)
     : _udp_client(std::move(udp_client))
@@ -33,6 +29,11 @@ auto Client::send(Datagram&& datagram) -> void
     this->_udp_client.send_async(std::visit([this]<typename T>(const T& formattable_datagram)
                                             { return formattable_datagram.serialize(this->_global_tags); },
                                             std::move(datagram)));
+}
+
+auto Client::make_local_client(Tags global_tags, uint16_t port) -> Client
+{
+    return Client {UDPClient::make_local_udp_client(port), std::move(global_tags)};
 }
 
 }  // namespace twig::datadog
