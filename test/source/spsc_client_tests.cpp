@@ -10,7 +10,6 @@
 
 #include "./details/raii_async_context.hpp"
 #include "twig/datadog/tags.hpp"
-#include "twig/datadog/udp_client.hpp"
 
 namespace twig::datadog
 {
@@ -33,7 +32,7 @@ TEST_SUITE("SPSCClient")
                                                      });
 
             auto queue_size = size_t {1};
-            auto client = SPSCClient(UDPClient::make_local_udp_client(port), queue_size);
+            auto client = SPSCClient::make_local_client(queue_size, no_tags, port);
             client.send(std::move(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"}))));
             barrier.arrive_and_wait();
         }
@@ -55,7 +54,7 @@ TEST_SUITE("SPSCClient")
                                                          barrier.arrive_and_drop();
                                                      });
             auto queue_size = size_t {1};
-            auto client = SPSCClient(UDPClient::make_local_udp_client(port), queue_size);
+            auto client = SPSCClient::make_local_client(queue_size, no_tags, port);
             auto moved = std::move(client);
             moved.send(std::move(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"}))));
             barrier.arrive_and_wait();

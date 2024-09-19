@@ -25,16 +25,15 @@ namespace
 template<typename T>
 auto create_client() -> T
 {
-    constexpr static auto hostname = std::string_view {"localhost"};
     constexpr static auto port = int16_t {18125};
     constexpr static auto queue_size = std::size_t {1'000'000};
 
     if constexpr (std::is_same_v<T, Client>) {
-        return Client(UDPClient(hostname, port));
+        return Client::make_local_client(no_tags, port);
     } else if constexpr (std::is_same_v<T, SPSCClient>) {
-        return SPSCClient(UDPClient(hostname, port), queue_size);
+        return SPSCClient::make_local_client(queue_size, no_tags, port);
     } else if constexpr (std::is_same_v<T, MPMCClient>) {
-        return MPMCClient(UDPClient(hostname, port), queue_size);
+        return MPMCClient::make_local_client(queue_size, no_tags, port);
     }
 }
 
