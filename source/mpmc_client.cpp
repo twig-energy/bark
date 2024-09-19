@@ -32,11 +32,7 @@ MPMCClient::MPMCClient(UDPClient&& udp_client, std::size_t queue_size, Tags glob
                   while (!stop_token.stop_requested()) {
                       std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
-                      while (!queue_ptr->empty()) {
-                          if (!queue_ptr->try_pop(popped)) {
-                              continue;
-                          }
-
+                      while (queue_ptr->try_pop(popped)) {
                           client.send(popped);
                       }
                   }
