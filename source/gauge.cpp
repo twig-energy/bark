@@ -2,16 +2,15 @@
 
 #include "twig/datadog/gauge.hpp"
 
-#include <fmt/format.h>
-
-#include "./fmt.hpp"
+#include "./serialize.hpp"
+#include "twig/datadog/tags.hpp"
 
 namespace twig::datadog
 {
 
-auto Gauge::serialize() const -> std::string
+auto Gauge::serialize(const Tags& global_tags) const -> std::string
 {
-    return fmt::format("{}", *this);
+    return twig::datadog::serialize(*this, global_tags);
 }
 
 }  // namespace twig::datadog

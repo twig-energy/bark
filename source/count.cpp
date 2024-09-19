@@ -2,16 +2,15 @@
 
 #include "twig/datadog/count.hpp"
 
-#include <fmt/format.h>
-
-#include "./fmt.hpp"
+#include "serialize.hpp"
+#include "twig/datadog/tags.hpp"
 
 namespace twig::datadog
 {
 
-auto Count::serialize() const -> std::string
+auto Count::serialize(const Tags& global_tags) const -> std::string
 {
-    return fmt::format("{}", *this);
+    return twig::datadog::serialize(*this, global_tags);
 }
 
 }  // namespace twig::datadog

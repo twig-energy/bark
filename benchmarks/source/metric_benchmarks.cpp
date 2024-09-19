@@ -50,7 +50,7 @@ auto benchmark_metric_serialize(benchmark::State& state) -> void
     auto iteration = std::size_t {0};
     for (auto _ : state) {
         auto metric = create_metric<T>(iteration);
-        benchmark::DoNotOptimize(metric.serialize());
+        benchmark::DoNotOptimize(metric.serialize(no_tags));
         iteration++;
     }
 }

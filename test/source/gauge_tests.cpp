@@ -14,7 +14,7 @@ TEST_SUITE("Gauge")
     TEST_CASE("Can format gauge with no tags")
     {
         auto gauge = Gauge("metric", 42.0);
-        CHECK_EQ("metric:42|g", gauge.serialize());
+        CHECK_EQ("metric:42|g", gauge.serialize(no_tags));
     }
 
     TEST_CASE("Can format gauge with tags")
@@ -22,7 +22,7 @@ TEST_SUITE("Gauge")
         auto tags = Tags::from_tags({"tag1:hello", "tag2:world"});
 
         auto gauge = Gauge("metric", 42.0).with(std::move(tags));
-        CHECK_EQ("metric:42|g|#tag1:hello,tag2:world", gauge.serialize());
+        CHECK_EQ("metric:42|g|#tag1:hello,tag2:world", gauge.serialize(no_tags));
     }
 }
 

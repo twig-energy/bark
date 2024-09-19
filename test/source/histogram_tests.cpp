@@ -15,7 +15,7 @@ TEST_SUITE("Histogram")
     TEST_CASE("Can format histogram with no tags")
     {
         auto histogram = Histogram("metric", 1);
-        CHECK_EQ("metric:1|h", histogram.serialize());
+        CHECK_EQ("metric:1|h", histogram.serialize(no_tags));
     }
 
     TEST_CASE("Can format histogram with tags")
@@ -23,13 +23,13 @@ TEST_SUITE("Histogram")
         auto tags = Tags::from_tags({"tag1:hello", "tag2:world"});
 
         auto histogram = Histogram("metric", 42.654).with(std::move(tags));
-        CHECK_EQ("metric:42.654|h|#tag1:hello,tag2:world", histogram.serialize());
+        CHECK_EQ("metric:42.654|h|#tag1:hello,tag2:world", histogram.serialize(no_tags));
     }
 
     TEST_CASE("Can format histogram with sample_rate")
     {
         auto histogram = Histogram("metric", 55).with(SampleRate {0.2});
-        CHECK_EQ("metric:55|h|@0.2", histogram.serialize());
+        CHECK_EQ("metric:55|h|@0.2", histogram.serialize(no_tags));
     }
 
     TEST_CASE("Can format histogram with sample_rate and tags")
@@ -37,7 +37,7 @@ TEST_SUITE("Histogram")
         auto tags = Tags::from_pairs({{"tag1", "hello"}, {"tag2", "world"}});
 
         auto histogram = Histogram("metric", 40.1).with(SampleRate {0.2}).with(std::move(tags));
-        CHECK_EQ("metric:40.1|h|@0.2|#tag1:hello,tag2:world", histogram.serialize());
+        CHECK_EQ("metric:40.1|h|@0.2|#tag1:hello,tag2:world", histogram.serialize(no_tags));
     }
 }
 

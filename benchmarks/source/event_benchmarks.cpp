@@ -23,7 +23,7 @@ auto benchmark_event_serialize(benchmark::State& state) -> void
                 .with(std::move(tags))
                 .with(AlertType::ERROR);
 
-        benchmark::DoNotOptimize(event.serialize());
+        benchmark::DoNotOptimize(event.serialize(no_tags));
     }
 }
 

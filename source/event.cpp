@@ -2,16 +2,15 @@
 
 #include "twig/datadog/event.hpp"
 
-#include <fmt/format.h>
-
-#include "./fmt.hpp"
+#include "./serialize.hpp"
+#include "twig/datadog/tags.hpp"
 
 namespace twig::datadog
 {
 
-auto Event::serialize() const -> std::string
+auto Event::serialize(const Tags& global_tags) const -> std::string
 {
-    return fmt::format("{}", *this);
+    return twig::datadog::serialize(*this, global_tags);
 }
 
 }  // namespace twig::datadog
