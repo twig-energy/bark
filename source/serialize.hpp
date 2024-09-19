@@ -39,6 +39,8 @@ concept is_metric_like = requires(T t) {
 template<is_metric_like T>
 constexpr auto serialize(const T& metric, const Tags& global_tags) -> std::string
 {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
     auto out = fmt::memory_buffer {};
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
     if constexpr (has_sample_rate<T>) {
@@ -59,12 +61,9 @@ constexpr auto serialize(const T& metric, const Tags& global_tags) -> std::strin
 
     iterator = fmt::format_to(iterator, "{}:{}|{}", metric.metric, metric.value, T::metric_type_indicator);
     if constexpr (twig::datadog::has_sample_rate<T>) {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wfloat-equal"
         if (metric.sample_rate != 1.0) {
             iterator = fmt::format_to(iterator, "|@{}", metric.sample_rate);
         }
-#pragma GCC diagnostic pop
     }
     if (!metric.tags.str().empty()) {
         iterator = fmt::format_to(iterator, "|#{}", metric.tags.str());
@@ -77,6 +76,7 @@ constexpr auto serialize(const T& metric, const Tags& global_tags) -> std::strin
     }
 
     return fmt::to_string(out);
+#pragma GCC diagnostic pop
 }
 
 constexpr auto serialize(const Event& event, const Tags& global_tags) -> std::string
