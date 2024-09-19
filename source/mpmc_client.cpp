@@ -24,7 +24,8 @@ namespace twig::datadog
 MPMCClient::MPMCClient(UDPClient&& udp_client, std::size_t queue_size, Tags global_tags)
     : _queue(std::make_unique<rigtorp::MPMCQueue<Datagram>>(queue_size))
     , _worker(
-          [queue_ptr = _queue.get(),
+          [is_running_ptr = this->_is_running.get(),
+           queue_ptr = _queue.get(),
            client = Client {std::move(udp_client), std::move(global_tags)}](const std::stop_token& stop_token) mutable
           {
               try {
@@ -44,8 +45,27 @@ MPMCClient::MPMCClient(UDPClient&& udp_client, std::size_t queue_size, Tags glob
                   std::cerr << ex.what() << '\n' << std::flush;
                   // TODO(mikael): Log error
               }
+
+              if (is_running_ptr != nullptr) {
+                  is_running_ptr->store(false);
+              }
           })
 {
+}
+
+MPMCClient::~MPMCClient()
+{
+    if (this->_queue != nullptr && this->_is_running != nullptr) {
+        this->flush();
+    }
+}
+
+auto MPMCClient::flush() -> void
+{
+    // wait for the worker to finish processing the queue
+    while (this->_is_running->load() && !this->_queue->empty()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
 }
 
 auto MPMCClient::send(const Datagram& datagram) -> void
