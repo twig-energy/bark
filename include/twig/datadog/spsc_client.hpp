@@ -26,13 +26,6 @@ class SPSCClient : public IDatadogClient
     auto send(const Datagram& datagram) -> void override;
     auto send(Datagram&& datagram) -> void override;
 
-    template<typename T>
-    constexpr auto send(T&& value) -> void
-    {
-        // NOTE: try_emplace means that the datagram will not be submitted if the queue is full.
-        this->_queue->try_emplace(std::forward<T>(value));
-    }
-
     static auto make_local_client(std::size_t queue_size,
                                   Tags global_tags = no_tags,
                                   uint16_t port = dogstatsd_udp_port) -> SPSCClient;
