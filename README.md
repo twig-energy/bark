@@ -15,16 +15,16 @@ auto main() -> int
     auto client = Client(UDPClient::make_local_udp_client());
 
     // Sending a gauge datagram
-    client.send_async(Gauge("gauge.name", 42.0));
+    client.send(Gauge("gauge.name", 42.0));
 
     // Sending a histogram datagram
-    client.send_async(Histogram("histogram.name", 99).with(Tags::from_tags({"tag1:hello", "tag2:world"})));
+    client.send(Histogram("histogram.name", 99).with(Tags::from_tags({"tag1:hello", "tag2:world"})));
 
     // Sending a count datagram
-    client.send_async(Count("count.name", 22).with(SampleRate {0.5}));
+    client.send(Count("count.name", 22).with(SampleRate {0.5}));
 
     // Sending an event datagram
-    client.send_async(Event("event.title", "event.value").with(Priority::NORMAL).with(AlertType::INFO));
+    client.send(Event("event.title", "event.value").with(Priority::NORMAL).with(AlertType::INFO));
 
     return 0;
 }
@@ -62,12 +62,12 @@ Load Average: 3.00, 1.67, 0.69
 ------------------------------------------------------------------------------------------------------------
 Benchmark                                                                  Time             CPU   Iterations
 ------------------------------------------------------------------------------------------------------------
-benchmark_client_send_metric_async<Client>                              8257 ns         8251 ns        86938
-benchmark_client_send_metric_async<SPSCClient>/iterations:1000000       80.1 ns         80.0 ns      1000000
-benchmark_client_send_metric_async<MPMCClient>/iterations:1000000       58.5 ns         58.5 ns      1000000
-benchmark_client_send_event_async<Client>                               7834 ns         7832 ns        89432
-benchmark_client_send_event_async<SPSCClient>/iterations:1000000        59.2 ns         59.2 ns      1000000
-benchmark_client_send_event_async<MPMCClient>/iterations:1000000        66.6 ns         66.6 ns      1000000
+benchmark_client_send_metric<Client>                                    8257 ns         8251 ns        86938
+benchmark_client_send_metric<SPSCClient>/iterations:1000000             80.1 ns         80.0 ns      1000000
+benchmark_client_send_metric<MPMCClient>/iterations:1000000             58.5 ns         58.5 ns      1000000
+benchmark_client_send_event<Client>                                     7834 ns         7832 ns        89432
+benchmark_client_send_event<SPSCClient>/iterations:1000000              59.2 ns         59.2 ns      1000000
+benchmark_client_send_event<MPMCClient>/iterations:1000000              66.6 ns         66.6 ns      1000000
 benchmark_event_serialize                                                240 ns          240 ns      2917293
 benchmark_metric_serialize<Count>                                        225 ns          225 ns      3130795
 benchmark_metric_serialize<Gauge>                                        212 ns          212 ns      3297873
@@ -90,12 +90,12 @@ Load Average: 1.57, 0.48, 0.19
 ------------------------------------------------------------------------------------------------------------
 Benchmark                                                                  Time             CPU   Iterations
 ------------------------------------------------------------------------------------------------------------
-benchmark_client_send_metric_async<Client>                              8035 ns         8032 ns        87194
-benchmark_client_send_metric_async<SPSCClient>/iterations:1000000       88.5 ns         88.5 ns      1000000
-benchmark_client_send_metric_async<MPMCClient>/iterations:1000000       60.9 ns         60.9 ns      1000000
-benchmark_client_send_event_async<Client>                               8006 ns         8002 ns        88864
-benchmark_client_send_event_async<SPSCClient>/iterations:1000000        66.9 ns         66.9 ns      1000000
-benchmark_client_send_event_async<MPMCClient>/iterations:1000000        65.9 ns         65.9 ns      1000000
+benchmark_client_send_metric<Client>                                    8035 ns         8032 ns        87194
+benchmark_client_send_metric<SPSCClient>/iterations:1000000             88.5 ns         88.5 ns      1000000
+benchmark_client_send_metric<MPMCClient>/iterations:1000000             60.9 ns         60.9 ns      1000000
+benchmark_client_send_event<Client>                                     8006 ns         8002 ns        88864
+benchmark_client_send_event<SPSCClient>/iterations:1000000              66.9 ns         66.9 ns      1000000
+benchmark_client_send_event<MPMCClient>/iterations:1000000              65.9 ns         65.9 ns      1000000
 benchmark_event_serialize                                                243 ns          243 ns      2882897
 benchmark_metric_serialize<Count>                                        251 ns          251 ns      2789760
 benchmark_metric_serialize<Gauge>                                        229 ns          229 ns      3074499

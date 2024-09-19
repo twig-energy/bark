@@ -39,7 +39,7 @@ auto create_client() -> T
 }
 
 template<typename T>
-auto benchmark_client_send_metric_async(benchmark::State& state) -> void
+auto benchmark_client_send_metric(benchmark::State& state) -> void
 {
     auto values = random_double_vector(100, 0.0, 1'000'000.0);
 
@@ -49,31 +49,31 @@ auto benchmark_client_send_metric_async(benchmark::State& state) -> void
     for (auto _ : state) {
         auto tags = Tags::from_tags({"tag1:hello", "tag2:world"});
 
-        client.send_async(std::move(Gauge("metric_name", values[iteration % values.size()]).with(std::move(tags))));
+        client.send(std::move(Gauge("metric_name", values[iteration % values.size()]).with(std::move(tags))));
         iteration++;
     }
 }
 
 template<typename T>
-auto benchmark_client_send_event_async(benchmark::State& state) -> void
+auto benchmark_client_send_event(benchmark::State& state) -> void
 {
     auto client = create_client<T>();
 
     for (auto _ : state) {
         auto tags = Tags::from_tags({"tag1:hello", "tag2:world"});
 
-        client.send_async(std::move(Event("event", "text").with(std::move(tags))));
+        client.send(std::move(Event("event", "text").with(std::move(tags))));
     }
 }
 
 }  // namespace
 
-BENCHMARK(benchmark_client_send_metric_async<Client>);
-BENCHMARK(benchmark_client_send_metric_async<SPSCClient>)->Iterations(1'000'000);
-BENCHMARK(benchmark_client_send_metric_async<MPMCClient>)->Iterations(1'000'000);
+BENCHMARK(benchmark_client_send_metric<Client>);
+BENCHMARK(benchmark_client_send_metric<SPSCClient>)->Iterations(1'000'000);
+BENCHMARK(benchmark_client_send_metric<MPMCClient>)->Iterations(1'000'000);
 
-BENCHMARK(benchmark_client_send_event_async<Client>);
-BENCHMARK(benchmark_client_send_event_async<SPSCClient>)->Iterations(1'000'000);
-BENCHMARK(benchmark_client_send_event_async<MPMCClient>)->Iterations(1'000'000);
+BENCHMARK(benchmark_client_send_event<Client>);
+BENCHMARK(benchmark_client_send_event<SPSCClient>)->Iterations(1'000'000);
+BENCHMARK(benchmark_client_send_event<MPMCClient>)->Iterations(1'000'000);
 
 }  // namespace twig::datadog

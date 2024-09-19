@@ -14,8 +14,8 @@ struct IDatadogClient
     constexpr auto operator=(IDatadogClient&&) noexcept -> IDatadogClient& = default;
     constexpr virtual ~IDatadogClient() = default;
 
-    virtual auto send_async(const Datagram& datagram) -> void = 0;
-    virtual auto send_async(Datagram&& datagram) -> void = 0;
+    virtual auto send(const Datagram& datagram) -> void = 0;
+    virtual auto send(Datagram&& datagram) -> void = 0;
 };
 
 }  // namespace twig::datadog

@@ -31,7 +31,7 @@ MPMCClient::MPMCClient(UDPClient&& client, std::size_t queue_size)
                               continue;
                           }
 
-                          _client.send_async(popped);
+                          _client.send(popped);
                       }
 
                       std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -44,13 +44,13 @@ MPMCClient::MPMCClient(UDPClient&& client, std::size_t queue_size)
 {
 }
 
-auto MPMCClient::send_async(const Datagram& datagram) -> void
+auto MPMCClient::send(const Datagram& datagram) -> void
 {
     // NOTE: try_emplace means that the datagram will not be submitted if the queue is full.
     // unfortunately we have to copy datagram because std::variant is not nothrow copy constructible
     this->_queue->try_emplace(auto(datagram));
 }
-auto MPMCClient::send_async(Datagram&& datagram) -> void
+auto MPMCClient::send(Datagram&& datagram) -> void
 {
     // NOTE: try_emplace means that the datagram will not be submitted if the queue is full.
     this->_queue->try_emplace(std::move(datagram));

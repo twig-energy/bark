@@ -26,8 +26,8 @@ class MPMCClient : public IDatadogClient
   public:
     MPMCClient(UDPClient&& udp_client, std::size_t queue_size);
 
-    auto send_async(const Datagram& datagram) -> void override;
-    auto send_async(Datagram&& datagram) -> void override;
+    auto send(const Datagram& datagram) -> void override;
+    auto send(Datagram&& datagram) -> void override;
 };
 
 }  // namespace twig::datadog

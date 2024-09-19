@@ -10,8 +10,8 @@ struct NoOpClient : IDatadogClient
 {
     explicit NoOpClient();
 
-    auto send_async([[maybe_unused]] const Datagram& datagram) -> void override {}
-    auto send_async([[maybe_unused]] Datagram&& datagram) -> void override {}
+    auto send([[maybe_unused]] const Datagram& datagram) -> void override {}
+    auto send([[maybe_unused]] Datagram&& datagram) -> void override {}
 };
 
 }  // namespace twig::datadog

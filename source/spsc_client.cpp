@@ -26,7 +26,7 @@ SPSCClient::SPSCClient(UDPClient&& client_, std::size_t queue_size)
               try {
                   do {
                       while (!queue_ptr->empty()) {
-                          client.send_async(*queue_ptr->front());
+                          client.send(*queue_ptr->front());
                           queue_ptr->pop();
                       }
 
@@ -40,12 +40,12 @@ SPSCClient::SPSCClient(UDPClient&& client_, std::size_t queue_size)
 {
 }
 
-auto SPSCClient::send_async(Datagram&& datagram) -> void
+auto SPSCClient::send(Datagram&& datagram) -> void
 {
     // NOTE: try_emplace means that the datagram will not be submitted if the queue is full.
     this->_queue->try_emplace(std::move(datagram));
 }
-auto SPSCClient::send_async(const Datagram& datagram) -> void
+auto SPSCClient::send(const Datagram& datagram) -> void
 {
     // NOTE: try_emplace means that the datagram will not be submitted if the queue is full.
     this->_queue->try_emplace(datagram);

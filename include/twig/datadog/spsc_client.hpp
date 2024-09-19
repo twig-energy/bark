@@ -21,11 +21,11 @@ class SPSCClient : public IDatadogClient
   public:
     SPSCClient(UDPClient&& udp_client, std::size_t queue_size);
 
-    auto send_async(const Datagram& datagram) -> void override;
-    auto send_async(Datagram&& datagram) -> void override;
+    auto send(const Datagram& datagram) -> void override;
+    auto send(Datagram&& datagram) -> void override;
 
     template<typename T>
-    constexpr auto send_async(T&& value) -> void
+    constexpr auto send(T&& value) -> void
     {
         // NOTE: try_emplace means that the datagram will not be submitted if the queue is full.
         this->_queue->try_emplace(std::forward<T>(value));
