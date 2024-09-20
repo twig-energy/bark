@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 
 env:
-  VCPKG_COMMIT: "9a6da16845eca8d6ed70be416c1acbd206894c7f"
+  VCPKG_COMMIT: "66f543e2ac43a2d43d46e08c7f4d5e9ed8cba9b9"
 
 jobs:
   lint:
@@ -58,14 +58,14 @@ jobs:
   check-readme:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Update Readme
-      run: python tools/embed_code.py -i --file ./README.md
+      - name: Update Readme
+        run: python tools/embed_code.py -i --file ./README.md
 
-    - name: Test that readme is up to date
-      if: github.ref != 'refs/heads/main'
-      run: git diff --exit-code HEAD -- README.md || (echo "README.md is not up to date. Please update it with tools/embed_code.py and commit the changes." && exit 1)
+      - name: Test that readme is up to date
+        if: github.ref != 'refs/heads/main'
+        run: git diff --exit-code HEAD -- README.md || (echo "README.md is not up to date. Please update it with tools/embed_code.py and commit the changes." && exit 1)
 
   sanitize:
     needs: lint
