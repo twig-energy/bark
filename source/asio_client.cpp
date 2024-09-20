@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <cstring>
 #include <memory>
+#include <source_location>
 #include <stdexcept>
 #include <stop_token>
 #include <string>
@@ -21,6 +22,7 @@
 #include <asio/ip/udp.hpp>
 #include <asio/post.hpp>
 #include <fmt/base.h>
+#include <fmt/std.h>
 
 #include "twig/datadog/datagram.hpp"
 #include "twig/datadog/number_of_io_threads.hpp"
@@ -74,8 +76,9 @@ auto AsioClient::send(const Datagram& datagram) -> void
                 *receiver_endpoint_ptr,
                 [](const std::error_code& error, std::size_t)
                 {
-                    if (error) {
-                        fmt::print(stderr, "Failed at sending {}\n", error.message());
+                    if (error) [[unlikely]] {
+                        fmt::println(
+                            stderr, "Failed at sending {}. {}", error.message(), std::source_location::current());
                     }
                 });
         });
@@ -100,8 +103,9 @@ auto AsioClient::send(Datagram&& datagram) -> void
                 *receiver_endpoint_ptr,
                 [](const std::error_code& error, std::size_t)
                 {
-                    if (error) {
-                        fmt::print(stderr, "Failed at sending {}\n", error.message());
+                    if (error) [[unlikely]] {
+                        fmt::println(
+                            stderr, "Failed at sending {}. {}", error.message(), std::source_location::current());
                     }
                 });
         });

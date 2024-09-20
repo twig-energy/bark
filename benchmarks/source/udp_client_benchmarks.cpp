@@ -27,6 +27,6 @@ auto benchmark_udp_client_send_metric(benchmark::State& state) -> void
 
 }  // namespace
 
-BENCHMARK(benchmark_udp_client_send_metric)->Iterations(1'000'000);
+BENCHMARK(benchmark_udp_client_send_metric);
 
 }  // namespace twig::datadog
