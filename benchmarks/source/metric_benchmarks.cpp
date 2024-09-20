@@ -22,7 +22,7 @@ auto create_metric(std::size_t iteration) -> T
     auto tags = Tags::from_list({"tag1:hello", "tag2:world"});
 
     if constexpr (std::is_same_v<T, Count>) {
-        static const auto values = random_int32_t_vector(100, 0, 1000.0);
+        static const auto values = random_int32_t_vector(100, 0, 1000);
         static const auto rates = random_double_vector(99, 0.0, 1.0);
 
         return T("count_metric", values[iteration % values.size()])
