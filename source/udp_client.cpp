@@ -29,20 +29,12 @@ UDPClient::UDPClient(std::string_view host, uint16_t port)
 
 auto UDPClient::send(std::string_view msg) -> bool
 {
-    auto bytes_sent = this->_socket.send_to(asio::buffer(msg), _receiver_endpoint);
+    auto error = std::error_code {};
+    auto bytes_sent = this->_socket.send_to(asio::buffer(msg), _receiver_endpoint, 0, error);
+    if (error) [[unlikely]] {
+        fmt::println("Failed at sending {}", error.message());
+    }
     return bytes_sent == msg.size();
-}
-
-auto UDPClient::send_async(std::string_view msg) -> void
-{
-    this->_socket.async_send_to(asio::buffer(msg),
-                                this->_receiver_endpoint,
-                                [](const std::error_code& error, std::size_t)
-                                {
-                                    if (error) [[unlikely]] {
-                                        fmt::println("Failed at sending {}", error.message());
-                                    }
-                                });
 }
 
 auto UDPClient::make_local_udp_client(uint16_t port) -> UDPClient
