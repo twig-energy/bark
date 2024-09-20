@@ -93,7 +93,7 @@ TEST_SUITE("MPMCClient")
         constexpr std::string_view expected_msg = "gauge.name:43|g|#tag1:hello,tag2:world";
 
         auto sender_barrier = std::barrier<>(2);
-        auto received = size_t {0};
+        auto received = 0;
         auto server = twig::datadog::make_local_udp_server(
             port,
             [&received, &expected_msg, &server_barrier, &sender_barrier](std::string_view recv_msg)
