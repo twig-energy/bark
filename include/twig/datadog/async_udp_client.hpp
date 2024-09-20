@@ -31,11 +31,11 @@ class AsyncUDPClient
 
   public:
     AsyncUDPClient(std::string_view host, uint16_t port, std::size_t num_io_threads);
-    ~AsyncUDPClient();
     AsyncUDPClient(const AsyncUDPClient&) = delete;
-    auto operator=(const AsyncUDPClient&) -> AsyncUDPClient& = delete;
     AsyncUDPClient(AsyncUDPClient&& other) noexcept = default;
+    auto operator=(const AsyncUDPClient&) -> AsyncUDPClient& = delete;
     auto operator=(AsyncUDPClient&& other) noexcept -> AsyncUDPClient& = default;
+    ~AsyncUDPClient();
 
     auto send(std::string msg) -> void;
 

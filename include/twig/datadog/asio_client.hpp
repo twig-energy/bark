@@ -34,11 +34,11 @@ class AsioClient final : IDatadogClient
 
   public:
     AsioClient(std::string_view host, uint16_t port, std::size_t num_io_threads, Tags global_tags = no_tags);
-    ~AsioClient() override;
     AsioClient(const AsioClient&) = delete;
-    auto operator=(const AsioClient&) -> AsioClient& = delete;
     AsioClient(AsioClient&& other) noexcept = default;
+    auto operator=(const AsioClient&) -> AsioClient& = delete;
     auto operator=(AsioClient&& other) noexcept -> AsioClient& = default;
+    ~AsioClient() override;
 
     auto send(const Datagram& datagram) -> void override;
     auto send(Datagram&& datagram) -> void override;
