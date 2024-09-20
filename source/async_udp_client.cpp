@@ -32,7 +32,7 @@ AsyncUDPClient::AsyncUDPClient(std::string_view host, uint16_t port, std::size_t
           asio::make_work_guard(*this->_io_context)))
 {
     if (num_io_threads == 0) {
-        throw std::runtime_error("Cannot have 0 IO threads");
+        throw std::invalid_argument("Cannot have 0 IO threads on AsyncUDPClient");
     }
 
     this->_socket.open(asio::ip::udp::v4());
@@ -50,7 +50,7 @@ AsyncUDPClient::AsyncUDPClient(std::string_view host, uint16_t port, std::size_t
 
 AsyncUDPClient::~AsyncUDPClient()
 {
-    // Note: This will probably cause the threads to stop before emptying the queue :-(
+    // Allows the worker threads to stop when no more work is in the queue.
     this->_work_guard.reset();
 }
 
