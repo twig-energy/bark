@@ -26,21 +26,19 @@ namespace twig::datadog
 class AsioClient final : public IDatadogClient
 {
     std::unique_ptr<Tags> _global_tags;
-    std::unique_ptr<asio::io_context> _io_context = std::make_unique<asio::io_context>();
-    std::unique_ptr<asio::executor_work_guard<asio::io_context::executor_type>> _work_guard =
-        std::make_unique<asio::executor_work_guard<asio::io_context::executor_type>>(
-            asio::make_work_guard(*this->_io_context));
+    std::unique_ptr<asio::io_context> _io_context;
     std::unique_ptr<asio::ip::udp::socket> _socket = std::make_unique<asio::ip::udp::socket>(*this->_io_context);
     std::unique_ptr<asio::ip::udp::endpoint> _receiver_endpoint;
     std::vector<std::jthread> _io_threads;
 
+    // This is registered after the threads, since it's destruction will allow the worker threads to stop when no more
+    // work is in the queue.
+    std::unique_ptr<asio::executor_work_guard<asio::io_context::executor_type>> _work_guard =
+        std::make_unique<asio::executor_work_guard<asio::io_context::executor_type>>(
+            asio::make_work_guard(*this->_io_context));
+
   public:
     AsioClient(std::string_view host, uint16_t port, std::size_t num_io_threads, Tags global_tags = no_tags);
-    AsioClient(const AsioClient&) = delete;
-    AsioClient(AsioClient&& other) noexcept = default;
-    auto operator=(const AsioClient&) -> AsioClient& = delete;
-    auto operator=(AsioClient&& other) noexcept -> AsioClient& = default;
-    ~AsioClient() override;
 
     auto send(const Datagram& datagram) -> void override;
     auto send(Datagram&& datagram) -> void override;

@@ -13,8 +13,7 @@
 #include "twig/datadog/asio_client.hpp"
 
 #include <asio/buffer.hpp>
-#include <asio/dispatch.hpp>
-#include <asio/executor_work_guard.hpp>
+#include <asio/post.hpp>
 
 #include "twig/datadog/datagram.hpp"
 #include "twig/datadog/tags.hpp"
@@ -30,6 +29,7 @@ namespace twig::datadog
 
 AsioClient::AsioClient(std::string_view host, uint16_t port, std::size_t num_io_threads, Tags global_tags)
     : _global_tags(std::make_unique<Tags>(std::move(global_tags)))
+    , _io_context(std::make_unique<asio::io_context>(num_io_threads))
     , _receiver_endpoint(
           std::make_unique<asio::ip::udp::endpoint>(*asio::ip::udp::resolver(*this->_io_context)
                                                          .resolve(asio::ip::udp::v4(), host, std::to_string(port))
@@ -53,17 +53,9 @@ AsioClient::AsioClient(std::string_view host, uint16_t port, std::size_t num_io_
     }
 }
 
-AsioClient::~AsioClient()
-{
-    if (this->_work_guard != nullptr) {
-        // Allows the worker threads to stop when no more work is in the queue.
-        this->_work_guard->reset();
-    }
-}
-
 auto AsioClient::send(const Datagram& datagram) -> void
 {
-    asio::dispatch(  //
+    asio::post(  //
         *this->_io_context,
         [global_tags_ptr = this->_global_tags.get(),
          socket_ptr = this->_socket.get(),
@@ -89,7 +81,7 @@ auto AsioClient::send(const Datagram& datagram) -> void
 
 auto AsioClient::send(Datagram&& datagram) -> void
 {
-    asio::dispatch(  //
+    asio::post(  //
         *this->_io_context,
         [global_tags_ptr = this->_global_tags.get(),
          socket_ptr = this->_socket.get(),

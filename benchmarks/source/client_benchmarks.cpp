@@ -1,7 +1,6 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <utility>
 
 #include "twig/datadog/client.hpp"
 
@@ -47,9 +46,8 @@ auto benchmark_client_send_metric(benchmark::State& state) -> void
 
     auto iteration = std::size_t {0};
     for (auto _ : state) {
-        auto tags = Tags::from_list({"tag1:hello", "tag2:world"});
-
-        client.send(std::move(Gauge("metric_name", values[iteration % values.size()]).with(std::move(tags))));
+        client.send(Gauge("metric_name", values[iteration % values.size()])
+                        .with(Tags::from_list({"tag1:hello", "tag2:world"})));
         iteration++;
     }
 }
@@ -60,9 +58,7 @@ auto benchmark_client_send_event(benchmark::State& state) -> void
     auto client = create_client<T>();
 
     for (auto _ : state) {
-        auto tags = Tags::from_list({"tag1:hello", "tag2:world"});
-
-        client.send(std::move(Event("event", "text").with(std::move(tags))));
+        client.send(Event("event", "text").with(Tags::from_list({"tag1:hello", "tag2:world"})));
     }
 }
 
