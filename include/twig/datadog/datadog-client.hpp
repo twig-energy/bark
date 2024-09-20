@@ -6,6 +6,7 @@
  */
 
 // NOLINTBEGIN(misc-include-cleaner)
+#include "twig/datadog/asio_client.hpp"
 #include "twig/datadog/client.hpp"
 #include "twig/datadog/count.hpp"
 #include "twig/datadog/datagram.hpp"
@@ -13,7 +14,9 @@
 #include "twig/datadog/gauge.hpp"
 #include "twig/datadog/histogram.hpp"
 #include "twig/datadog/i_datadog_client.hpp"
+#include "twig/datadog/mpmc_client.hpp"
 #include "twig/datadog/noop_client.hpp"
+#include "twig/datadog/number_of_io_threads.hpp"
 #include "twig/datadog/sample_rate.hpp"
 #include "twig/datadog/spsc_client.hpp"
 #include "twig/datadog/tags.hpp"
