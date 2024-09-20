@@ -37,7 +37,7 @@ AsioClient::AsioClient(std::string_view host, uint16_t port, std::size_t num_io_
     , _global_tags(std::move(global_tags))
 {
     if (num_io_threads == 0) {
-        throw std::runtime_error("Cannot have 0 IO threads");
+        throw std::invalid_argument("Cannot have 0 IO threads on AsioClient");
     }
 
     this->_socket.open(asio::ip::udp::v4());
