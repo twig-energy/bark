@@ -4,7 +4,7 @@ include(cmake/prelude.cmake)
 
 project(
     twig-cpp-datadog-client
-    VERSION 0.1.2
+    VERSION 0.1.3
     DESCRIPTION "Datadog Agent client for C++"
     HOMEPAGE_URL "https://github.com/twig-energy/cpp-datadog-client"
     LANGUAGES CXX
@@ -28,6 +28,7 @@ find_package(SPSCQueue CONFIG REQUIRED)
 
 add_library(
     twig-cpp-datadog-client
+    source/asio_client.cpp
     source/client.cpp
     source/count.cpp
     source/event.cpp

@@ -1,16 +1,17 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <utility>
 
 #include "twig/datadog/client.hpp"
 
 #include <benchmark/benchmark.h>
 
 #include "./benchmark_helpers.hpp"
+#include "twig/datadog/asio_client.hpp"
 #include "twig/datadog/event.hpp"
 #include "twig/datadog/gauge.hpp"
 #include "twig/datadog/mpmc_client.hpp"
+#include "twig/datadog/number_of_io_threads.hpp"
 #include "twig/datadog/spsc_client.hpp"
 #include "twig/datadog/tags.hpp"
 
@@ -28,6 +29,8 @@ auto create_client() -> T
 
     if constexpr (std::is_same_v<T, Client>) {
         return Client::make_local_client(no_tags, port);
+    } else if constexpr (std::is_same_v<T, AsioClient>) {
+        return AsioClient::make_local_client(NumberOfIOThreads {1}, no_tags, port);
     } else if constexpr (std::is_same_v<T, SPSCClient>) {
         return SPSCClient::make_local_client(queue_size, no_tags, port);
     } else if constexpr (std::is_same_v<T, MPMCClient>) {
@@ -44,9 +47,8 @@ auto benchmark_client_send_metric(benchmark::State& state) -> void
 
     auto iteration = std::size_t {0};
     for (auto _ : state) {
-        auto tags = Tags::from_list({"tag1:hello", "tag2:world"});
-
-        client.send(std::move(Gauge("metric_name", values[iteration % values.size()]).with(std::move(tags))));
+        client.send(Gauge("metric_name", values[iteration % values.size()])
+                        .with(Tags::from_list({"tag1:hello", "tag2:world"})));
         iteration++;
     }
 }
@@ -57,19 +59,19 @@ auto benchmark_client_send_event(benchmark::State& state) -> void
     auto client = create_client<T>();
 
     for (auto _ : state) {
-        auto tags = Tags::from_list({"tag1:hello", "tag2:world"});
-
-        client.send(std::move(Event("event", "text").with(std::move(tags))));
+        client.send(Event("event", "text").with(Tags::from_list({"tag1:hello", "tag2:world"})));
     }
 }
 
 }  // namespace
 
 BENCHMARK(benchmark_client_send_metric<Client>);
+BENCHMARK(benchmark_client_send_metric<AsioClient>);
 BENCHMARK(benchmark_client_send_metric<SPSCClient>)->Iterations(1'000'000);
 BENCHMARK(benchmark_client_send_metric<MPMCClient>)->Iterations(1'000'000);
 
 BENCHMARK(benchmark_client_send_event<Client>);
+BENCHMARK(benchmark_client_send_event<AsioClient>);
 BENCHMARK(benchmark_client_send_event<SPSCClient>)->Iterations(1'000'000);
 BENCHMARK(benchmark_client_send_event<MPMCClient>)->Iterations(1'000'000);
 

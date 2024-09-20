@@ -1,6 +1,8 @@
 #include <cstdint>
+#include <cstdio>
 #include <cstring>
 #include <memory>
+#include <source_location>
 #include <string>
 #include <string_view>
 #include <system_error>
@@ -14,6 +16,7 @@
 #pragma GCC diagnostic pop
 #include <asio/ip/udp.hpp>
 #include <fmt/base.h>
+#include <fmt/std.h>
 
 namespace twig::datadog
 {
@@ -32,7 +35,7 @@ auto UDPClient::send(std::string_view msg) -> bool
     auto error = std::error_code {};
     auto bytes_sent = this->_socket.send_to(asio::buffer(msg), _receiver_endpoint, 0, error);
     if (error) [[unlikely]] {
-        fmt::println("Failed at sending {}", error.message());
+        fmt::println(stderr, "Failed at sending {}. {}", error.message(), std::source_location::current());
     }
     return bytes_sent == msg.size();
 }
