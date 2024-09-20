@@ -3,8 +3,12 @@
 #include <cstdint>
 #include <cstring>
 #include <memory>
+#include <string>
 #include <string_view>
 #include <thread>
+#include <vector>
+
+#include <asio/executor_work_guard.hpp>
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wnull-dereference"
@@ -34,7 +38,7 @@ class AsyncUDPClient
     auto operator=(const AsyncUDPClient&) -> AsyncUDPClient& = delete;
     auto operator=(AsyncUDPClient&& other) noexcept -> AsyncUDPClient& = default;
 
-    auto send(std::string_view msg) -> void;
+    auto send(std::string msg) -> void;
 
     static auto make_local_udp_client(std::size_t num_io_threads, uint16_t port = dogstatsd_udp_port) -> AsyncUDPClient;
 };

@@ -1,11 +1,9 @@
 
-#include <cstddef>
 
 #include "twig/datadog/udp_client.hpp"
 
 #include <benchmark/benchmark.h>
 
-#include "./benchmark_helpers.hpp"
 #include "twig/datadog/gauge.hpp"
 #include "twig/datadog/tags.hpp"
 

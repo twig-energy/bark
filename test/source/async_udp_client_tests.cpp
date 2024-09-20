@@ -1,5 +1,6 @@
 #include <barrier>
 #include <cstdint>
+#include <string>
 #include <string_view>
 #include <utility>
 
@@ -18,10 +19,10 @@ TEST_SUITE("AsyncUDPClient")
     {
         auto barrier = std::barrier<>(2);
         auto port = uint16_t {18127};
-        constexpr std::string_view sent_msg = "hello:42|g";
+        constexpr static std::string sent_msg = "hello:42|g";
         auto server = twig::datadog::make_local_udp_server(  //
             port,
-            [&sent_msg, &barrier](std::string_view recv_msg)
+            [&barrier](std::string_view recv_msg)
             {
                 CHECK_EQ(sent_msg, recv_msg);
                 barrier.arrive_and_drop();
@@ -37,10 +38,10 @@ TEST_SUITE("AsyncUDPClient")
     {
         auto barrier = std::barrier<>(5);
         auto port = uint16_t {18127};
-        constexpr std::string_view sent_msg = "hello:42|g";
+        constexpr static std::string sent_msg = "hello:42|g";
         auto server = twig::datadog::make_local_udp_server(  //
             port,
-            [&sent_msg, &barrier](std::string_view recv_msg)
+            [&barrier](std::string_view recv_msg)
             {
                 CHECK_EQ(sent_msg, recv_msg);
                 barrier.arrive_and_drop();
@@ -59,10 +60,10 @@ TEST_SUITE("AsyncUDPClient")
     {
         auto barrier = std::barrier<>(3);
         auto port = uint16_t {18127};
-        constexpr std::string_view sent_msg = "hello:42|g";
+        constexpr static std::string sent_msg = "hello:42|g";
         auto server = twig::datadog::make_local_udp_server(  //
             port,
-            [&sent_msg, &barrier](std::string_view recv_msg)
+            [&barrier](std::string_view recv_msg)
             {
                 CHECK_EQ(sent_msg, recv_msg);
                 barrier.arrive_and_drop();

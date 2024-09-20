@@ -1,14 +1,17 @@
 #include <cstdint>
 #include <cstring>
 #include <memory>
+#include <stdexcept>
 #include <stop_token>
 #include <string>
 #include <string_view>
 #include <system_error>
+#include <utility>
 
 #include "twig/datadog/async_udp_client.hpp"
 
 #include <asio/buffer.hpp>
+#include <asio/dispatch.hpp>
 #include <asio/executor_work_guard.hpp>
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wnull-dereference"
@@ -51,16 +54,23 @@ AsyncUDPClient::~AsyncUDPClient()
     this->_work_guard.reset();
 }
 
-auto AsyncUDPClient::send(std::string_view msg) -> void
+auto AsyncUDPClient::send(std::string msg) -> void
 {
-    this->_socket.async_send_to(asio::buffer(msg),
-                                _receiver_endpoint,
-                                [](const std::error_code& error, std::size_t)
-                                {
-                                    if (error) {
-                                        fmt::print("Failed at sending {}\n", error.message());
-                                    }
-                                });
+    asio::dispatch(  //
+        *this->_io_context,
+        [this, message = std::move(msg)]() mutable
+        {
+            auto buffer = asio::buffer(message);
+            this->_socket.async_send_to(  //
+                buffer,
+                this->_receiver_endpoint,
+                [](const std::error_code& error, std::size_t)
+                {
+                    if (error) {
+                        fmt::print("Failed at sending {}\n", error.message());
+                    }
+                });
+        });
 }
 
 auto AsyncUDPClient::make_local_udp_client(std::size_t num_io_threads, uint16_t port) -> AsyncUDPClient
