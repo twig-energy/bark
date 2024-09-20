@@ -80,7 +80,7 @@ jobs:
 
       - name: General Build Dependencies
         run: >-
-          sudo apt-get update -q && sudo apt-get install ninja-build nasm yasm -y -q
+          sudo apt-get update -q && sudo apt-get install ninja-build -y -q
 
       - name: Install LLVM and Clang
         uses: ./.github/actions/install-clang
@@ -133,7 +133,7 @@ jobs:
 
       - name: General Build Dependencies
         run: >-
-          sudo apt-get update -q && sudo apt-get install ninja-build nasm yasm -y -q
+          sudo apt-get update -q && sudo apt-get install ninja-build -y -q
 
       - name: Install LLVM and Clang
         uses: ./.github/actions/install-clang
@@ -189,7 +189,7 @@ jobs:
 
       - name: General Build Dependencies
         run: >-
-          sudo apt-get update -q && sudo apt-get install ninja-build nasm yasm -y -q
+          sudo apt-get update -q && sudo apt-get install ninja-build -y -q
 
       - name: Install vcpkg
         uses: friendlyanon/setup-vcpkg@v1
@@ -234,7 +234,7 @@ jobs:
         run: |
           sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
           sudo apt-get update -q
-          sudo apt-get install ninja-build nasm yasm -y -q
+          sudo apt-get install ninja-build -y -q
 
       - name: Install GCC
         if: matrix.compiler == 'gcc-13'
