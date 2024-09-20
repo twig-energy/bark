@@ -10,6 +10,7 @@
 #include <doctest/doctest.h>
 
 #include "./details/raii_async_context.hpp"
+#include "twig/datadog/number_of_io_threads.hpp"
 #include "twig/datadog/tags.hpp"
 
 namespace twig::datadog
@@ -32,7 +33,7 @@ TEST_SUITE("AsioClient")
                                                          barrier.arrive_and_drop();
                                                      });
 
-            auto client = AsioClient::make_local_client(1, no_tags, port);
+            auto client = AsioClient::make_local_client(NumberOfIOThreads {1}, no_tags, port);
             client.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
             barrier.arrive_and_wait();
         }
@@ -54,7 +55,7 @@ TEST_SUITE("AsioClient")
                                                          barrier.arrive_and_drop();
                                                      });
 
-            auto client = AsioClient::make_local_client(1, no_tags, port);
+            auto client = AsioClient::make_local_client(NumberOfIOThreads {1}, no_tags, port);
             auto moved = std::move(client);
             moved.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
             barrier.arrive_and_wait();
@@ -74,7 +75,8 @@ TEST_SUITE("AsioClient")
                                                                barrier.arrive_and_drop();
                                                            });
 
-        auto client = AsioClient::make_local_client(1, Tags::from_list({"language:cpp", "foo:bar"}), port);
+        auto client =
+            AsioClient::make_local_client(NumberOfIOThreads {1}, Tags::from_list({"language:cpp", "foo:bar"}), port);
         client.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
         barrier.arrive_and_wait();
     }
@@ -89,7 +91,7 @@ TEST_SUITE("AsioClient")
                                                                // Just consume message.
                                                            });
 
-        auto client = AsioClient::make_local_client(2, Tags::from_list({"env:test"}), port);
+        auto client = AsioClient::make_local_client(NumberOfIOThreads {2}, Tags::from_list({"env:test"}), port);
 
         for (auto i = 0; i < 1'000; i++) {   // Simulate 1000 ticks
             for (auto j = 0; j < 50; j++) {  // That each sends 50 metrics

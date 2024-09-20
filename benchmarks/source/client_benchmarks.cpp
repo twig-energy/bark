@@ -11,6 +11,7 @@
 #include "twig/datadog/event.hpp"
 #include "twig/datadog/gauge.hpp"
 #include "twig/datadog/mpmc_client.hpp"
+#include "twig/datadog/number_of_io_threads.hpp"
 #include "twig/datadog/spsc_client.hpp"
 #include "twig/datadog/tags.hpp"
 
@@ -29,7 +30,7 @@ auto create_client() -> T
     if constexpr (std::is_same_v<T, Client>) {
         return Client::make_local_client(no_tags, port);
     } else if constexpr (std::is_same_v<T, AsioClient>) {
-        return AsioClient::make_local_client(1, no_tags, port);
+        return AsioClient::make_local_client(NumberOfIOThreads {1}, no_tags, port);
     } else if constexpr (std::is_same_v<T, SPSCClient>) {
         return SPSCClient::make_local_client(queue_size, no_tags, port);
     } else if constexpr (std::is_same_v<T, MPMCClient>) {

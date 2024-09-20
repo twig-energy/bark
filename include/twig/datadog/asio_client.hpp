@@ -8,17 +8,17 @@
 #include <vector>
 
 #include <asio/executor_work_guard.hpp>
-
-#include "twig/datadog/datagram.hpp"
-#include "twig/datadog/i_datadog_client.hpp"
-#include "twig/datadog/tags.hpp"
-#include "twig/datadog/udp_client.hpp"
-
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wnull-dereference"
 #include <asio/io_context.hpp>
 #pragma GCC diagnostic pop
 #include <asio/ip/udp.hpp>
+
+#include "twig/datadog/datagram.hpp"
+#include "twig/datadog/i_datadog_client.hpp"
+#include "twig/datadog/number_of_io_threads.hpp"
+#include "twig/datadog/tags.hpp"
+#include "twig/datadog/udp_client.hpp"
 
 namespace twig::datadog
 {
@@ -38,12 +38,12 @@ class AsioClient final : public IDatadogClient
             asio::make_work_guard(*this->_io_context));
 
   public:
-    AsioClient(std::string_view host, uint16_t port, std::size_t num_io_threads, Tags global_tags = no_tags);
+    AsioClient(std::string_view host, uint16_t port, NumberOfIOThreads num_io_threads, Tags global_tags = no_tags);
 
     auto send(const Datagram& datagram) -> void override;
     auto send(Datagram&& datagram) -> void override;
 
-    static auto make_local_client(std::size_t num_io_threads,
+    static auto make_local_client(NumberOfIOThreads num_io_threads,
                                   Tags global_tags = no_tags,
                                   uint16_t port = dogstatsd_udp_port) -> AsioClient;
 };
