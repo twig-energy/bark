@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <cstdio>
 #include <cstring>
 #include <memory>
 #include <stdexcept>
@@ -73,7 +74,7 @@ auto AsioClient::send(const Datagram& datagram) -> void
                 [](const std::error_code& error, std::size_t)
                 {
                     if (error) {
-                        fmt::print("Failed at sending {}\n", error.message());
+                        fmt::print(stderr, "Failed at sending {}\n", error.message());
                     }
                 });
         });
@@ -99,7 +100,7 @@ auto AsioClient::send(Datagram&& datagram) -> void
                 [](const std::error_code& error, std::size_t)
                 {
                     if (error) {
-                        fmt::print("Failed at sending {}\n", error.message());
+                        fmt::print(stderr, "Failed at sending {}\n", error.message());
                     }
                 });
         });

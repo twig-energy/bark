@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <cstdio>
 #include <cstring>
 #include <memory>
 #include <string>
@@ -32,7 +33,7 @@ auto UDPClient::send(std::string_view msg) -> bool
     auto error = std::error_code {};
     auto bytes_sent = this->_socket.send_to(asio::buffer(msg), _receiver_endpoint, 0, error);
     if (error) [[unlikely]] {
-        fmt::println("Failed at sending {}", error.message());
+        fmt::println(stderr, "Failed at sending {}", error.message());
     }
     return bytes_sent == msg.size();
 }

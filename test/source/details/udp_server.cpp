@@ -1,5 +1,6 @@
 #include <cstddef>
 #include <cstdint>
+#include <cstdio>
 #include <functional>
 #include <string_view>
 #include <system_error>
@@ -40,7 +41,7 @@ auto UDPServer::handle_receive(const std::error_code& error, std::size_t bytes_t
     if (!error) [[likely]] {
         this->_receive_msg_callback(std::string_view(this->_recv_buffer.data(), bytes_transferred));
     } else {
-        fmt::println("Failed at receiving, maybe buffer is too small?");
+        fmt::println(stderr, "Failed at receiving, maybe buffer is too small?");
     }
     start_receive();
 }
