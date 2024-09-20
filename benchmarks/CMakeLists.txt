@@ -13,5 +13,12 @@ endif ()
 
 find_package(benchmark CONFIG REQUIRED)
 
-add_executable(twig-cpp-datadog-client_benchmarks source/client_benchmarks.cpp source/event_benchmarks.cpp source/metric_benchmarks.cpp)
+add_executable(
+    twig-cpp-datadog-client_benchmarks
+    source/async_udp_client_benchmarks.cpp
+    source/client_benchmarks.cpp
+    source/event_benchmarks.cpp
+    source/metric_benchmarks.cpp
+    source/udp_client_benchmarks.cpp
+)
 target_link_libraries(twig-cpp-datadog-client_benchmarks twig::cpp-datadog-client benchmark::benchmark_main)
