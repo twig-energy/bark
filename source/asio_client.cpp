@@ -59,29 +59,7 @@ AsioClient::AsioClient(std::string_view host, uint16_t port, NumberOfIOThreads n
 
 auto AsioClient::send(const Datagram& datagram) -> void
 {
-    asio::post(  //
-        *this->_io_context,
-        [global_tags_ptr = this->_global_tags.get(),
-         socket_ptr = this->_socket.get(),
-         receiver_endpoint_ptr = this->_receiver_endpoint.get(),
-         message = datagram]() mutable
-        {
-            auto serialized = std::visit([global_tags_ptr](const auto& serializable_datagram)
-                                         { return serializable_datagram.serialize(*global_tags_ptr); },
-                                         message);
-
-            auto buffer = asio::buffer(serialized);
-            socket_ptr->async_send_to(  //
-                buffer,
-                *receiver_endpoint_ptr,
-                [](const std::error_code& error, std::size_t)
-                {
-                    if (error) [[unlikely]] {
-                        fmt::println(
-                            stderr, "Failed at sending {}. {}", error.message(), std::source_location::current());
-                    }
-                });
-        });
+    this->send(auto(datagram));
 }
 
 auto AsioClient::send(Datagram&& datagram) -> void
