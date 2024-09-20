@@ -6,8 +6,10 @@
 #include <string>
 #include <string_view>
 #include <system_error>
+#include <thread>
 #include <utility>
 #include <variant>
+#include <vector>
 
 #include "twig/datadog/asio_client.hpp"
 
