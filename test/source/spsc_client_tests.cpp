@@ -93,7 +93,7 @@ TEST_SUITE("SPSCClient")
         constexpr std::string_view expected_msg = "gauge.name:43|g|#tag1:hello,tag2:world";
 
         auto sender_barrier = std::barrier<>(2);
-        auto received = 0;
+        auto received = std::size_t {0};
         auto server = twig::datadog::make_local_udp_server(
             port,
             [&received, &expected_msg, &server_barrier, &sender_barrier](std::string_view recv_msg)
@@ -102,7 +102,7 @@ TEST_SUITE("SPSCClient")
                     sender_barrier.arrive_and_drop();
                 }
 
-                received += (recv_msg == expected_msg) ? 1 : 0;
+                received += static_cast<std::size_t>(recv_msg == expected_msg);
 
                 if (received == 2) {
                     server_barrier.arrive_and_drop();
