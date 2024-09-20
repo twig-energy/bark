@@ -29,7 +29,6 @@ find_package(SPSCQueue CONFIG REQUIRED)
 add_library(
     twig-cpp-datadog-client
     source/asio_client.cpp
-    source/async_udp_client.cpp
     source/client.cpp
     source/count.cpp
     source/event.cpp

@@ -19,7 +19,6 @@ find_package(doctest REQUIRED)
 add_executable(
     twig-cpp-datadog-client_test
     source/asio_client_tests.cpp
-    source/async_udp_client_tests.cpp
     source/client_tests.cpp
     source/count_tests.cpp
     source/details/udp_server.cpp

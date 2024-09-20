@@ -6,7 +6,6 @@
 #include <string>
 #include <string_view>
 #include <system_error>
-#include <thread>
 #include <utility>
 #include <variant>
 #include <vector>
@@ -30,16 +29,11 @@ namespace twig::datadog
 {
 
 AsioClient::AsioClient(std::string_view host, uint16_t port, std::size_t num_io_threads, Tags global_tags)
-    : _io_context(std::make_unique<asio::io_context>())
-    , _socket(std::make_unique<asio::ip::udp::socket>(*this->_io_context))
+    : _global_tags(std::make_unique<Tags>(std::move(global_tags)))
     , _receiver_endpoint(
           std::make_unique<asio::ip::udp::endpoint>(*asio::ip::udp::resolver(*this->_io_context)
                                                          .resolve(asio::ip::udp::v4(), host, std::to_string(port))
                                                          .begin()))
-    , _work_guard(std::make_unique<asio::executor_work_guard<asio::io_context::executor_type>>(
-          asio::make_work_guard(*this->_io_context)))
-    , _global_tags(std::make_unique<Tags>(std::move(global_tags)))
-    , _io_threads(std::make_unique<std::vector<std::jthread>>())
 {
     if (num_io_threads == 0) {
         throw std::invalid_argument("Cannot have 0 IO threads on AsioClient");
@@ -47,9 +41,9 @@ AsioClient::AsioClient(std::string_view host, uint16_t port, std::size_t num_io_
 
     this->_socket->open(asio::ip::udp::v4());
 
-    this->_io_threads->reserve(num_io_threads);
+    this->_io_threads.reserve(num_io_threads);
     for (auto i = 0ULL; i < num_io_threads; i++) {
-        this->_io_threads->emplace_back(
+        this->_io_threads.emplace_back(
             [io_context_ptr = this->_io_context.get()](const std::stop_token& stop_token)
             {
                 while (!stop_token.stop_requested()) {
