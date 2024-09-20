@@ -102,7 +102,7 @@ TEST_SUITE("SPSCClient")
                     sender_barrier.arrive_and_drop();
                 }
 
-                received += (recv_msg == expected_msg);
+                received += (recv_msg == expected_msg) ? 1 : 0;
 
                 if (received == 2) {
                     server_barrier.arrive_and_drop();

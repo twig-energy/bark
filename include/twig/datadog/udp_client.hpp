@@ -26,7 +26,6 @@ class UDPClient
     UDPClient(std::string_view host, uint16_t port);
 
     auto send(std::string_view msg) -> bool;
-    auto send_async(std::string_view msg) -> void;
 
     static auto make_local_udp_client(uint16_t port = dogstatsd_udp_port) -> UDPClient;
 };
