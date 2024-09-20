@@ -23,14 +23,14 @@
 namespace twig::datadog
 {
 
-class AsioClient final : IDatadogClient
+class AsioClient final : public IDatadogClient
 {
     std::unique_ptr<asio::io_context> _io_context;
-    asio::ip::udp::socket _socket;
-    asio::ip::udp::endpoint _receiver_endpoint;
+    std::unique_ptr<asio::ip::udp::socket> _socket;
+    std::unique_ptr<asio::ip::udp::endpoint> _receiver_endpoint;
     std::unique_ptr<asio::executor_work_guard<asio::io_context::executor_type>> _work_guard;
-    std::vector<std::jthread> _io_threads;
-    Tags _global_tags;
+    std::unique_ptr<Tags> _global_tags;
+    std::unique_ptr<std::vector<std::jthread>> _io_threads;
 
   public:
     AsioClient(std::string_view host, uint16_t port, std::size_t num_io_threads, Tags global_tags = no_tags);

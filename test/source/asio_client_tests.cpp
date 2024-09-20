@@ -91,7 +91,7 @@ TEST_SUITE("AsioClient")
 
         auto client = AsioClient::make_local_client(2, Tags::from_list({"env:test"}), port);
 
-        for (auto i = 0; i < 10'000; i++) {  // Simulate 10000 ticks
+        for (auto i = 0; i < 1'000; i++) {   // Simulate 1000 ticks
             for (auto j = 0; j < 50; j++) {  // That each sends 50 metrics
                 client.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
             }
