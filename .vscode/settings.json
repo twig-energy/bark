@@ -124,7 +124,7 @@
     "sonarlint.pathToCompileCommands": "${workspaceFolder}/build/dev/compile_commands.json",
     "sonarlint.connectedMode.project": {
         "connectionId": "twig-energy",
-        "projectKey": "twig-energy_cpp-datadog-client"
+        "projectKey": "twig-energy_bark"
     },
     "files.watcherExclude": {
         "**/.git/objects/**": true,
