@@ -1,10 +1,9 @@
 cmake_minimum_required(VERSION 3.14)
 
 include(cmake/prelude.cmake)
-
 project(
     twig-cpp-datadog-client
-    VERSION 0.1.4
+    VERSION 0.1.5
     DESCRIPTION "Datadog Agent client for C++"
     HOMEPAGE_URL "https://github.com/twig-energy/cpp-datadog-client"
     LANGUAGES CXX
