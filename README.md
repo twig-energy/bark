@@ -32,13 +32,13 @@ auto main() -> int
 
 We provide a number of Client implementations for different use cases:
 
-| Client        | Queue type                          | Number of active threads     | Notes                                          |
-| ------------- | ----------------------------------- | ---------------------------- | ---------------------------------------------- |
-| `Client`      | None                                | The publishing thread only   | Sends metrics on the publishing thread         |
-| `SPSCClient`  | Single Producer Single Consumer     | The publishing thread + 1    | Fixed queue size. Drops new messages when full |
-| `MPMCClient`  | Multiple Producer Multiple Consumer | The publishing thread + 1    | Fixed queue size. Drops new messages when full |
-| `AsioClient`  | `asio::io_context`                  | The publishing thread + `N`  | `N` is supplied when creating the client       |
-| `NoOpClient`  | None                                | (The publishing thread)/None | Useful for testing                             |
+| Client       | Queue type                          | Number of active threads     | Notes                                          |
+| ------------ | ----------------------------------- | ---------------------------- | ---------------------------------------------- |
+| `Client`     | None                                | The publishing thread only   | Sends metrics on the publishing thread         |
+| `SPSCClient` | Single Producer Single Consumer     | The publishing thread + 1    | Fixed queue size. Drops new messages when full |
+| `MPMCClient` | Multiple Producer Multiple Consumer | The publishing thread + 1    | Fixed queue size. Drops new messages when full |
+| `AsioClient` | `asio::io_context`                  | The publishing thread + `N`  | `N` is supplied when creating the client       |
+| `NoOpClient` | None                                | (The publishing thread)/None | Useful for testing                             |
 
 All of these clients implement the `IDatadogClient` interface. You are not required to use it, but it is there to allow mocking and ease of use for those that need it.
 
@@ -53,63 +53,133 @@ See [benchmarks/source](./benchmarks/source) for the benchmark code.
 
 #### Clang-18 Results
 ```
-Run ./build/benchmarks/twig-cpp-datadog-client_benchmarks
-2024-09-20T11:13:51+00:00
+2024-09-20T12:42:44+00:00
 Running ./build/benchmarks/twig-cpp-datadog-client_benchmarks
-Run on (4 X 3244.17 MHz CPU s)
+Run on (4 X 3241.38 MHz CPU s)
 CPU Caches:
   L1 Data 32 KiB (x2)
   L1 Instruction 32 KiB (x2)
   L2 Unified 512 KiB (x2)
   L3 Unified 32768 KiB (x1)
-Load Average: 3.02, 2.22, 1.06
-------------------------------------------------------------------------------------------------------
-Benchmark                                                            Time             CPU   Iterations
-------------------------------------------------------------------------------------------------------
-benchmark_client_send_metric<Client>                              7843 ns         7843 ns        90051
-benchmark_client_send_metric<AsioClient>                           243 ns          243 ns      2829947
-benchmark_client_send_metric<SPSCClient>/iterations:1000000       91.2 ns         91.2 ns      1000000
-benchmark_client_send_metric<MPMCClient>/iterations:1000000       84.4 ns         84.4 ns      1000000
-benchmark_client_send_event<Client>                               7780 ns         7779 ns        90227
-benchmark_client_send_event<AsioClient>                            268 ns          268 ns      2633388
-benchmark_client_send_event<SPSCClient>/iterations:1000000        99.1 ns         99.1 ns      1000000
-benchmark_client_send_event<MPMCClient>/iterations:1000000        93.4 ns         93.4 ns      1000000
-benchmark_event_serialize                                          209 ns          209 ns      3347061
-benchmark_metric_serialize<Count>                                  212 ns          212 ns      3312071
-benchmark_metric_serialize<Gauge>                                  198 ns          198 ns      3541317
-benchmark_metric_serialize<Histogram>                              285 ns          285 ns      2470524
-benchmark_udp_client_send_metric                                  7343 ns         7342 ns        95563
+Load Average: 3.26, 2.09, 0.92
+----------------------------------------------------------------------------------------------------------------------
+Benchmark                                                                            Time             CPU   Iterations
+----------------------------------------------------------------------------------------------------------------------
+benchmark_client_send_metric<Client>/iterations:25000/repeats:32_mean             7735 ns         7734 ns           32
+benchmark_client_send_metric<Client>/iterations:25000/repeats:32_median           7719 ns         7719 ns           32
+benchmark_client_send_metric<Client>/iterations:25000/repeats:32_stddev           44.1 ns         44.0 ns           32
+benchmark_client_send_metric<Client>/iterations:25000/repeats:32_cv               0.57 %          0.57 %            32
+benchmark_client_send_event<AsioClient>/iterations:25000/repeats:32_mean           297 ns          296 ns           32
+benchmark_client_send_event<AsioClient>/iterations:25000/repeats:32_median         278 ns          278 ns           32
+benchmark_client_send_event<AsioClient>/iterations:25000/repeats:32_stddev        57.4 ns         57.5 ns           32
+benchmark_client_send_event<AsioClient>/iterations:25000/repeats:32_cv           19.31 %         19.41 %            32
+benchmark_client_send_metric<SPSCClient>/iterations:25000/repeats:32_mean         76.6 ns         76.6 ns           32
+benchmark_client_send_metric<SPSCClient>/iterations:25000/repeats:32_median       73.7 ns         73.7 ns           32
+benchmark_client_send_metric<SPSCClient>/iterations:25000/repeats:32_stddev       12.0 ns         11.9 ns           32
+benchmark_client_send_metric<SPSCClient>/iterations:25000/repeats:32_cv          15.60 %         15.60 %            32
+benchmark_client_send_metric<MPMCClient>/iterations:25000/repeats:32_mean         74.6 ns         74.5 ns           32
+benchmark_client_send_metric<MPMCClient>/iterations:25000/repeats:32_median       73.1 ns         73.1 ns           32
+benchmark_client_send_metric<MPMCClient>/iterations:25000/repeats:32_stddev       3.70 ns         3.71 ns           32
+benchmark_client_send_metric<MPMCClient>/iterations:25000/repeats:32_cv           4.95 %          4.97 %            32
+benchmark_client_send_event<Client>/iterations:25000/repeats:32_mean              7758 ns         7758 ns           32
+benchmark_client_send_event<Client>/iterations:25000/repeats:32_median            7755 ns         7755 ns           32
+benchmark_client_send_event<Client>/iterations:25000/repeats:32_stddev            15.3 ns         15.3 ns           32
+benchmark_client_send_event<Client>/iterations:25000/repeats:32_cv                0.20 %          0.20 %            32
+benchmark_client_send_metric<AsioClient>/iterations:25000/repeats:32_mean          146 ns          146 ns           32
+benchmark_client_send_metric<AsioClient>/iterations:25000/repeats:32_median        143 ns          142 ns           32
+benchmark_client_send_metric<AsioClient>/iterations:25000/repeats:32_stddev       18.6 ns         18.6 ns           32
+benchmark_client_send_metric<AsioClient>/iterations:25000/repeats:32_cv          12.73 %         12.77 %            32
+benchmark_client_send_event<SPSCClient>/iterations:25000/repeats:32_mean          87.3 ns         87.3 ns           32
+benchmark_client_send_event<SPSCClient>/iterations:25000/repeats:32_median        86.4 ns         86.4 ns           32
+benchmark_client_send_event<SPSCClient>/iterations:25000/repeats:32_stddev        5.66 ns         5.61 ns           32
+benchmark_client_send_event<SPSCClient>/iterations:25000/repeats:32_cv            6.48 %          6.43 %            32
+benchmark_client_send_event<MPMCClient>/iterations:25000/repeats:32_mean          96.7 ns         96.6 ns           32
+benchmark_client_send_event<MPMCClient>/iterations:25000/repeats:32_median        93.1 ns         93.1 ns           32
+benchmark_client_send_event<MPMCClient>/iterations:25000/repeats:32_stddev        12.9 ns         12.8 ns           32
+benchmark_client_send_event<MPMCClient>/iterations:25000/repeats:32_cv           13.38 %         13.27 %            32
+benchmark_event_serialize/repeats:16_mean                                          228 ns          228 ns           16
+benchmark_event_serialize/repeats:16_median                                        228 ns          228 ns           16
+benchmark_event_serialize/repeats:16_stddev                                      0.304 ns        0.304 ns           16
+benchmark_event_serialize/repeats:16_cv                                           0.13 %          0.13 %            16
+benchmark_metric_serialize<Count>/repeats:16_mean                                  222 ns          222 ns           16
+benchmark_metric_serialize<Count>/repeats:16_median                                222 ns          222 ns           16
+benchmark_metric_serialize<Count>/repeats:16_stddev                              0.403 ns        0.405 ns           16
+benchmark_metric_serialize<Count>/repeats:16_cv                                   0.18 %          0.18 %            16
+benchmark_metric_serialize<Gauge>/repeats:16_mean                                  197 ns          197 ns           16
+benchmark_metric_serialize<Gauge>/repeats:16_median                                196 ns          196 ns           16
+benchmark_metric_serialize<Gauge>/repeats:16_stddev                              0.695 ns        0.694 ns           16
+benchmark_metric_serialize<Gauge>/repeats:16_cv                                   0.35 %          0.35 %            16
+benchmark_metric_serialize<Histogram>/repeats:16_mean                              290 ns          290 ns           16
+benchmark_metric_serialize<Histogram>/repeats:16_median                            290 ns          290 ns           16
+benchmark_metric_serialize<Histogram>/repeats:16_stddev                          0.601 ns        0.600 ns           16
+benchmark_metric_serialize<Histogram>/repeats:16_cv                               0.21 %          0.21 %            16
+benchmark_udp_client_send_metric                                                  7342 ns         7342 ns        94870
 ```
 
 #### GCC-13 Results
 
 ```
-Run ./build/benchmarks/twig-cpp-datadog-client_benchmarks
-2024-09-20T11:19:05+00:00
+2024-09-20T12:43:14+00:00
 Running ./build/benchmarks/twig-cpp-datadog-client_benchmarks
-Run on (4 X 3290.28 MHz CPU s)
+Run on (4 X 3244.6 MHz CPU s)
 CPU Caches:
   L1 Data 32 KiB (x2)
   L1 Instruction 32 KiB (x2)
   L2 Unified 512 KiB (x2)
   L3 Unified 32768 KiB (x1)
-Load Average: 1.76, 0.67, 0.31
-------------------------------------------------------------------------------------------------------
-Benchmark                                                            Time             CPU   Iterations
-------------------------------------------------------------------------------------------------------
-benchmark_client_send_metric<Client>                              7895 ns         7894 ns        89456
-benchmark_client_send_metric<AsioClient>                           244 ns          244 ns      2886157
-benchmark_client_send_metric<SPSCClient>/iterations:1000000       85.6 ns         85.6 ns      1000000
-benchmark_client_send_metric<MPMCClient>/iterations:1000000       79.7 ns         79.6 ns      1000000
-benchmark_client_send_event<Client>                               7740 ns         7739 ns        90413
-benchmark_client_send_event<AsioClient>                            253 ns          253 ns      2771835
-benchmark_client_send_event<SPSCClient>/iterations:1000000        94.1 ns         94.0 ns      1000000
-benchmark_client_send_event<MPMCClient>/iterations:1000000        87.0 ns         87.0 ns      1000000
-benchmark_event_serialize                                          226 ns          226 ns      3110870
-benchmark_metric_serialize<Count>                                  230 ns          230 ns      3036371
-benchmark_metric_serialize<Gauge>                                  201 ns          201 ns      3494570
-benchmark_metric_serialize<Histogram>                              297 ns          297 ns      2359632
-benchmark_udp_client_send_metric                                  7425 ns         7424 ns        94534
+Load Average: 1.85, 0.63, 0.24
+----------------------------------------------------------------------------------------------------------------------
+Benchmark                                                                            Time             CPU   Iterations
+----------------------------------------------------------------------------------------------------------------------
+benchmark_client_send_metric<Client>/iterations:25000/repeats:32_mean             7752 ns         7752 ns           32
+benchmark_client_send_metric<Client>/iterations:25000/repeats:32_median           7722 ns         7722 ns           32
+benchmark_client_send_metric<Client>/iterations:25000/repeats:32_stddev            102 ns          102 ns           32
+benchmark_client_send_metric<Client>/iterations:25000/repeats:32_cv               1.31 %          1.31 %            32
+benchmark_client_send_event<AsioClient>/iterations:25000/repeats:32_mean           255 ns          255 ns           32
+benchmark_client_send_event<AsioClient>/iterations:25000/repeats:32_median         254 ns          254 ns           32
+benchmark_client_send_event<AsioClient>/iterations:25000/repeats:32_stddev        46.8 ns         46.8 ns           32
+benchmark_client_send_event<AsioClient>/iterations:25000/repeats:32_cv           18.39 %         18.40 %            32
+benchmark_client_send_metric<SPSCClient>/iterations:25000/repeats:32_mean         70.9 ns         70.9 ns           32
+benchmark_client_send_metric<SPSCClient>/iterations:25000/repeats:32_median       69.0 ns         68.9 ns           32
+benchmark_client_send_metric<SPSCClient>/iterations:25000/repeats:32_stddev       9.84 ns         9.84 ns           32
+benchmark_client_send_metric<SPSCClient>/iterations:25000/repeats:32_cv          13.87 %         13.88 %            32
+benchmark_client_send_metric<MPMCClient>/iterations:25000/repeats:32_mean         66.8 ns         66.8 ns           32
+benchmark_client_send_metric<MPMCClient>/iterations:25000/repeats:32_median       65.7 ns         65.6 ns           32
+benchmark_client_send_metric<MPMCClient>/iterations:25000/repeats:32_stddev       3.46 ns         3.44 ns           32
+benchmark_client_send_metric<MPMCClient>/iterations:25000/repeats:32_cv           5.17 %          5.14 %            32
+benchmark_client_send_event<Client>/iterations:25000/repeats:32_mean              7690 ns         7689 ns           32
+benchmark_client_send_event<Client>/iterations:25000/repeats:32_median            7680 ns         7679 ns           32
+benchmark_client_send_event<Client>/iterations:25000/repeats:32_stddev            32.9 ns         33.0 ns           32
+benchmark_client_send_event<Client>/iterations:25000/repeats:32_cv                0.43 %          0.43 %            32
+benchmark_client_send_metric<AsioClient>/iterations:25000/repeats:32_mean          131 ns          131 ns           32
+benchmark_client_send_metric<AsioClient>/iterations:25000/repeats:32_median        128 ns          128 ns           32
+benchmark_client_send_metric<AsioClient>/iterations:25000/repeats:32_stddev       11.7 ns         11.7 ns           32
+benchmark_client_send_metric<AsioClient>/iterations:25000/repeats:32_cv           8.98 %          8.99 %            32
+benchmark_client_send_event<SPSCClient>/iterations:25000/repeats:32_mean          78.2 ns         78.1 ns           32
+benchmark_client_send_event<SPSCClient>/iterations:25000/repeats:32_median        77.3 ns         77.3 ns           32
+benchmark_client_send_event<SPSCClient>/iterations:25000/repeats:32_stddev        5.55 ns         5.55 ns           32
+benchmark_client_send_event<SPSCClient>/iterations:25000/repeats:32_cv            7.10 %          7.10 %            32
+benchmark_client_send_event<MPMCClient>/iterations:25000/repeats:32_mean          77.3 ns         77.2 ns           32
+benchmark_client_send_event<MPMCClient>/iterations:25000/repeats:32_median        76.1 ns         76.0 ns           32
+benchmark_client_send_event<MPMCClient>/iterations:25000/repeats:32_stddev        3.88 ns         3.89 ns           32
+benchmark_client_send_event<MPMCClient>/iterations:25000/repeats:32_cv            5.02 %          5.04 %            32
+benchmark_event_serialize/repeats:16_mean                                          231 ns          231 ns           16
+benchmark_event_serialize/repeats:16_median                                        231 ns          231 ns           16
+benchmark_event_serialize/repeats:16_stddev                                       1.16 ns         1.16 ns           16
+benchmark_event_serialize/repeats:16_cv                                           0.50 %          0.50 %            16
+benchmark_metric_serialize<Count>/repeats:16_mean                                  241 ns          241 ns           16
+benchmark_metric_serialize<Count>/repeats:16_median                                240 ns          240 ns           16
+benchmark_metric_serialize<Count>/repeats:16_stddev                              0.901 ns        0.903 ns           16
+benchmark_metric_serialize<Count>/repeats:16_cv                                   0.37 %          0.38 %            16
+benchmark_metric_serialize<Gauge>/repeats:16_mean                                  213 ns          213 ns           16
+benchmark_metric_serialize<Gauge>/repeats:16_median                                213 ns          213 ns           16
+benchmark_metric_serialize<Gauge>/repeats:16_stddev                               1.18 ns         1.18 ns           16
+benchmark_metric_serialize<Gauge>/repeats:16_cv                                   0.55 %          0.55 %            16
+benchmark_metric_serialize<Histogram>/repeats:16_mean                              313 ns          313 ns           16
+benchmark_metric_serialize<Histogram>/repeats:16_median                            313 ns          313 ns           16
+benchmark_metric_serialize<Histogram>/repeats:16_stddev                          0.559 ns        0.560 ns           16
+benchmark_metric_serialize<Histogram>/repeats:16_cv                               0.18 %          0.18 %            16
+benchmark_udp_client_send_metric                                                  7332 ns         7332 ns        95439
 ```
 
 
