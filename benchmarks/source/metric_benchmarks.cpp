@@ -22,18 +22,18 @@ auto create_metric(std::size_t iteration) -> T
     auto tags = Tags::from_list({"tag1:hello", "tag2:world"});
 
     if constexpr (std::is_same_v<T, Count>) {
-        static const auto values = random_int32_t_vector(100, 0, 1'000'000);
+        static const auto values = random_int32_t_vector(100, 0, 1000);
         static const auto rates = random_double_vector(99, 0.0, 1.0);
 
         return T("count_metric", values[iteration % values.size()])
             .with(SampleRate {rates[iteration % rates.size()]})
             .with(std::move(tags));
     } else if constexpr (std::is_same_v<T, Gauge>) {
-        static const auto values = random_double_vector(100, 0.0, 1'000'000.0);
+        static const auto values = random_double_vector(100, 0.0, 1000.0);
 
         return T("gauge_metric", values[iteration % values.size()]).with(std::move(tags));
     } else if constexpr (std::is_same_v<T, Histogram>) {
-        static const auto values = random_double_vector(100, 0.0, 1'000'000.0);
+        static const auto values = random_double_vector(100, 0.0, 1000.0);
         static const auto rates = random_double_vector(99, 0.0, 1.0);
 
         return T("histogram_metric", values[iteration % values.size()])
@@ -57,8 +57,8 @@ auto benchmark_metric_serialize(benchmark::State& state) -> void
 
 }  // namespace
 
-BENCHMARK(benchmark_metric_serialize<Count>);
-BENCHMARK(benchmark_metric_serialize<Gauge>);
-BENCHMARK(benchmark_metric_serialize<Histogram>);
+BENCHMARK(benchmark_metric_serialize<Count>)->Repetitions(16);
+BENCHMARK(benchmark_metric_serialize<Gauge>)->Repetitions(16);
+BENCHMARK(benchmark_metric_serialize<Histogram>)->Repetitions(16);
 
 }  // namespace twig::datadog

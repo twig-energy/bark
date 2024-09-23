@@ -29,6 +29,6 @@ auto benchmark_event_serialize(benchmark::State& state) -> void
 
 }  // namespace
 
-BENCHMARK(benchmark_event_serialize);
+BENCHMARK(benchmark_event_serialize)->Repetitions(16);
 
 }  // namespace twig::datadog

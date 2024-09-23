@@ -21,11 +21,13 @@ namespace twig::datadog
 namespace
 {
 
+constexpr auto number_of_iterations = std::size_t {25'000};
+
 template<typename T>
 auto create_client() -> T
 {
     constexpr static auto port = int16_t {18125};
-    constexpr static auto queue_size = std::size_t {1'000'000};
+    constexpr static auto queue_size = std::size_t {number_of_iterations};
 
     if constexpr (std::is_same_v<T, Client>) {
         return Client::make_local_client(no_tags, port);
@@ -41,7 +43,7 @@ auto create_client() -> T
 template<typename T>
 auto benchmark_client_send_metric(benchmark::State& state) -> void
 {
-    auto values = random_double_vector(100, 0.0, 1'000'000.0);
+    auto values = random_double_vector(1'000, 0.0, 1000.0);
 
     auto client = create_client<T>();
 
@@ -65,14 +67,14 @@ auto benchmark_client_send_event(benchmark::State& state) -> void
 
 }  // namespace
 
-BENCHMARK(benchmark_client_send_metric<Client>);
-BENCHMARK(benchmark_client_send_metric<AsioClient>);
-BENCHMARK(benchmark_client_send_metric<SPSCClient>)->Iterations(1'000'000);
-BENCHMARK(benchmark_client_send_metric<MPMCClient>)->Iterations(1'000'000);
+BENCHMARK(benchmark_client_send_metric<Client>)->Iterations(number_of_iterations)->Repetitions(32);
+BENCHMARK(benchmark_client_send_event<AsioClient>)->Iterations(number_of_iterations)->Repetitions(32);
+BENCHMARK(benchmark_client_send_metric<SPSCClient>)->Iterations(number_of_iterations)->Repetitions(32);
+BENCHMARK(benchmark_client_send_metric<MPMCClient>)->Iterations(number_of_iterations)->Repetitions(32);
 
-BENCHMARK(benchmark_client_send_event<Client>);
-BENCHMARK(benchmark_client_send_event<AsioClient>);
-BENCHMARK(benchmark_client_send_event<SPSCClient>)->Iterations(1'000'000);
-BENCHMARK(benchmark_client_send_event<MPMCClient>)->Iterations(1'000'000);
+BENCHMARK(benchmark_client_send_event<Client>)->Iterations(number_of_iterations)->Repetitions(32);
+BENCHMARK(benchmark_client_send_metric<AsioClient>)->Iterations(number_of_iterations)->Repetitions(32);
+BENCHMARK(benchmark_client_send_event<SPSCClient>)->Iterations(number_of_iterations)->Repetitions(32);
+BENCHMARK(benchmark_client_send_event<MPMCClient>)->Iterations(number_of_iterations)->Repetitions(32);
 
 }  // namespace twig::datadog

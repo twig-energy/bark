@@ -1,5 +1,6 @@
 #include <barrier>
 #include <chrono>
+#include <cstddef>
 #include <cstdint>
 #include <string_view>
 #include <thread>
@@ -101,6 +102,47 @@ TEST_SUITE("AsioClient")
             // Small wait
             std::this_thread::sleep_for(std::chrono::microseconds(500));
         }
+    }
+
+    TEST_CASE("queue gets emptied after client has been destroyed")
+    {
+        auto port = uint16_t {18127};
+        auto server_barrier = std::barrier<>(2);
+        constexpr std::string_view expected_msg = "gauge.name:43|g|#tag1:hello,tag2:world";
+
+        auto sender_barrier = std::barrier<>(2);
+        auto received = std::size_t {0};
+        auto server = twig::datadog::make_local_udp_server(
+            port,
+            [&received, &expected_msg, &server_barrier, &sender_barrier](std::string_view recv_msg)
+            {
+                if (received == 0) {
+                    sender_barrier.arrive_and_drop();
+                }
+
+                received += static_cast<std::size_t>(recv_msg == expected_msg);
+
+                if (received == 2) {
+                    server_barrier.arrive_and_drop();
+                }
+            });
+
+        {
+            auto client = AsioClient::make_local_client(NumberOfIOThreads {1}, no_tags, port);
+
+            // send the first so we can wait for the server to receive
+            client.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
+
+            // we now know that the worker thread has started
+            sender_barrier.arrive_and_wait();
+
+            // send the second and immediately destroy the client
+            client.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
+        }
+
+        // wait for messages to arrive at server
+        server_barrier.arrive_and_wait();
+        CHECK_EQ(received, 2);
     }
 }
 
