@@ -75,8 +75,10 @@ auto AsioClient::send(Datagram&& datagram) -> void
                                          { return serializable_datagram.serialize(*global_tags_ptr); },
                                          message);
 
+            auto buffer = asio::buffer(serialized);
+
             socket_ptr->async_send_to(  //
-                asio::buffer(std::as_const(serialized)),
+                buffer,
                 *receiver_endpoint_ptr,
                 [msg = std::move(serialized)](const std::error_code& error, std::size_t)
                 {
