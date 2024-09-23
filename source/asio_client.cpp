@@ -76,11 +76,14 @@ auto AsioClient::send(Datagram&& datagram) -> void
                                          message);
 
             auto buffer = asio::buffer(serialized);
+
             socket_ptr->async_send_to(  //
                 buffer,
                 *receiver_endpoint_ptr,
-                [](const std::error_code& error, std::size_t)
+                [msg = std::move(serialized)](const std::error_code& error, std::size_t)
                 {
+                    // Move in `serialized`, to make the callback clean up, such that we are sure we are not using a
+                    // cleaned up string.
                     if (error) [[unlikely]] {
                         fmt::println(
                             stderr, "Failed at sending {}. {}", error.message(), std::source_location::current());
