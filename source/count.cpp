@@ -1,16 +1,16 @@
 #include <string>
 
-#include "twig/datadog/count.hpp"
+#include "bark/count.hpp"
 
+#include "bark/tags.hpp"
 #include "serialize.hpp"
-#include "twig/datadog/tags.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 auto Count::serialize(const Tags& global_tags) const -> std::string
 {
-    return twig::datadog::serialize(*this, global_tags);
+    return bark::serialize(*this, global_tags);
 }
 
-}  // namespace twig::datadog
+}  // namespace bark

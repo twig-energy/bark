@@ -2,7 +2,7 @@
 
 #include <cstddef>
 
-namespace twig::datadog
+namespace bark
 {
 
 struct NumberOfIOThreads
@@ -10,4 +10,4 @@ struct NumberOfIOThreads
     std::size_t value;
 };
 
-}  // namespace twig::datadog
+}  // namespace bark

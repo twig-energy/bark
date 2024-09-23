@@ -7,7 +7,7 @@
 #include <string_view>
 #include <system_error>
 
-#include "twig/datadog/udp_client.hpp"
+#include "bark/udp_client.hpp"
 
 #include <asio/buffer.hpp>
 #pragma GCC diagnostic push
@@ -18,7 +18,7 @@
 #include <fmt/base.h>
 #include <fmt/std.h>
 
-namespace twig::datadog
+namespace bark
 {
 
 UDPClient::UDPClient(std::string_view host, uint16_t port)
@@ -44,4 +44,4 @@ auto UDPClient::make_local_udp_client(uint16_t port) -> UDPClient
 {
     return {"localhost", port};
 }
-}  // namespace twig::datadog
+}  // namespace bark

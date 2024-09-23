@@ -1,13 +1,13 @@
 #include <utility>
 
-#include "twig/datadog/histogram.hpp"
+#include "bark/histogram.hpp"
 
 #include <doctest/doctest.h>
 
-#include "twig/datadog/sample_rate.hpp"
-#include "twig/datadog/tags.hpp"
+#include "bark/sample_rate.hpp"
+#include "bark/tags.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 TEST_SUITE("Histogram")
@@ -58,4 +58,4 @@ TEST_SUITE("Histogram")
     }
 }
 
-}  // namespace twig::datadog
+}  // namespace bark

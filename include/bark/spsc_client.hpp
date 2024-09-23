@@ -7,12 +7,12 @@
 
 #include <rigtorp/SPSCQueue.h>
 
-#include "twig/datadog/datagram.hpp"
-#include "twig/datadog/i_datadog_client.hpp"
-#include "twig/datadog/tags.hpp"
-#include "twig/datadog/udp_client.hpp"
+#include "bark/datagram.hpp"
+#include "bark/i_datadog_client.hpp"
+#include "bark/tags.hpp"
+#include "bark/udp_client.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 class SPSCClient final : public IDatadogClient
@@ -31,4 +31,4 @@ class SPSCClient final : public IDatadogClient
                                   uint16_t port = dogstatsd_udp_port) -> SPSCClient;
 };
 
-}  // namespace twig::datadog
+}  // namespace bark

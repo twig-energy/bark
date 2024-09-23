@@ -1,10 +1,10 @@
 // NOLINTBEGIN(misc-include-cleaner)
 
-#include "twig/datadog/datadog-client.hpp"
+#include "bark/bark.hpp"
 
 auto main() -> int
 {
-    using namespace twig::datadog;
+    using namespace bark;
 
     // make a none-async client which sends to the local DogStatsD agent
     auto client = Client::make_local_client();

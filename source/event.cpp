@@ -1,16 +1,16 @@
 #include <string>
 
-#include "twig/datadog/event.hpp"
+#include "bark/event.hpp"
 
 #include "./serialize.hpp"
-#include "twig/datadog/tags.hpp"
+#include "bark/tags.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 auto Event::serialize(const Tags& global_tags) const -> std::string
 {
-    return twig::datadog::serialize(*this, global_tags);
+    return bark::serialize(*this, global_tags);
 }
 
-}  // namespace twig::datadog
+}  // namespace bark

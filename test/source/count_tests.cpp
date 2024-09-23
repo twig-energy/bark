@@ -1,13 +1,13 @@
 #include <utility>
 
-#include "twig/datadog/count.hpp"
+#include "bark/count.hpp"
 
 #include <doctest/doctest.h>
 
-#include "twig/datadog/sample_rate.hpp"
-#include "twig/datadog/tags.hpp"
+#include "bark/sample_rate.hpp"
+#include "bark/tags.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 TEST_SUITE("Count")
@@ -58,4 +58,4 @@ TEST_SUITE("Count")
     }
 }
 
-}  // namespace twig::datadog
+}  // namespace bark

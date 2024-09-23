@@ -8,16 +8,16 @@
 #include <thread>
 #include <utility>
 
-#include "twig/datadog/spsc_client.hpp"
+#include "bark/spsc_client.hpp"
 
 #include <rigtorp/SPSCQueue.h>
 
-#include "twig/datadog/client.hpp"
-#include "twig/datadog/datagram.hpp"
-#include "twig/datadog/tags.hpp"
-#include "twig/datadog/udp_client.hpp"
+#include "bark/client.hpp"
+#include "bark/datagram.hpp"
+#include "bark/tags.hpp"
+#include "bark/udp_client.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 SPSCClient::SPSCClient(UDPClient&& udp_client, std::size_t queue_size, Tags global_tags)
@@ -60,4 +60,4 @@ auto SPSCClient::make_local_client(std::size_t queue_size, Tags global_tags, uin
     return {UDPClient::make_local_udp_client(port), queue_size, std::move(global_tags)};
 }
 
-}  // namespace twig::datadog
+}  // namespace bark

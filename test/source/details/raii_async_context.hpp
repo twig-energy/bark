@@ -9,7 +9,7 @@
 
 #include "./udp_server.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 class RAIIAsyncContext
@@ -66,4 +66,4 @@ auto make_local_udp_server(uint16_t port, ReceiveCallbackT callback)
                             { return UDPServer(io_context, port, std::move(callback), 512); });
 }
 
-}  // namespace twig::datadog
+}  // namespace bark

@@ -1,9 +1,9 @@
 include(cmake/folders.cmake)
 
-if (NOT TWIG_CPP_DATADOG_CLIENT_DEVELOPER_MODE)
+if (NOT BARK_DEVELOPER_MODE)
     return()
 elseif (NOT PROJECT_IS_TOP_LEVEL)
-    message(AUTHOR_WARNING "Developer mode is intended for developers of twig-cpp-datadog-client")
+    message(AUTHOR_WARNING "Developer mode is intended for developers of bark")
 endif ()
 
 option(ENABLE_COVERAGE "Enable coverage support separate from CTest's" OFF)

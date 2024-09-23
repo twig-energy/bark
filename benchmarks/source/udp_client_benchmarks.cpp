@@ -1,13 +1,13 @@
 
 
-#include "twig/datadog/udp_client.hpp"
+#include "bark/udp_client.hpp"
 
 #include <benchmark/benchmark.h>
 
-#include "twig/datadog/gauge.hpp"
-#include "twig/datadog/tags.hpp"
+#include "bark/gauge.hpp"
+#include "bark/tags.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 namespace
@@ -29,4 +29,4 @@ auto benchmark_udp_client_send_metric(benchmark::State& state) -> void
 
 BENCHMARK(benchmark_udp_client_send_metric);
 
-}  // namespace twig::datadog
+}  // namespace bark

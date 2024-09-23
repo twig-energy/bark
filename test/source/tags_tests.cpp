@@ -1,9 +1,9 @@
 
-#include "twig/datadog/tags.hpp"
+#include "bark/tags.hpp"
 
 #include <doctest/doctest.h>
 
-namespace twig::datadog
+namespace bark
 {
 
 TEST_SUITE("Tags")
@@ -39,4 +39,4 @@ TEST_SUITE("Tags")
     }
 }
 
-}  // namespace twig::datadog
+}  // namespace bark

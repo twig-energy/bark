@@ -5,7 +5,7 @@
     "clangd.arguments": [
         "-compile-commands-dir=${workspaceFolder}/build/dev"
     ],
-    "C_Cpp.default.cppStandard": "c++20",
+    "C_Cpp.default.cppStandard": "c++23",
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "files.associations": {
         "tuple": "cpp",
@@ -124,7 +124,7 @@
     "sonarlint.pathToCompileCommands": "${workspaceFolder}/build/dev/compile_commands.json",
     "sonarlint.connectedMode.project": {
         "connectionId": "twig-energy",
-        "projectKey": "twig-energy_cpp-datadog-client"
+        "projectKey": "twig-energy_bark"
     },
     "files.watcherExclude": {
         "**/.git/objects/**": true,

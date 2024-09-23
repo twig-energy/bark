@@ -3,14 +3,14 @@
 #include <string_view>
 #include <utility>
 
-#include "twig/datadog/client.hpp"
+#include "bark/client.hpp"
 
 #include <doctest/doctest.h>
 
 #include "./details/raii_async_context.hpp"
-#include "twig/datadog/tags.hpp"
+#include "bark/tags.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 TEST_SUITE("Client")
@@ -22,13 +22,12 @@ TEST_SUITE("Client")
             auto barrier = std::barrier<>(2);
             auto port = uint16_t {18127};
             constexpr std::string_view expected_msg = "gauge.name:43|g|#tag1:hello,tag2:world";
-            auto server =
-                twig::datadog::make_local_udp_server(port,
-                                                     [&received, &expected_msg, &barrier](std::string_view recv_msg)
-                                                     {
-                                                         received = recv_msg == expected_msg;
-                                                         barrier.arrive_and_drop();
-                                                     });
+            auto server = bark::make_local_udp_server(port,
+                                                      [&received, &expected_msg, &barrier](std::string_view recv_msg)
+                                                      {
+                                                          received = recv_msg == expected_msg;
+                                                          barrier.arrive_and_drop();
+                                                      });
 
             auto client = Client::make_local_client(no_tags, port);
             client.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
@@ -44,13 +43,12 @@ TEST_SUITE("Client")
             auto barrier = std::barrier<>(2);
             auto port = uint16_t {18127};
             constexpr std::string_view expected_msg = "gauge.name:43|g|#tag1:hello,tag2:world";
-            auto server =
-                twig::datadog::make_local_udp_server(port,
-                                                     [&received, &expected_msg, &barrier](std::string_view recv_msg)
-                                                     {
-                                                         received = recv_msg == expected_msg;
-                                                         barrier.arrive_and_drop();
-                                                     });
+            auto server = bark::make_local_udp_server(port,
+                                                      [&received, &expected_msg, &barrier](std::string_view recv_msg)
+                                                      {
+                                                          received = recv_msg == expected_msg;
+                                                          barrier.arrive_and_drop();
+                                                      });
 
             auto client = Client::make_local_client(no_tags, port);
             auto moved = std::move(client);
@@ -65,12 +63,12 @@ TEST_SUITE("Client")
         auto barrier = std::barrier<>(2);
         auto port = uint16_t {18127};
         constexpr std::string_view expected_msg = "gauge.name:43|g|#tag1:hello,tag2:world,language:cpp,foo:bar";
-        auto server = twig::datadog::make_local_udp_server(port,
-                                                           [&expected_msg, &barrier](std::string_view recv_msg)
-                                                           {
-                                                               CHECK_EQ(recv_msg, expected_msg);
-                                                               barrier.arrive_and_drop();
-                                                           });
+        auto server = bark::make_local_udp_server(port,
+                                                  [&expected_msg, &barrier](std::string_view recv_msg)
+                                                  {
+                                                      CHECK_EQ(recv_msg, expected_msg);
+                                                      barrier.arrive_and_drop();
+                                                  });
 
         auto client = Client::make_local_client(Tags::from_list({"language:cpp", "foo:bar"}), port);
         client.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
@@ -78,4 +76,4 @@ TEST_SUITE("Client")
     }
 }
 
-}  // namespace twig::datadog
+}  // namespace bark

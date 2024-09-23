@@ -6,7 +6,7 @@
 #include <random>
 #include <vector>
 
-namespace twig::datadog
+namespace bark
 {
 
 namespace
@@ -35,4 +35,4 @@ inline auto random_int32_t_vector(std::size_t elements, int32_t min, int32_t max
     return values;
 }
 
-}  // namespace twig::datadog
+}  // namespace bark

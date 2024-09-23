@@ -1,12 +1,12 @@
 #include <utility>
 
-#include "twig/datadog/event.hpp"
+#include "bark/event.hpp"
 
 #include <doctest/doctest.h>
 
-#include "twig/datadog/tags.hpp"
+#include "bark/tags.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 TEST_SUITE("Event")
@@ -58,4 +58,4 @@ TEST_SUITE("Event")
     }
 }
 
-}  // namespace twig::datadog
+}  // namespace bark

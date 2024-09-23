@@ -6,15 +6,15 @@
 #include <thread>
 #include <utility>
 
-#include "twig/datadog/asio_client.hpp"
+#include "bark/asio_client.hpp"
 
 #include <doctest/doctest.h>
 
 #include "./details/raii_async_context.hpp"
-#include "twig/datadog/number_of_io_threads.hpp"
-#include "twig/datadog/tags.hpp"
+#include "bark/number_of_io_threads.hpp"
+#include "bark/tags.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 TEST_SUITE("AsioClient")
@@ -24,7 +24,7 @@ TEST_SUITE("AsioClient")
         constexpr static std::string_view expected_msg = "gauge.name:43|g|#tag1:hello,tag2:world";
         auto barrier = std::barrier<>(2);
         auto port = uint16_t {18127};
-        auto server = twig::datadog::make_local_udp_server(  //
+        auto server = bark::make_local_udp_server(  //
             port,
             [&barrier](std::string_view recv_msg)
             {
@@ -42,7 +42,7 @@ TEST_SUITE("AsioClient")
         constexpr static std::string_view expected_msg = "gauge.name:43|g|#tag1:hello,tag2:world";
         auto barrier = std::barrier<>(2);
         auto port = uint16_t {18127};
-        auto server = twig::datadog::make_local_udp_server(  //
+        auto server = bark::make_local_udp_server(  //
             port,
             [&barrier](std::string_view recv_msg)
             {
@@ -61,7 +61,7 @@ TEST_SUITE("AsioClient")
         constexpr static std::string_view expected_msg = "gauge.name:43|g|#tag1:hello,tag2:world,language:cpp,foo:bar";
         auto barrier = std::barrier<>(2);
         auto port = uint16_t {18127};
-        auto server = twig::datadog::make_local_udp_server(  //
+        auto server = bark::make_local_udp_server(  //
             port,
             [&barrier](std::string_view recv_msg)
             {
@@ -78,12 +78,12 @@ TEST_SUITE("AsioClient")
     TEST_CASE("Can send many metrics without leaking")
     {
         auto port = uint16_t {18127};
-        auto server = twig::datadog::make_local_udp_server(port,
-                                                           []([[maybe_unused]]
-                                                              std::string_view recv_msg)
-                                                           {
-                                                               // Just consume message.
-                                                           });
+        auto server = bark::make_local_udp_server(port,
+                                                  []([[maybe_unused]]
+                                                     std::string_view recv_msg)
+                                                  {
+                                                      // Just consume message.
+                                                  });
 
         auto client = AsioClient::make_local_client(NumberOfIOThreads {2}, Tags::from_list({"env:test"}), port);
 
@@ -105,7 +105,7 @@ TEST_SUITE("AsioClient")
 
         auto sender_barrier = std::barrier<>(2);
         auto received = std::size_t {0};
-        auto server = twig::datadog::make_local_udp_server(
+        auto server = bark::make_local_udp_server(
             port,
             [&received, &expected_msg, &server_barrier, &sender_barrier](std::string_view recv_msg)
             {
@@ -139,4 +139,4 @@ TEST_SUITE("AsioClient")
     }
 }
 
-}  // namespace twig::datadog
+}  // namespace bark

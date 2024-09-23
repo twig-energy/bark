@@ -11,7 +11,7 @@
 #pragma GCC diagnostic pop
 #include <asio/ip/udp.hpp>
 
-namespace twig::datadog
+namespace bark
 {
 
 constexpr static const uint16_t dogstatsd_udp_port = 8125;
@@ -30,4 +30,4 @@ class UDPClient
     static auto make_local_udp_client(uint16_t port = dogstatsd_udp_port) -> UDPClient;
 };
 
-}  // namespace twig::datadog
+}  // namespace bark
