@@ -15,7 +15,7 @@
 #include <fmt/base.h>
 #include <fmt/std.h>
 
-namespace twig::datadog
+namespace bark
 {
 
 UDPServer::UDPServer(asio::io_context& io_context,
@@ -48,4 +48,4 @@ auto UDPServer::handle_receive(const std::error_code& error, std::size_t bytes_t
     start_receive();
 }
 
-}  // namespace twig::datadog
+}  // namespace bark

@@ -1,12 +1,12 @@
 #include <utility>
 
-#include "twig/datadog/event.hpp"
+#include "bark/event.hpp"
 
 #include <benchmark/benchmark.h>
 
-#include "twig/datadog/tags.hpp"
+#include "bark/tags.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 namespace
@@ -31,4 +31,4 @@ auto benchmark_event_serialize(benchmark::State& state) -> void
 
 BENCHMARK(benchmark_event_serialize)->Repetitions(16);
 
-}  // namespace twig::datadog
+}  // namespace bark

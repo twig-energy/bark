@@ -1,8 +1,8 @@
 #pragma once
 
-#include "twig/datadog/datagram.hpp"
+#include "bark/datagram.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 struct IDatadogClient
@@ -18,4 +18,4 @@ struct IDatadogClient
     virtual auto send(Datagram&& datagram) -> void = 0;
 };
 
-}  // namespace twig::datadog
+}  // namespace bark

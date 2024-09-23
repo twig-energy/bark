@@ -7,7 +7,7 @@
 #include <string_view>
 #include <utility>
 
-namespace twig::datadog
+namespace bark
 {
 
 class Tags
@@ -89,4 +89,4 @@ class Tags
 
 constexpr const auto no_tags = Tags();
 
-}  // namespace twig::datadog
+}  // namespace bark

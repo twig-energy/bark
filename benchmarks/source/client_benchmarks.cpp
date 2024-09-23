@@ -2,20 +2,20 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "twig/datadog/client.hpp"
+#include "bark/client.hpp"
 
 #include <benchmark/benchmark.h>
 
 #include "./benchmark_helpers.hpp"
-#include "twig/datadog/asio_client.hpp"
-#include "twig/datadog/event.hpp"
-#include "twig/datadog/gauge.hpp"
-#include "twig/datadog/mpmc_client.hpp"
-#include "twig/datadog/number_of_io_threads.hpp"
-#include "twig/datadog/spsc_client.hpp"
-#include "twig/datadog/tags.hpp"
+#include "bark/asio_client.hpp"
+#include "bark/event.hpp"
+#include "bark/gauge.hpp"
+#include "bark/mpmc_client.hpp"
+#include "bark/number_of_io_threads.hpp"
+#include "bark/spsc_client.hpp"
+#include "bark/tags.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 namespace
@@ -77,4 +77,4 @@ BENCHMARK(benchmark_client_send_metric<AsioClient>)->Iterations(number_of_iterat
 BENCHMARK(benchmark_client_send_event<SPSCClient>)->Iterations(number_of_iterations)->Repetitions(32);
 BENCHMARK(benchmark_client_send_event<MPMCClient>)->Iterations(number_of_iterations)->Repetitions(32);
 
-}  // namespace twig::datadog
+}  // namespace bark

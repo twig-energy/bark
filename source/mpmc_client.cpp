@@ -9,16 +9,16 @@
 #include <thread>
 #include <utility>
 
-#include "twig/datadog/mpmc_client.hpp"
+#include "bark/mpmc_client.hpp"
 
 #include <rigtorp/MPMCQueue.h>
 
-#include "twig/datadog/client.hpp"
-#include "twig/datadog/datagram.hpp"
-#include "twig/datadog/tags.hpp"
-#include "twig/datadog/udp_client.hpp"
+#include "bark/client.hpp"
+#include "bark/datagram.hpp"
+#include "bark/tags.hpp"
+#include "bark/udp_client.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 MPMCClient::MPMCClient(UDPClient&& udp_client, std::size_t queue_size, Tags global_tags)
@@ -61,4 +61,4 @@ auto MPMCClient::make_local_client(std::size_t queue_size, Tags global_tags, uin
     return {UDPClient::make_local_udp_client(port), queue_size, std::move(global_tags)};
 }
 
-}  // namespace twig::datadog
+}  // namespace bark

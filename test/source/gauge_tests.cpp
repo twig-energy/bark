@@ -1,12 +1,12 @@
 #include <utility>
 
-#include "twig/datadog/gauge.hpp"
+#include "bark/gauge.hpp"
 
 #include <doctest/doctest.h>
 
-#include "twig/datadog/tags.hpp"
+#include "bark/tags.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 TEST_SUITE("Gauge")
@@ -43,4 +43,4 @@ TEST_SUITE("Gauge")
     }
 }
 
-}  // namespace twig::datadog
+}  // namespace bark

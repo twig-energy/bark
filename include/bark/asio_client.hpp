@@ -14,13 +14,13 @@
 #pragma GCC diagnostic pop
 #include <asio/ip/udp.hpp>
 
-#include "twig/datadog/datagram.hpp"
-#include "twig/datadog/i_datadog_client.hpp"
-#include "twig/datadog/number_of_io_threads.hpp"
-#include "twig/datadog/tags.hpp"
-#include "twig/datadog/udp_client.hpp"
+#include "bark/datagram.hpp"
+#include "bark/i_datadog_client.hpp"
+#include "bark/number_of_io_threads.hpp"
+#include "bark/tags.hpp"
+#include "bark/udp_client.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 class AsioClient final : public IDatadogClient
@@ -48,4 +48,4 @@ class AsioClient final : public IDatadogClient
                                   uint16_t port = dogstatsd_udp_port) -> AsioClient;
 };
 
-}  // namespace twig::datadog
+}  // namespace bark

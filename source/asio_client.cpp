@@ -12,7 +12,7 @@
 #include <variant>
 #include <vector>
 
-#include "twig/datadog/asio_client.hpp"
+#include "bark/asio_client.hpp"
 
 #include <asio/buffer.hpp>
 #pragma GCC diagnostic push
@@ -24,11 +24,11 @@
 #include <fmt/base.h>
 #include <fmt/std.h>
 
-#include "twig/datadog/datagram.hpp"
-#include "twig/datadog/number_of_io_threads.hpp"
-#include "twig/datadog/tags.hpp"
+#include "bark/datagram.hpp"
+#include "bark/number_of_io_threads.hpp"
+#include "bark/tags.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 AsioClient::AsioClient(std::string_view host, uint16_t port, NumberOfIOThreads num_io_threads, Tags global_tags)
@@ -97,4 +97,4 @@ auto AsioClient::make_local_client(NumberOfIOThreads num_io_threads, Tags global
     return {"localhost", port, num_io_threads, std::move(global_tags)};
 }
 
-}  // namespace twig::datadog
+}  // namespace bark

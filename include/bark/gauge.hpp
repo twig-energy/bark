@@ -4,9 +4,9 @@
 #include <string_view>
 #include <utility>
 
-#include "twig/datadog/tags.hpp"
+#include "bark/tags.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 struct Gauge
@@ -32,4 +32,4 @@ struct Gauge
     auto serialize(const Tags& global_tags) const -> std::string;
 };
 
-}  // namespace twig::datadog
+}  // namespace bark

@@ -4,13 +4,13 @@
 #include <benchmark/benchmark.h>
 
 #include "./benchmark_helpers.hpp"
-#include "twig/datadog/count.hpp"
-#include "twig/datadog/gauge.hpp"
-#include "twig/datadog/histogram.hpp"
-#include "twig/datadog/sample_rate.hpp"
-#include "twig/datadog/tags.hpp"
+#include "bark/count.hpp"
+#include "bark/gauge.hpp"
+#include "bark/histogram.hpp"
+#include "bark/sample_rate.hpp"
+#include "bark/tags.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 namespace
@@ -61,4 +61,4 @@ BENCHMARK(benchmark_metric_serialize<Count>)->Repetitions(16);
 BENCHMARK(benchmark_metric_serialize<Gauge>)->Repetitions(16);
 BENCHMARK(benchmark_metric_serialize<Histogram>)->Repetitions(16);
 
-}  // namespace twig::datadog
+}  // namespace bark

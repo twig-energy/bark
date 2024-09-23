@@ -2,13 +2,13 @@
 #include <utility>
 #include <variant>
 
-#include "twig/datadog/client.hpp"
+#include "bark/client.hpp"
 
-#include "twig/datadog/datagram.hpp"
-#include "twig/datadog/tags.hpp"
-#include "twig/datadog/udp_client.hpp"
+#include "bark/datagram.hpp"
+#include "bark/tags.hpp"
+#include "bark/udp_client.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 Client::Client(UDPClient&& udp_client, Tags global_tags)
@@ -36,4 +36,4 @@ auto Client::make_local_client(Tags global_tags, uint16_t port) -> Client
     return Client {UDPClient::make_local_udp_client(port), std::move(global_tags)};
 }
 
-}  // namespace twig::datadog
+}  // namespace bark

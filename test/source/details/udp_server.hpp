@@ -13,7 +13,7 @@
 #include <asio/ip/udp.hpp>
 #include <fmt/core.h>
 
-namespace twig::datadog
+namespace bark
 {
 
 class UDPServer
@@ -35,4 +35,4 @@ class UDPServer
     auto handle_receive(const std::error_code& error, std::size_t bytes_transferred) -> void;
 };
 
-}  // namespace twig::datadog
+}  // namespace bark

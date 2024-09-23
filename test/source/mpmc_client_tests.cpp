@@ -4,14 +4,14 @@
 #include <string_view>
 #include <utility>
 
-#include "twig/datadog/mpmc_client.hpp"
+#include "bark/mpmc_client.hpp"
 
 #include <doctest/doctest.h>
 
 #include "./details/raii_async_context.hpp"
-#include "twig/datadog/tags.hpp"
+#include "bark/tags.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 TEST_SUITE("MPMCClient")
@@ -23,13 +23,12 @@ TEST_SUITE("MPMCClient")
             auto barrier = std::barrier<>(2);
             auto port = uint16_t {18127};
             constexpr std::string_view expected_msg = "gauge.name:43|g|#tag1:hello,tag2:world";
-            auto server =
-                twig::datadog::make_local_udp_server(port,
-                                                     [&received, &expected_msg, &barrier](std::string_view recv_msg)
-                                                     {
-                                                         received = recv_msg == expected_msg;
-                                                         barrier.arrive_and_drop();
-                                                     });
+            auto server = bark::make_local_udp_server(port,
+                                                      [&received, &expected_msg, &barrier](std::string_view recv_msg)
+                                                      {
+                                                          received = recv_msg == expected_msg;
+                                                          barrier.arrive_and_drop();
+                                                      });
 
             auto queue_size = size_t {1};
             auto client = MPMCClient::make_local_client(queue_size, no_tags, port);
@@ -46,13 +45,12 @@ TEST_SUITE("MPMCClient")
             auto barrier = std::barrier<>(2);
             auto port = uint16_t {18127};
             constexpr std::string_view expected_msg = "gauge.name:43|g|#tag1:hello,tag2:world";
-            auto server =
-                twig::datadog::make_local_udp_server(port,
-                                                     [&received, &expected_msg, &barrier](std::string_view recv_msg)
-                                                     {
-                                                         barrier.arrive_and_drop();
-                                                         received = recv_msg == expected_msg;
-                                                     });
+            auto server = bark::make_local_udp_server(port,
+                                                      [&received, &expected_msg, &barrier](std::string_view recv_msg)
+                                                      {
+                                                          barrier.arrive_and_drop();
+                                                          received = recv_msg == expected_msg;
+                                                      });
 
             auto queue_size = size_t {1};
             auto client = MPMCClient ::make_local_client(queue_size, no_tags, port);
@@ -70,13 +68,12 @@ TEST_SUITE("MPMCClient")
             auto barrier = std::barrier<>(2);
             auto port = uint16_t {18127};
             constexpr std::string_view expected_msg = "gauge.name:43|g|#tag1:hello,tag2:world";
-            auto server =
-                twig::datadog::make_local_udp_server(port,
-                                                     [&received, &expected_msg, &barrier](std::string_view recv_msg)
-                                                     {
-                                                         received = recv_msg == expected_msg;
-                                                         barrier.arrive_and_drop();
-                                                     });
+            auto server = bark::make_local_udp_server(port,
+                                                      [&received, &expected_msg, &barrier](std::string_view recv_msg)
+                                                      {
+                                                          received = recv_msg == expected_msg;
+                                                          barrier.arrive_and_drop();
+                                                      });
             auto queue_size = size_t {1};
             auto client = MPMCClient::make_local_client(queue_size, no_tags, port);
             auto moved = std::move(client);
@@ -94,7 +91,7 @@ TEST_SUITE("MPMCClient")
 
         auto sender_barrier = std::barrier<>(2);
         auto received = std::size_t {0};
-        auto server = twig::datadog::make_local_udp_server(
+        auto server = bark::make_local_udp_server(
             port,
             [&received, &expected_msg, &server_barrier, &sender_barrier](std::string_view recv_msg)
             {
@@ -128,4 +125,4 @@ TEST_SUITE("MPMCClient")
     }
 }
 
-}  // namespace twig::datadog
+}  // namespace bark

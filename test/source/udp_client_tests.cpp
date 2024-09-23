@@ -3,13 +3,13 @@
 #include <string_view>
 #include <utility>
 
-#include "twig/datadog/udp_client.hpp"
+#include "bark/udp_client.hpp"
 
 #include <doctest/doctest.h>
 
 #include "./details/raii_async_context.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 TEST_SUITE("UDPClient")
@@ -19,7 +19,7 @@ TEST_SUITE("UDPClient")
         auto barrier = std::barrier<>(2);
         auto port = uint16_t {18127};
         constexpr std::string_view sent_msg = "hello:42|g";
-        auto server = twig::datadog::make_local_udp_server(  //
+        auto server = bark::make_local_udp_server(  //
             port,
             [&sent_msg, &barrier](std::string_view recv_msg)
             {
@@ -38,7 +38,7 @@ TEST_SUITE("UDPClient")
         auto barrier = std::barrier<>(5);
         auto port = uint16_t {18127};
         constexpr std::string_view sent_msg = "hello:42|g";
-        auto server = twig::datadog::make_local_udp_server(  //
+        auto server = bark::make_local_udp_server(  //
             port,
             [&sent_msg, &barrier](std::string_view recv_msg)
             {
@@ -60,7 +60,7 @@ TEST_SUITE("UDPClient")
         auto barrier = std::barrier<>(3);
         auto port = uint16_t {18127};
         constexpr std::string_view sent_msg = "hello:42|g";
-        auto server = twig::datadog::make_local_udp_server(  //
+        auto server = bark::make_local_udp_server(  //
             port,
             [&sent_msg, &barrier](std::string_view recv_msg)
             {
@@ -77,4 +77,4 @@ TEST_SUITE("UDPClient")
     }
 }
 
-}  // namespace twig::datadog
+}  // namespace bark

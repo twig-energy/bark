@@ -1,6 +1,6 @@
 #pragma once
 
-namespace twig::datadog
+namespace bark
 {
 
 struct SampleRate
@@ -8,4 +8,4 @@ struct SampleRate
     double value;
 };
 
-}  // namespace twig::datadog
+}  // namespace bark

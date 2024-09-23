@@ -1,15 +1,15 @@
-# twig-cpp-datadog-client
+# bark
 
 A modern, low latency datadog stats library for c++
 
 ## Getting Started
 
 ```cpp :file=./example/getting_started.cpp:line_start=2:line_end=-2
-#include "twig/datadog/datadog-client.hpp"
+#include "bark/bark.hpp"
 
 auto main() -> int
 {
-    using namespace twig::datadog;
+    using namespace bark;
 
     // make a none-async client which sends to the local DogStatsD agent
     auto client = Client::make_local_client();
@@ -54,7 +54,7 @@ See [benchmarks/source](./benchmarks/source) for the benchmark code.
 #### Clang-18 Results
 ```
 2024-09-20T12:42:44+00:00
-Running ./build/benchmarks/twig-cpp-datadog-client_benchmarks
+Running ./build/benchmarks/bark_benchmarks
 Run on (4 X 3241.38 MHz CPU s)
 CPU Caches:
   L1 Data 32 KiB (x2)
@@ -120,7 +120,7 @@ benchmark_udp_client_send_metric                                                
 
 ```
 2024-09-20T12:43:14+00:00
-Running ./build/benchmarks/twig-cpp-datadog-client_benchmarks
+Running ./build/benchmarks/bark_benchmarks
 Run on (4 X 3244.6 MHz CPU s)
 CPU Caches:
   L1 Data 32 KiB (x2)

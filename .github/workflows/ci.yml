@@ -274,4 +274,4 @@ jobs:
         run: ctest --output-on-failure --no-tests=error -C Release -j 4
 
       - name: Benchmarks
-        run: ./build/benchmarks/twig-cpp-datadog-client_benchmarks --benchmark_display_aggregates_only=true
+        run: ./build/benchmarks/bark_benchmarks --benchmark_display_aggregates_only=true

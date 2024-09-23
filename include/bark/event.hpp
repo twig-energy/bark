@@ -4,9 +4,9 @@
 #include <string>
 #include <utility>
 
-#include "twig/datadog/tags.hpp"
+#include "bark/tags.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 enum class Priority : uint8_t
@@ -62,4 +62,4 @@ struct Event
     auto serialize(const Tags& global_tags) const -> std::string;
 };
 
-}  // namespace twig::datadog
+}  // namespace bark

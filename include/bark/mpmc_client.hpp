@@ -5,8 +5,8 @@
 #include <memory>
 #include <thread>
 
-#include "twig/datadog/tags.hpp"
-#include "twig/datadog/udp_client.hpp"
+#include "bark/tags.hpp"
+#include "bark/udp_client.hpp"
 
 // TODO(mikael): Keep an eye on https://github.com/rigtorp/MPMCQueue/issues/49 to see if this is still needed
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -14,10 +14,10 @@
 #include <rigtorp/MPMCQueue.h>
 #pragma GCC diagnostic pop
 
-#include "twig/datadog/datagram.hpp"
-#include "twig/datadog/i_datadog_client.hpp"
+#include "bark/datagram.hpp"
+#include "bark/i_datadog_client.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 class MPMCClient final : public IDatadogClient
@@ -36,4 +36,4 @@ class MPMCClient final : public IDatadogClient
                                   uint16_t port = dogstatsd_udp_port) -> MPMCClient;
 };
 
-}  // namespace twig::datadog
+}  // namespace bark

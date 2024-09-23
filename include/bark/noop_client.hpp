@@ -1,9 +1,9 @@
 #pragma once
 
-#include "twig/datadog/datagram.hpp"
-#include "twig/datadog/i_datadog_client.hpp"
+#include "bark/datagram.hpp"
+#include "bark/i_datadog_client.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 struct NoOpClient final : IDatadogClient
@@ -12,4 +12,4 @@ struct NoOpClient final : IDatadogClient
     auto send([[maybe_unused]] Datagram&& datagram) -> void override {}
 };
 
-}  // namespace twig::datadog
+}  // namespace bark

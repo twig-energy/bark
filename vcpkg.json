@@ -1,5 +1,5 @@
 {
-  "name": "twig-cpp-datadog-client",
+  "name": "bark",
   "version-semver": "0.1.0",
   "dependencies": [
     {

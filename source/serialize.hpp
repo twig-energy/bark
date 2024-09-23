@@ -7,10 +7,10 @@
 #include <fmt/base.h>
 #include <fmt/format.h>
 
-#include "twig/datadog/event.hpp"
-#include "twig/datadog/tags.hpp"
+#include "bark/event.hpp"
+#include "bark/tags.hpp"
 
-namespace twig::datadog
+namespace bark
 {
 
 template<typename T>
@@ -60,7 +60,7 @@ constexpr auto serialize(const T& metric, const Tags& global_tags) -> std::strin
     auto iterator = fmt::appender {out};
 
     iterator = fmt::format_to(iterator, "{}:{}|{}", metric.metric, metric.value, T::metric_type_indicator);
-    if constexpr (twig::datadog::has_sample_rate<T>) {
+    if constexpr (bark::has_sample_rate<T>) {
         if (metric.sample_rate != 1.0) {
             iterator = fmt::format_to(iterator, "|@{}", metric.sample_rate);
         }
@@ -83,11 +83,11 @@ constexpr auto serialize(const Event& event, const Tags& global_tags) -> std::st
 {
     auto out = fmt::memory_buffer {};
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
-    out.reserve(3 + 10 + 1 + 10 + 2 +                                            // _e{<title size>,<text size>}:
-                event.title.size() + 1 + event.text.size() +                     // <title>|<text>
-                (event.priority == twig::datadog::Priority::LOW ? 5 : 0) +       // |p:low
-                (event.alert_type != twig::datadog::AlertType::INFO ? 10 : 0) +  // |t:<type>
-                event.tags.str().size() + global_tags.str().size() + 2           // |#<tags>
+    out.reserve(3 + 10 + 1 + 10 + 2 +                                   // _e{<title size>,<text size>}:
+                event.title.size() + 1 + event.text.size() +            // <title>|<text>
+                (event.priority == bark::Priority::LOW ? 5 : 0) +       // |p:low
+                (event.alert_type != bark::AlertType::INFO ? 10 : 0) +  // |t:<type>
+                event.tags.str().size() + global_tags.str().size() + 2  // |#<tags>
     );
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
     auto iterator = fmt::appender {out};
@@ -95,11 +95,11 @@ constexpr auto serialize(const Event& event, const Tags& global_tags) -> std::st
     iterator = fmt::format_to(
         iterator, "_e{{{},{}}}:{}|{}", event.title.length(), event.text.length(), event.title, event.text);
 
-    if (event.priority == twig::datadog::Priority::LOW) {
+    if (event.priority == bark::Priority::LOW) {
         iterator = fmt::format_to(iterator, "|p:low");
     }
 
-    using enum twig::datadog::AlertType;
+    using enum bark::AlertType;
     switch (event.alert_type) {
         case ERROR:
             iterator = fmt::format_to(iterator, "|t:error");
@@ -128,4 +128,4 @@ constexpr auto serialize(const Event& event, const Tags& global_tags) -> std::st
     return fmt::to_string(out);
 }
 
-}  // namespace twig::datadog
+}  // namespace bark
