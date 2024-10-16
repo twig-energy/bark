@@ -47,10 +47,4 @@ auto UDPClient::make_local_udp_client(uint16_t port) -> UDPClient
     return {"localhost", port};
 }
 
-UDPClient::~UDPClient()
-{
-    if (this->_socket) {
-        this->_socket->close();
-    }
-}
 }  // namespace bark
