@@ -19,8 +19,8 @@ constexpr static const uint16_t dogstatsd_udp_port = 8125;
 class UDPClient
 {
     std::unique_ptr<asio::io_context> _io_context;
-    asio::ip::udp::socket _socket;
     asio::ip::udp::endpoint _receiver_endpoint;
+    asio::ip::udp::socket _socket;
 
   public:
     UDPClient(std::string_view host, uint16_t port);
