@@ -239,12 +239,12 @@ jobs:
           sudo apt-get install ninja-build -y -q
 
       - uses: ./.github/actions/install-gcc
-        if: contains(matrix.compiler, 'gcc')
+        if: ${{ contains(matrix.compiler, 'gcc') && contains(matrix.os, 'ubuntu') }}
         with:
           version: ${{ matrix.compiler }}
 
       - uses: ./.github/actions/install-clang
-        if: contains(matrix.compiler, 'clang')
+        if: ${{ contains(matrix.compiler, 'clang') && contains(matrix.os, 'ubuntu') }}
         with:
           version: ${{ matrix.compiler }}
 
@@ -255,6 +255,18 @@ jobs:
           cache-version: "test-${{ contains(matrix.os, 'ubuntu') && 'Linux' || contains(matrix.os, 'macos') && 'macOS' || 'Windows' }}-${{ matrix.compiler }}"
           cache-restore-keys: |
             vcpkg-${{ contains(matrix.os, 'ubuntu') && 'Linux' || contains(matrix.os, 'macos') && 'macOS' || 'Windows' }}-test-${{ matrix.compiler }}-
+
+      - name: Setup MultiToolTask
+        if: matrix.os == 'windows-2022'
+        shell: pwsh
+        run: |
+          Add-Content "$env:GITHUB_ENV" 'UseMultiToolTask=true'
+          Add-Content "$env:GITHUB_ENV" 'EnforceProcessCountAcrossBuilds=true'
+
+      - name: Setup PATH
+        if: matrix.os == 'windows-2022'
+        shell: pwsh
+        run: Add-Content "$env:GITHUB_PATH" "$(Get-Location)\build\Release"
 
       - name: Configure
         shell: pwsh
