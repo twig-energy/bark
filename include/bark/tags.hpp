@@ -90,6 +90,6 @@ class Tags
     }
 };
 
-BARK_CONSTEXPR const auto no_tags = Tags();
+inline const auto no_tags = Tags();
 
 }  // namespace bark
