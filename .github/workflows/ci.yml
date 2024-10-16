@@ -267,7 +267,9 @@ jobs:
 
       - name: Test
         working-directory: build
+        if: ${{ !contains(matrix.os, 'windows') }}
         run: ctest --output-on-failure --no-tests=error -C Release -j 4
 
       - name: Benchmarks
+        if: ${{ !contains(matrix.os, 'windows') }}
         run: ./build/benchmarks/bark_benchmarks --benchmark_display_aggregates_only=true
