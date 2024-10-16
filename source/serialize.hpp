@@ -8,7 +8,6 @@
 #include <fmt/format.h>
 
 #include "bark/event.hpp"
-#include "bark/feature_detection.hpp"
 #include "bark/tags.hpp"
 
 namespace bark
@@ -38,7 +37,7 @@ concept is_metric_like = requires(T t) {
 };
 
 template<is_metric_like T>
-BARK_CONSTEXPR auto serialize(const T& metric, const Tags& global_tags) -> std::string
+inline auto serialize(const T& metric, const Tags& global_tags) -> std::string
 {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wfloat-equal"
@@ -80,7 +79,7 @@ BARK_CONSTEXPR auto serialize(const T& metric, const Tags& global_tags) -> std::
 #pragma GCC diagnostic pop
 }
 
-BARK_CONSTEXPR_OR_INLINE auto serialize(const Event& event, const Tags& global_tags) -> std::string
+inline auto serialize(const Event& event, const Tags& global_tags) -> std::string
 {
     auto out = fmt::memory_buffer {};
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)

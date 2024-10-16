@@ -45,10 +45,8 @@
 
 #if BARK_USE_CONSTEXPR
 #    define BARK_CONSTEXPR constexpr
-#    define BARK_CONSTEXPR_OR_INLINE constexpr
 #else
 #    define BARK_CONSTEXPR
-#    define BARK_CONSTEXPR_OR_INLINE inline
 #endif
 
 // NOLINTEND(cppcoreguidelines-macro-usage,cppcoreguidelines-macro-to-enum,modernize-macro-to-enum)
