@@ -272,18 +272,18 @@ jobs:
         if: matrix.os == 'windows-2022'
         shell: pwsh
         run: |
-          Add-Content "$env:GITHUB_PATH" "$(Get-Location)\build\Debug"
+          Add-Content "$env:GITHUB_PATH" "$(Get-Location)\build\Release"
           Add-Content "$env:GITHUB_PATH" "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.41.34120\bin\Hostx64\x64\"
 
       - name: Build
-        run: cmake --build build --config Debug -j 4
+        run: cmake --build build --config Release -j 4
 
       - name: Install
-        run: cmake --install build --config Debug --prefix prefix
+        run: cmake --install build --config Release --prefix prefix
 
       - name: Test
         working-directory: build
-        run: ctest --output-on-failure --no-tests=error -C Debug -j 4
+        run: ctest --output-on-failure --no-tests=error -C Release -j 4
 
       - name: Benchmarks
         run: ./build/benchmarks/bark_benchmarks --benchmark_display_aggregates_only=true
