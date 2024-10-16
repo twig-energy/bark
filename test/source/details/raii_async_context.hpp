@@ -4,10 +4,10 @@
 #include <mutex>
 #include <thread>
 
-#include <asio/io_context.hpp>
 #include <asio/io_service.hpp>
 
 #include "./udp_server.hpp"
+#include "bark/asio_io_context_wrapper.hpp"
 
 namespace bark
 {

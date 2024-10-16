@@ -8,9 +8,9 @@
 #include <vector>
 
 #include <asio/executor_work_guard.hpp>
-#include <asio/io_context.hpp>
 #include <asio/ip/udp.hpp>
 
+#include "bark/asio_io_context_wrapper.hpp"
 #include "bark/datagram.hpp"
 #include "bark/i_datadog_client.hpp"
 #include "bark/number_of_io_threads.hpp"

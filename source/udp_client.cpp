@@ -10,10 +10,11 @@
 #include "bark/udp_client.hpp"
 
 #include <asio/buffer.hpp>
-#include <asio/io_context.hpp>
 #include <asio/ip/udp.hpp>
 #include <fmt/base.h>
 #include <fmt/std.h>
+
+#include "bark/asio_io_context_wrapper.hpp"
 
 namespace bark
 {

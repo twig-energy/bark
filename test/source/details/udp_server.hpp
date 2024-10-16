@@ -6,9 +6,10 @@
 #include <system_error>
 #include <vector>
 
-#include <asio/io_context.hpp>
 #include <asio/ip/udp.hpp>
 #include <fmt/core.h>
+
+#include "bark/asio_io_context_wrapper.hpp"
 
 namespace bark
 {
