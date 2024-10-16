@@ -250,9 +250,9 @@ jobs:
         uses: friendlyanon/setup-vcpkg@v1
         with:
           committish: "${{ env.VCPKG_COMMIT }}"
-          cache-version: "test-${{ matrix.compiler }}"
+          cache-version: "test-${{ contains(matrix.os, 'ubuntu') && 'Linux' || 'Windows' }}-${{ matrix.compiler }}"
           cache-restore-keys: |
-            vcpkg-Linux-test-${{ matrix.compiler }}-
+            vcpkg-${{ contains(matrix.os, 'ubuntu') && 'Linux' || 'Windows' }}-test-${{ matrix.compiler }}-
 
       - name: Configure
         shell: pwsh
