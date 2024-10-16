@@ -1,0 +1,17 @@
+---
+name: "Install GCC"
+description: "Installs GCC on CI runners"
+inputs:
+  version:
+    description: "Which version of GCC to install. E.g. '13' or 'gcc-13'"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Install GCC
+      shell: bash
+      run: >-
+        GCC_VERSION=`echo ${{ inputs.version }} | cut -d'-' -f 2``
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+        sudo apt-get update -q
+        sudo apt-get install gcc-$GCC_VERSION g++-$GCC_VERSION g++-$GCC_VERSION-multilib -y -q

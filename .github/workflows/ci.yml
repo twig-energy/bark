@@ -221,7 +221,10 @@ jobs:
 
     strategy:
       matrix:
-        compiler: ["gcc-13", "clang-18"]
+        compiler:
+          - "gcc-11"
+          - "gcc-13"
+          - "clang-18"
 
     runs-on: ubuntu22_4c_16gb
 
@@ -232,20 +235,17 @@ jobs:
 
       - name: General Build Dependencies
         run: |
-          sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-          sudo apt-get update -q
           sudo apt-get install ninja-build -y -q
 
-      - name: Install GCC
-        if: matrix.compiler == 'gcc-13'
-        run: >-
-          sudo apt-get install ninja-build gcc-13 g++-13 g++-13-multilib -y -q
-
-      - name: Install LLVM and Clang
-        if: matrix.compiler == 'clang-18'
-        uses: ./.github/actions/install-clang
+      - uses: ./.github/actions/install-gcc
+        if: contains(matrix.compiler, 'gcc')
         with:
-          version: "18"
+          version: ${{ matrix.compiler }}
+
+      - uses: ./.github/actions/install-clang
+        if: contains(matrix.compiler, 'clang')
+        with:
+          version: ${{ matrix.compiler }}
 
       - name: Install vcpkg
         uses: friendlyanon/setup-vcpkg@v1

@@ -4,6 +4,7 @@
 #include <string>
 #include <utility>
 
+#include "bark/feature_detection.hpp"
 #include "bark/tags.hpp"
 
 namespace bark
@@ -35,13 +36,13 @@ struct Event
     AlertType alert_type = AlertType::INFO;
     Tags tags;
 
-    constexpr Event(std::string title_, std::string text_) noexcept
+    BARK_CONSTEXPR Event(std::string title_, std::string text_) noexcept
         : title(std::move(title_))
         , text(std::move(text_))
     {
     }
 
-    constexpr auto with(Tags tags_) -> Event&
+    BARK_CONSTEXPR auto with(Tags tags_) -> Event&
     {
         this->tags = std::move(tags_);
         return *this;

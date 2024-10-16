@@ -4,6 +4,7 @@
 #include <string_view>
 #include <utility>
 
+#include "bark/feature_detection.hpp"
 #include "bark/tags.hpp"
 
 namespace bark
@@ -17,13 +18,13 @@ struct Gauge
     double value;
     Tags tags;
 
-    constexpr Gauge(std::string metric_, double value_) noexcept
+    BARK_CONSTEXPR Gauge(std::string metric_, double value_) noexcept
         : metric(std::move(metric_))
         , value(value_)
     {
     }
 
-    constexpr auto with(Tags tags_) -> Gauge&
+    BARK_CONSTEXPR auto with(Tags tags_) -> Gauge&
     {
         this->tags = std::move(tags_);
         return *this;

@@ -7,6 +7,8 @@
 #include <string_view>
 #include <utility>
 
+#include "bark/feature_detection.hpp"
+
 namespace bark
 {
 
@@ -15,18 +17,19 @@ class Tags
     std::string _tags;
 
   public:
-    constexpr Tags() = default;
-    constexpr explicit Tags(std::string tags)
+    BARK_CONSTEXPR Tags() = default;
+    BARK_CONSTEXPR explicit Tags(std::string tags)
         : _tags(std::move(tags))
     {
     }
 
-    constexpr static auto from_pairs(std::initializer_list<std::pair<std::string_view, std::string_view>> tags) -> Tags
+    BARK_CONSTEXPR static auto from_pairs(std::initializer_list<std::pair<std::string_view, std::string_view>> tags)
+        -> Tags
     {
         return from_pairs(std::span(tags));
     }
 
-    constexpr static auto from_pairs(std::span<const std::pair<std::string_view, std::string_view>> tags) -> Tags
+    BARK_CONSTEXPR static auto from_pairs(std::span<const std::pair<std::string_view, std::string_view>> tags) -> Tags
     {
         if (tags.empty()) {
             return Tags {};
@@ -52,12 +55,12 @@ class Tags
         return Tags {std::move(tags_string)};
     }
 
-    constexpr static auto from_list(std::initializer_list<std::string_view> tags) -> Tags
+    BARK_CONSTEXPR static auto from_list(std::initializer_list<std::string_view> tags) -> Tags
     {
         return from_list(std::span(tags));
     }
 
-    constexpr static auto from_list(std::span<const std::string_view> tags) -> Tags
+    BARK_CONSTEXPR static auto from_list(std::span<const std::string_view> tags) -> Tags
     {
         if (tags.empty()) {
             return Tags {};
@@ -87,6 +90,6 @@ class Tags
     }
 };
 
-constexpr const auto no_tags = Tags();
+BARK_CONSTEXPR const auto no_tags = Tags();
 
 }  // namespace bark

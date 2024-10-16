@@ -8,6 +8,7 @@
 #include <fmt/format.h>
 
 #include "bark/event.hpp"
+#include "bark/feature_detection.hpp"
 #include "bark/tags.hpp"
 
 namespace bark
@@ -37,22 +38,22 @@ concept is_metric_like = requires(T t) {
 };
 
 template<is_metric_like T>
-constexpr auto serialize(const T& metric, const Tags& global_tags) -> std::string
+BARK_CONSTEXPR auto serialize(const T& metric, const Tags& global_tags) -> std::string
 {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wfloat-equal"
     auto out = fmt::memory_buffer {};
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
     if constexpr (has_sample_rate<T>) {
-        out.reserve(metric.metric.size() + 1 +                               // metric_name:
-                    23 +                                                     // value|<indicator>
-                    (metric.sample_rate != 1.0 ? 5 : 0) +                    // |@<sample_rate>
-                    metric.tags.str().size() + global_tags.str().size() + 2  // |#<tags>
+        out.try_reserve(metric.metric.size() + 1 +                               // metric_name:
+                        23 +                                                     // value|<indicator>
+                        (metric.sample_rate != 1.0 ? 5 : 0) +                    // |@<sample_rate>
+                        metric.tags.str().size() + global_tags.str().size() + 2  // |#<tags>
         );
     } else {
-        out.reserve(metric.metric.size() + 1 +                               // metric_name:
-                    23 +                                                     // value|<indicator>
-                    metric.tags.str().size() + global_tags.str().size() + 2  // |#<tags>
+        out.try_reserve(metric.metric.size() + 1 +                               // metric_name:
+                        23 +                                                     // value|<indicator>
+                        metric.tags.str().size() + global_tags.str().size() + 2  // |#<tags>
         );
     }
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
@@ -79,15 +80,15 @@ constexpr auto serialize(const T& metric, const Tags& global_tags) -> std::strin
 #pragma GCC diagnostic pop
 }
 
-constexpr auto serialize(const Event& event, const Tags& global_tags) -> std::string
+BARK_CONSTEXPR_OR_INLINE auto serialize(const Event& event, const Tags& global_tags) -> std::string
 {
     auto out = fmt::memory_buffer {};
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
-    out.reserve(3 + 10 + 1 + 10 + 2 +                                   // _e{<title size>,<text size>}:
-                event.title.size() + 1 + event.text.size() +            // <title>|<text>
-                (event.priority == bark::Priority::LOW ? 5 : 0) +       // |p:low
-                (event.alert_type != bark::AlertType::INFO ? 10 : 0) +  // |t:<type>
-                event.tags.str().size() + global_tags.str().size() + 2  // |#<tags>
+    out.try_reserve(3 + 10 + 1 + 10 + 2 +                                   // _e{<title size>,<text size>}:
+                    event.title.size() + 1 + event.text.size() +            // <title>|<text>
+                    (event.priority == bark::Priority::LOW ? 5 : 0) +       // |p:low
+                    (event.alert_type != bark::AlertType::INFO ? 10 : 0) +  // |t:<type>
+                    event.tags.str().size() + global_tags.str().size() + 2  // |#<tags>
     );
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
     auto iterator = fmt::appender {out};
