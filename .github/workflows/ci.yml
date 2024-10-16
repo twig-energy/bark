@@ -213,12 +213,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        os:
+          - "ubuntu-latest"
         compiler:
           - "gcc-11"
           - "gcc-13"
           - "clang-18"
 
-    runs-on: ubuntu-latest
+        include:
+          - os: "windows-2022"
+            compiler: "msvc"
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4
@@ -226,6 +232,7 @@ jobs:
           lfs: true
 
       - name: General Build Dependencies
+        if: contains(matrix.os, 'ubuntu')
         run: |
           sudo apt-get install ninja-build -y -q
 
@@ -250,7 +257,7 @@ jobs:
       - name: Configure
         shell: pwsh
         run: |
-          cmake "--preset=ci-ubuntu-${{ matrix.compiler }}"
+          cmake "--preset=ci-$("${{ matrix.os }}".split("-")[0])-${{ matrix.compiler }}"
 
       - name: Build
         run: cmake --build build --config Release -j 4

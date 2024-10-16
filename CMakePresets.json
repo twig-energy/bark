@@ -269,7 +269,7 @@
       ]
     },
     {
-      "name": "ci-windows",
+      "name": "ci-windows-msvc",
       "inherits": [
         "ci-build",
         "ci-win64",
