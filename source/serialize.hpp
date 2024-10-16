@@ -85,8 +85,8 @@ inline auto serialize(const Event& event, const Tags& global_tags) -> std::strin
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
     out.try_reserve(3 + 10 + 1 + 10 + 2 +                                   // _e{<title size>,<text size>}:
                     event.title.size() + 1 + event.text.size() +            // <title>|<text>
-                    (event.priority == bark::Priority::LOW ? 5 : 0) +       // |p:low
-                    (event.alert_type != bark::AlertType::INFO ? 10 : 0) +  // |t:<type>
+                    (event.priority == bark::Priority::Low ? 5 : 0) +       // |p:low
+                    (event.alert_type != bark::AlertType::Info ? 10 : 0) +  // |t:<type>
                     event.tags.str().size() + global_tags.str().size() + 2  // |#<tags>
     );
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
@@ -95,22 +95,22 @@ inline auto serialize(const Event& event, const Tags& global_tags) -> std::strin
     iterator = fmt::format_to(
         iterator, "_e{{{},{}}}:{}|{}", event.title.length(), event.text.length(), event.title, event.text);
 
-    if (event.priority == bark::Priority::LOW) {
+    if (event.priority == bark::Priority::Low) {
         iterator = fmt::format_to(iterator, "|p:low");
     }
 
     using enum bark::AlertType;
     switch (event.alert_type) {
-        case ERR:
+        case Error:
             iterator = fmt::format_to(iterator, "|t:error");
             break;
-        case WARNING:
+        case Warning:
             iterator = fmt::format_to(iterator, "|t:warning");
             break;
-        case INFO:
+        case Info:
             // This is assumed by default.
             break;
-        case SUCCESS:
+        case Success:
             iterator = fmt::format_to(iterator, "|t:success");
             break;
     }

@@ -12,16 +12,16 @@ namespace bark
 
 enum class Priority : uint8_t
 {
-    NORMAL,
-    LOW,
+    Normal,
+    Low,
 };
 
 enum class AlertType : uint8_t
 {
-    ERR,
-    WARNING,
-    INFO,
-    SUCCESS,
+    Error,
+    Warning,
+    Info,
+    Success,
 };
 
 struct Event
@@ -31,9 +31,9 @@ struct Event
     // TODO: Timestamp
     // TODO: Hostname
     // TODO: Aggregation key
-    Priority priority = Priority::NORMAL;
+    Priority priority = Priority::Normal;
     // TODO: Source type name
-    AlertType alert_type = AlertType::INFO;
+    AlertType alert_type = AlertType::Info;
     Tags tags;
 
     BARK_CONSTEXPR Event(std::string title_, std::string text_) noexcept
