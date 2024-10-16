@@ -5,9 +5,6 @@
 #include <memory>
 #include <thread>
 
-#include "bark/tags.hpp"
-#include "bark/udp_client.hpp"
-
 // TODO(mikael): Keep an eye on https://github.com/rigtorp/MPMCQueue/issues/49 to see if this is still needed
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #pragma GCC diagnostic push
@@ -16,6 +13,8 @@
 
 #include "bark/datagram.hpp"
 #include "bark/i_datadog_client.hpp"
+#include "bark/tags.hpp"
+#include "bark/udp_client.hpp"
 
 namespace bark
 {
