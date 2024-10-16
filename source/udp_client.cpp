@@ -24,16 +24,18 @@ namespace bark
 UDPClient::UDPClient(std::string_view host, uint16_t port)
     : _io_context(std::make_unique<asio::io_context>())
     , _receiver_endpoint(
-          *asio::ip::udp::resolver(*this->_io_context).resolve(asio::ip::udp::v4(), host, std::to_string(port)).begin())
-    , _socket(*this->_io_context)
+          std::make_unique<asio::ip::udp::endpoint>(*asio::ip::udp::resolver(*this->_io_context)
+                                                         .resolve(asio::ip::udp::v4(), host, std::to_string(port))
+                                                         .begin()))
+    , _socket(std::make_unique<asio::ip::udp::socket>(*this->_io_context))
 {
-    this->_socket.open(asio::ip::udp::v4());
+    this->_socket->open(asio::ip::udp::v4());
 }
 
 auto UDPClient::send(std::string_view msg) -> bool
 {
     auto error = std::error_code {};
-    auto bytes_sent = this->_socket.send_to(asio::buffer(msg), this->_receiver_endpoint, 0, error);
+    auto bytes_sent = this->_socket->send_to(asio::buffer(msg), *this->_receiver_endpoint, 0, error);
     if (error) [[unlikely]] {
         fmt::println(stderr, "Failed at sending {}. {}", error.message(), std::source_location::current());
     }
@@ -43,5 +45,12 @@ auto UDPClient::send(std::string_view msg) -> bool
 auto UDPClient::make_local_udp_client(uint16_t port) -> UDPClient
 {
     return {"localhost", port};
+}
+
+UDPClient::~UDPClient()
+{
+    if (this->_socket) {
+        this->_socket->close();
+    }
 }
 }  // namespace bark

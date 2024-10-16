@@ -19,11 +19,16 @@ constexpr static const uint16_t dogstatsd_udp_port = 8125;
 class UDPClient
 {
     std::unique_ptr<asio::io_context> _io_context;
-    asio::ip::udp::endpoint _receiver_endpoint;
-    asio::ip::udp::socket _socket;
+    std::unique_ptr<asio::ip::udp::endpoint> _receiver_endpoint;
+    std::unique_ptr<asio::ip::udp::socket> _socket;
 
   public:
     UDPClient(std::string_view host, uint16_t port);
+    UDPClient(const UDPClient&) = delete;
+    UDPClient(UDPClient&&) noexcept = default;
+    auto operator=(const UDPClient&) -> UDPClient& = delete;
+    auto operator=(UDPClient&&) noexcept -> UDPClient& = default;
+    ~UDPClient();
 
     auto send(std::string_view msg) -> bool;
 
