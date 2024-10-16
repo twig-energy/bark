@@ -97,10 +97,7 @@ jobs:
             vcpkg-Linux-test-clang-18-
 
       - name: Configure
-        env:
-          GH_TOKEN: ${{ secrets.ANDERS_WIND_REPO_ACCESS_TOKEN }}
         run: |
-          gh auth setup-git
           cmake --preset=ci-sanitize
 
       - name: Build
@@ -153,10 +150,7 @@ jobs:
             vcpkg-Linux-test-clang-18-
 
       - name: Configure
-        env:
-          GH_TOKEN: ${{ secrets.ANDERS_WIND_REPO_ACCESS_TOKEN }}
         run: |
-          gh auth setup-git
           cmake --preset=ci-coverage
 
       - name: Build with build-wrapper
@@ -206,10 +200,7 @@ jobs:
           version: "18"
 
       - name: Configure
-        env:
-          GH_TOKEN: ${{ secrets.ANDERS_WIND_REPO_ACCESS_TOKEN }}
         run: |
-          gh auth setup-git
           cmake --preset=ci-vcpkg
 
       - name: Build
@@ -256,11 +247,8 @@ jobs:
             vcpkg-Linux-test-${{ matrix.compiler }}-
 
       - name: Configure
-        env:
-          GH_TOKEN: ${{ secrets.ANDERS_WIND_REPO_ACCESS_TOKEN }}
         shell: pwsh
         run: |
-          gh auth setup-git
           cmake "--preset=ci-ubuntu-${{ matrix.compiler }}"
 
       - name: Build
