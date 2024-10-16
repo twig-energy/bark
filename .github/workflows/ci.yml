@@ -271,7 +271,10 @@ jobs:
       - name: Setup PATH
         if: matrix.os == 'windows-2022'
         shell: pwsh
-        run: Add-Content "$env:GITHUB_PATH" "$(Get-Location)\build\Debug"
+        run: |
+          Add-Content "$env:GITHUB_PATH" "$(Get-Location)\build\Debug"
+          Add-Content "$env:GITHUB_PATH" "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.41.34120\bin\Hostx64\x64\"
+          Add-Content "$env:PATH" "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.41.34120\bin\Hostx64\x64\"
 
       - name: Build
         run: cmake --build build --config Debug -j 4
