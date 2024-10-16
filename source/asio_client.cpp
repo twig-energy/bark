@@ -33,7 +33,7 @@ namespace bark
 
 AsioClient::AsioClient(std::string_view host, uint16_t port, NumberOfIOThreads num_io_threads, Tags global_tags)
     : _global_tags(std::make_unique<Tags>(std::move(global_tags)))
-    , _io_context(std::make_unique<asio::io_context>(num_io_threads.value))
+    , _io_context(std::make_unique<asio::io_context>(static_cast<int>(num_io_threads.value)))
     , _receiver_endpoint(
           std::make_unique<asio::ip::udp::endpoint>(*asio::ip::udp::resolver(*this->_io_context)
                                                          .resolve(asio::ip::udp::v4(), host, std::to_string(port))
