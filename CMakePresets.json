@@ -23,13 +23,6 @@
       }
     },
     {
-      "name": "vcpkg-win64",
-      "hidden": true,
-      "cacheVariables": {
-        "VCPKG_TARGET_TRIPLET": "sanitize-x64-windows-static-md"
-      }
-    },
-    {
       "name": "clang-tidy",
       "hidden": true,
       "cacheVariables": {
@@ -291,8 +284,7 @@
         "ci-build",
         "ci-win64",
         "dev-mode",
-        "vcpkg",
-        "vcpkg-win64"
+        "vcpkg"
       ]
     },
     {
