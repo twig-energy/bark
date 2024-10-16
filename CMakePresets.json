@@ -26,8 +26,7 @@
       "name": "vcpkg-win64",
       "hidden": true,
       "cacheVariables": {
-        "VCPKG_TARGET_TRIPLET": "x64-windows",
-        "BUILD_SHARED_LIBS": "ON"
+        "VCPKG_TARGET_TRIPLET": "sanitize-x64-windows-static-md"
       }
     },
     {
