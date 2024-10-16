@@ -59,8 +59,7 @@ AsioClient::AsioClient(std::string_view host, uint16_t port, NumberOfIOThreads n
 
 auto AsioClient::send(const Datagram& datagram) -> void
 {
-    auto copy = datagram;
-    this->send(std::move(copy));
+    this->send(Datagram {datagram});
 }
 
 auto AsioClient::send(Datagram&& datagram) -> void
