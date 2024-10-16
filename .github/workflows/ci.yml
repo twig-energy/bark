@@ -21,7 +21,7 @@ env:
 jobs:
   lint:
     if: github.ref != 'refs/heads/main' # skip on main build
-    runs-on: ubuntu22_4c_16gb
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -71,7 +71,7 @@ jobs:
     needs: lint
     if: ${{ !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') }} # Don't skip on main build, even though lint is skipped.
 
-    runs-on: ubuntu22_4c_16gb
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -121,7 +121,7 @@ jobs:
     needs: lint
     if: ${{ !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') }} # Don't skip on main build, even though lint is skipped.
 
-    runs-on: ubuntu22_4c_16gb
+    runs-on: ubuntu-latest
     env:
       BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory
 
@@ -226,7 +226,7 @@ jobs:
           - "gcc-13"
           - "clang-18"
 
-    runs-on: ubuntu22_4c_16gb
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
