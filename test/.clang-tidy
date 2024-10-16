@@ -1,10 +1,11 @@
 ---
 InheritParentConfig: "true"
 Checks: "\
-     -bugprone-easily-swappable-parameters\
-    ,-cppcoreguidelines-avoid-magic-numbers\
-    ,-readability-magic-numbers\
-    "
+  -bugprone-easily-swappable-parameters\
+  ,-cppcoreguidelines-avoid-magic-numbers\
+  ,-readability-function-cognitive-complexity\
+  ,-readability-magic-numbers\
+  "
 CheckOptions:
   - key: "readability-identifier-length.MinimumVariableNameLength"
     value: "1"

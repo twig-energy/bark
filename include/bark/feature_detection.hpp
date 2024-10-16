@@ -1,5 +1,7 @@
 #pragma once
 
+// NOLINTBEGIN(cppcoreguidelines-macro-usage,cppcoreguidelines-macro-to-enum,modernize-macro-to-enum)
+
 #if defined(__clang__) && !defined(__ibmxl__)
 #    define BARK_CLANG_VERSION (__clang_major__ * 100 + __clang_minor__)
 #else
@@ -48,3 +50,5 @@
 #    define BARK_CONSTEXPR
 #    define BARK_CONSTEXPR_OR_INLINE inline
 #endif
+
+// NOLINTEND(cppcoreguidelines-macro-usage,cppcoreguidelines-macro-to-enum,modernize-macro-to-enum)
