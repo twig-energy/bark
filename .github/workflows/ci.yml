@@ -223,6 +223,8 @@ jobs:
         include:
           - os: "windows-2022"
             compiler: "msvc"
+          - os: "macos-13"
+            compiler: "clang-15"
 
     runs-on: ${{ matrix.os }}
 
@@ -250,9 +252,9 @@ jobs:
         uses: friendlyanon/setup-vcpkg@v1
         with:
           committish: "${{ env.VCPKG_COMMIT }}"
-          cache-version: "test-${{ contains(matrix.os, 'ubuntu') && 'Linux' || 'Windows' }}-${{ matrix.compiler }}"
+          cache-version: "test-${{ contains(matrix.os, 'ubuntu') && 'Linux' || contains(matrix.os, 'macos') && 'macOS' || 'Windows' }}-${{ matrix.compiler }}"
           cache-restore-keys: |
-            vcpkg-${{ contains(matrix.os, 'ubuntu') && 'Linux' || 'Windows' }}-test-${{ matrix.compiler }}-
+            vcpkg-${{ contains(matrix.os, 'ubuntu') && 'Linux' || contains(matrix.os, 'macos') && 'macOS' || 'Windows' }}-test-${{ matrix.compiler }}-
 
       - name: Configure
         shell: pwsh

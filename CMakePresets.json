@@ -269,6 +269,16 @@
       ]
     },
     {
+      "name": "ci-macos-clang-15",
+      "inherits": [
+        "ci-build",
+        "ci-unix",
+        "dev-mode",
+        "vcpkg",
+        "clang-15"
+      ]
+    },
+    {
       "name": "ci-windows-msvc",
       "inherits": [
         "ci-build",
