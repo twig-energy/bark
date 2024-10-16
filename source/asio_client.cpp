@@ -15,10 +15,7 @@
 #include "bark/asio_client.hpp"
 
 #include <asio/buffer.hpp>
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wnull-dereference"
 #include <asio/io_context.hpp>
-#pragma GCC diagnostic pop
 #include <asio/ip/udp.hpp>
 #include <asio/post.hpp>
 #include <fmt/base.h>
@@ -38,6 +35,7 @@ AsioClient::AsioClient(std::string_view host, uint16_t port, NumberOfIOThreads n
           std::make_unique<asio::ip::udp::endpoint>(*asio::ip::udp::resolver(*this->_io_context)
                                                          .resolve(asio::ip::udp::v4(), host, std::to_string(port))
                                                          .begin()))
+    , _socket(std::make_unique<asio::ip::udp::socket>(*this->_io_context))
 {
     if (num_io_threads.value == 0) {
         throw std::invalid_argument("Cannot have 0 IO threads on AsioClient");

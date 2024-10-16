@@ -8,10 +8,7 @@
 #include <vector>
 
 #include <asio/executor_work_guard.hpp>
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wnull-dereference"
 #include <asio/io_context.hpp>
-#pragma GCC diagnostic pop
 #include <asio/ip/udp.hpp>
 
 #include "bark/datagram.hpp"
@@ -27,8 +24,8 @@ class AsioClient final : public IDatadogClient
 {
     std::unique_ptr<Tags> _global_tags;
     std::unique_ptr<asio::io_context> _io_context;
-    std::unique_ptr<asio::ip::udp::socket> _socket = std::make_unique<asio::ip::udp::socket>(*this->_io_context);
     std::unique_ptr<asio::ip::udp::endpoint> _receiver_endpoint;
+    std::unique_ptr<asio::ip::udp::socket> _socket;
     std::vector<std::jthread> _io_threads;
 
     // This is registered after the threads, since it's destruction will allow the worker threads to stop when no more

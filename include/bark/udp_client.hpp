@@ -5,10 +5,7 @@
 #include <memory>
 #include <string_view>
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wnull-dereference"
 #include <asio/io_context.hpp>
-#pragma GCC diagnostic pop
 #include <asio/ip/udp.hpp>
 
 namespace bark
