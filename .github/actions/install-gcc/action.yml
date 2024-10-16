@@ -10,7 +10,7 @@ runs:
   steps:
     - name: Install GCC
       shell: bash
-      run: >-
+      run: |
         GCC_VERSION=`echo ${{ inputs.version }} | cut -d'-' -f 2`
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
         sudo apt-get update -q
