@@ -246,6 +246,16 @@
       ]
     },
     {
+      "name": "ci-ubuntu-gcc-11",
+      "inherits": [
+        "ci-build",
+        "ci-linux",
+        "vcpkg",
+        "dev-mode",
+        "gcc-11"
+      ]
+    },
+    {
       "name": "ci-ubuntu-gcc-13",
       "inherits": [
         "ci-build",
