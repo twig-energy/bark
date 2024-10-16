@@ -17,7 +17,6 @@ include(cmake/dev-mode.cmake)
 
 # ---- Dependencies ----
 
-find_package(absl CONFIG REQUIRED)
 find_package(asio CONFIG REQUIRED)
 find_package(fmt REQUIRED)
 find_package(MPMCQueue CONFIG REQUIRED)
@@ -72,12 +71,7 @@ target_compile_features(bark PUBLIC cxx_std_23)
 
 target_link_libraries(
     bark
-    PUBLIC absl::civil_time
-           absl::container_memory
-           absl::time
-           asio::asio
-           MPMCQueue::MPMCQueue
-           SPSCQueue::SPSCQueue
+    PUBLIC asio::asio MPMCQueue::MPMCQueue SPSCQueue::SPSCQueue
     PRIVATE fmt::fmt
 )
 

@@ -2,12 +2,6 @@
   "name": "bark",
   "version-semver": "0.1.0",
   "dependencies": [
-    {
-      "name": "abseil",
-      "features": [
-        "cxx17"
-      ]
-    },
     "asio",
     "fmt",
     "mpmcqueue",

@@ -1,5 +1,4 @@
 include(CMakeFindDependencyMacro)
-find_dependency(absl)
 find_dependency(asio)
 find_dependency(fmt)
 find_dependency(MPMCQueue)
