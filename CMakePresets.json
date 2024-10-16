@@ -123,7 +123,7 @@
       }
     },
     {
-      "name": "flags-linux",
+      "name": "flags-unix",
       "hidden": true,
       "cacheVariables": {
         "CMAKE_CXX_FLAGS": "-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 -fstack-protector-strong -fcf-protection=full -fstack-clash-protection -Werror -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wcast-qual -Wformat=2 -Wundef -Werror=float-equal -Wshadow -Wcast-align -Wunused -Wnull-dereference -Wdouble-promotion -Wimplicit-fallthrough -Wextra-semi -Woverloaded-virtual -Wnon-virtual-dtor -Wold-style-cast",
@@ -141,12 +141,19 @@
       }
     },
     {
-      "name": "ci-linux",
+      "name": "ci-unix",
       "generator": "Ninja",
       "hidden": true,
       "inherits": [
-        "flags-linux",
+        "flags-unix",
         "ci-std"
+      ]
+    },
+    {
+      "name": "ci-linux",
+      "hidden": true,
+      "inherits": [
+        "ci-unix"
       ],
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
@@ -273,8 +280,8 @@
       "inherits": [
         "ci-build",
         "ci-unix",
-        "dev-mode",
         "vcpkg",
+        "dev-mode",
         "clang-15"
       ]
     },
