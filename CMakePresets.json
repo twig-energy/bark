@@ -253,7 +253,10 @@
         "vcpkg",
         "dev-mode",
         "gcc-11"
-      ]
+      ],
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -fstack-protector-strong -fcf-protection=full -fstack-clash-protection -Werror -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wcast-qual -Wformat=2 -Wundef -Werror=float-equal -Wshadow -Wcast-align -Wunused -Wnull-dereference -Wdouble-promotion -Wimplicit-fallthrough -Wextra-semi -Woverloaded-virtual -Wnon-virtual-dtor -Wold-style-cast"
+      }
     },
     {
       "name": "ci-ubuntu-gcc-13",
