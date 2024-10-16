@@ -11,7 +11,7 @@ runs:
     - name: Install LLVM and Clang
       shell: bash
       run: |
-        LLVM_VERSION=`echo ${{ inputs.version }} | cut -d'-' -f 2``
+        LLVM_VERSION=`echo ${{ inputs.version }} | cut -d'-' -f 2`
         wget https://apt.llvm.org/llvm.sh
         chmod +x llvm.sh
         sudo ./llvm.sh $LLVM_VERSION
