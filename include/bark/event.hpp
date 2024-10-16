@@ -18,7 +18,7 @@ enum class Priority : uint8_t
 
 enum class AlertType : uint8_t
 {
-    ERROR,
+    ERR,
     WARNING,
     INFO,
     SUCCESS,

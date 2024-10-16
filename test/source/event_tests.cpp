@@ -29,7 +29,7 @@ TEST_SUITE("Event")
     {
         auto tags = Tags::from_list({"tag1:hello", "tag2:world"});
 
-        auto event = Event("event", "a description here").with(std::move(tags)).with(AlertType::ERROR);
+        auto event = Event("event", "a description here").with(std::move(tags)).with(AlertType::ERR);
         CHECK_EQ("_e{5,18}:event|a description here|t:error|#tag1:hello,tag2:world", event.serialize(no_tags));
     }
 

@@ -102,7 +102,7 @@ BARK_CONSTEXPR_OR_INLINE auto serialize(const Event& event, const Tags& global_t
 
     using enum bark::AlertType;
     switch (event.alert_type) {
-        case ERROR:
+        case ERR:
             iterator = fmt::format_to(iterator, "|t:error");
             break;
         case WARNING:
