@@ -21,7 +21,7 @@ env:
 jobs:
   lint:
     if: github.ref != 'refs/heads/main' # skip on main build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4
@@ -56,7 +56,7 @@ jobs:
         run: echo "$(git diff HEAD origin/main -- CMakeLists.txt)" | grep VERSION -wq || (echo "version is not bumped. Please update it in ./CMakeLists.txt and commit the changes." && exit 1)
 
   check-readme:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -71,7 +71,7 @@ jobs:
     needs: lint
     if: ${{ !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') }} # Don't skip on main build, even though lint is skipped.
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4
@@ -118,7 +118,7 @@ jobs:
     needs: lint
     if: ${{ !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') }} # Don't skip on main build, even though lint is skipped.
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory
 
@@ -174,7 +174,7 @@ jobs:
   vcpkg-build:
     needs: [lint]
 
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4
@@ -213,7 +213,7 @@ jobs:
     strategy:
       matrix:
         os:
-          - "ubuntu-latest"
+          - "ubuntu-24.04"
         compiler:
           - "gcc-11"
           - "gcc-13"
