@@ -3,7 +3,7 @@
     "clang-format.executable": "clang-format-18",
     "clangd.path": "clangd-18",
     "clangd.arguments": [
-        "-compile-commands-dir=${workspaceFolder}/build/dev-gcc"
+        "-compile-commands-dir=${workspaceFolder}/build/dev"
     ],
     "C_Cpp.default.cppStandard": "c++23",
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
