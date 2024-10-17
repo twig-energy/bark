@@ -272,27 +272,6 @@
       ]
     },
     {
-      "name": "ci-macos-clang-15",
-      "inherits": [
-        "ci-build",
-        "ci-unix",
-        "vcpkg",
-        "dev-mode"
-      ],
-      "cacheVariables": {
-        "CMAKE_CXX_FLAGS": "-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 -fstack-protector-strong -Werror -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wcast-qual -Wformat=2 -Wundef -Werror=float-equal -Wshadow -Wcast-align -Wunused -Wnull-dereference -Wdouble-promotion -Wimplicit-fallthrough -Wextra-semi -Woverloaded-virtual -Wnon-virtual-dtor -Wold-style-cast",
-        "CMAKE_EXE_LINKER_FLAGS": "-Wl",
-        "CMAKE_SHARED_LINKER_FLAGS": "-Wl",
-        "CMAKE_CATCH_DISCOVER_TESTS_DISCOVERY_MODE": "PRE_TEST",
-        "CMAKE_CONFIGURATION_TYPES": "Release"
-      },
-      "environment": {
-        "CXX": "/opt/homebrew/opt/llvm@15/bin/clang++",
-        "CC": "/opt/homebrew/opt/llvm@15/bin/clang",
-        "LLVM_SYMBOLIZER_PATH": "/opt/homebrew/opt/llvm@15/bin/llvm-symbolizer"
-      }
-    },
-    {
       "name": "ci-windows-msvc",
       "inherits": [
         "ci-build",
