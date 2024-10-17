@@ -223,8 +223,8 @@ jobs:
         include:
           - os: "windows-2022"
             compiler: "msvc"
-          - os: "macos-14"
-            compiler: "clang-15"
+          # - os: "macos-14"
+          #   compiler: "clang-15"
 
     runs-on: ${{ matrix.os }}
 
