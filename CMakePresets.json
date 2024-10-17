@@ -276,9 +276,17 @@
         "ci-build",
         "ci-unix",
         "vcpkg",
-        "dev-mode",
-        "clang-15"
-      ]
+        "dev-mode"
+      ],
+      "cacheVariables": {
+        "CMAKE_CATCH_DISCOVER_TESTS_DISCOVERY_MODE": "PRE_TEST",
+        "CMAKE_CONFIGURATION_TYPES": "Release"
+      },
+      "environment": {
+        "CXX": "/opt/homebrew/opt/llvm@15/bin/clang++",
+        "CC": "/opt/homebrew/opt/llvm@15/bin/clang",
+        "LLVM_SYMBOLIZER_PATH": "/opt/homebrew/opt/llvm@15/bin/llvm-symbolizer"
+      }
     },
     {
       "name": "ci-windows-msvc",

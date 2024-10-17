@@ -223,7 +223,7 @@ jobs:
         include:
           - os: "windows-2022"
             compiler: "msvc"
-          - os: "macos-13"
+          - os: "macos-14"
             compiler: "clang-15"
 
     runs-on: ${{ matrix.os }}
@@ -286,4 +286,5 @@ jobs:
         run: ctest --output-on-failure --no-tests=error -C Release -j 4
 
       - name: Benchmarks
+        shell: pwsh
         run: ./build/benchmarks/bark_benchmarks --benchmark_display_aggregates_only=true
