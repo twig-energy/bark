@@ -140,7 +140,10 @@
       "inherits": [
         "flags-unix",
         "ci-std"
-      ]
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
     },
     {
       "name": "ci-linux",
@@ -149,7 +152,6 @@
         "ci-unix"
       ],
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release",
         "VCPKG_TARGET_TRIPLET": "x64-linux-release",
         "VCPKG_HOST_TRIPLET": "x64-linux-release"
       }
