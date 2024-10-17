@@ -238,6 +238,11 @@ jobs:
         run: |
           sudo apt-get install ninja-build -y -q
 
+      - name: General Build Dependencies
+        if: contains(matrix.os, 'macos')
+        run: |
+          brew install ninja
+
       - uses: ./.github/actions/install-gcc
         if: ${{ contains(matrix.compiler, 'gcc') && contains(matrix.os, 'ubuntu') }}
         with:
