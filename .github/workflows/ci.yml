@@ -211,7 +211,6 @@ jobs:
     if: ${{ !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') }} # Don't skip on main build, even though lint is skipped.
 
     strategy:
-      fail-fast: false
       matrix:
         os:
           - "ubuntu-latest"
