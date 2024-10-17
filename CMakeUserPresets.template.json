@@ -39,8 +39,7 @@
       "binaryDir": "${sourceDir}/build/dev-win64",
       "inherits": [
         "dev-common",
-        "ci-win64",
-        "vcpkg-win64-static"
+        "ci-win64"
       ],
       "environment": {
         "UseMultiToolTask": "true",

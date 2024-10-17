@@ -8,6 +8,7 @@
 #include <fmt/format.h>
 
 #include "bark/event.hpp"
+#include "bark/feature_detection.hpp"
 #include "bark/tags.hpp"
 
 namespace bark
@@ -39,8 +40,10 @@ concept is_metric_like = requires(T t) {
 template<is_metric_like T>
 inline auto serialize(const T& metric, const Tags& global_tags) -> std::string
 {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wfloat-equal"
+#if BARK_GCC_VERSION > 0
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
     auto out = fmt::memory_buffer {};
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
     if constexpr (has_sample_rate<T>) {
@@ -76,7 +79,9 @@ inline auto serialize(const T& metric, const Tags& global_tags) -> std::string
     }
 
     return fmt::to_string(out);
-#pragma GCC diagnostic pop
+#if BARK_GCC_VERSION > 0
+#    pragma GCC diagnostic pop
+#endif
 }
 
 inline auto serialize(const Event& event, const Tags& global_tags) -> std::string
