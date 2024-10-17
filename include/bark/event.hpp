@@ -4,6 +4,7 @@
 #include <string>
 #include <utility>
 
+#include "bark/feature_detection.hpp"
 #include "bark/tags.hpp"
 
 namespace bark
@@ -11,16 +12,16 @@ namespace bark
 
 enum class Priority : uint8_t
 {
-    NORMAL,
-    LOW,
+    Normal,
+    Low,
 };
 
 enum class AlertType : uint8_t
 {
-    ERROR,
-    WARNING,
-    INFO,
-    SUCCESS,
+    Error,
+    Warning,
+    Info,
+    Success,
 };
 
 struct Event
@@ -30,18 +31,18 @@ struct Event
     // TODO: Timestamp
     // TODO: Hostname
     // TODO: Aggregation key
-    Priority priority = Priority::NORMAL;
+    Priority priority = Priority::Normal;
     // TODO: Source type name
-    AlertType alert_type = AlertType::INFO;
+    AlertType alert_type = AlertType::Info;
     Tags tags;
 
-    constexpr Event(std::string title_, std::string text_) noexcept
+    BARK_CONSTEXPR Event(std::string title_, std::string text_) noexcept
         : title(std::move(title_))
         , text(std::move(text_))
     {
     }
 
-    constexpr auto with(Tags tags_) -> Event&
+    BARK_CONSTEXPR auto with(Tags tags_) -> Event&
     {
         this->tags = std::move(tags_);
         return *this;

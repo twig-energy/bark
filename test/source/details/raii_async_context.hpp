@@ -4,7 +4,9 @@
 #include <mutex>
 #include <thread>
 
-#include <asio/io_context.hpp>
+#include "bark/asio_io_context_wrapper.hpp"
+// ^ must be before asio includes, as it protects against gcc warnings
+
 #include <asio/io_service.hpp>
 
 #include "./udp_server.hpp"

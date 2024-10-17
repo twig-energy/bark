@@ -6,6 +6,7 @@
 #include <string_view>
 #include <utility>
 
+#include "bark/feature_detection.hpp"
 #include "bark/sample_rate.hpp"
 #include "bark/tags.hpp"
 
@@ -21,7 +22,7 @@ struct Count
     double sample_rate = 1.0;
     Tags tags;
 
-    constexpr Count(std::string metric_, int32_t value_) noexcept
+    BARK_CONSTEXPR Count(std::string metric_, int32_t value_) noexcept
         : metric(std::move(metric_))
         , value(value_)
     {
@@ -37,7 +38,7 @@ struct Count
         return *this;
     }
 
-    constexpr auto with(Tags tags_) -> Count&
+    BARK_CONSTEXPR auto with(Tags tags_) -> Count&
     {
         this->tags = std::move(tags_);
         return *this;

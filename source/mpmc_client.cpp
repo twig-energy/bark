@@ -48,7 +48,7 @@ auto MPMCClient::send(const Datagram& datagram) -> void
 {
     // NOTE: try_emplace means that the datagram will not be submitted if the queue is full.
     // unfortunately we have to copy datagram because std::variant is not nothrow copy constructible
-    this->_queue->try_emplace(auto(datagram));
+    this->_queue->try_emplace(Datagram {datagram});
 }
 auto MPMCClient::send(Datagram&& datagram) -> void
 {

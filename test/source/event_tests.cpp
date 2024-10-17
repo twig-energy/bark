@@ -29,13 +29,13 @@ TEST_SUITE("Event")
     {
         auto tags = Tags::from_list({"tag1:hello", "tag2:world"});
 
-        auto event = Event("event", "a description here").with(std::move(tags)).with(AlertType::ERROR);
+        auto event = Event("event", "a description here").with(std::move(tags)).with(AlertType::Error);
         CHECK_EQ("_e{5,18}:event|a description here|t:error|#tag1:hello,tag2:world", event.serialize(no_tags));
     }
 
     TEST_CASE("Can format event with priority")
     {
-        auto event = Event("event", "a description here").with(Priority::LOW);
+        auto event = Event("event", "a description here").with(Priority::Low);
         CHECK_EQ("_e{5,18}:event|a description here|p:low", event.serialize(no_tags));
     }
 

@@ -132,7 +132,7 @@ CheckOptions:
   - key: "readability-identifier-naming.PublicMethodCase"
     value: "lower_case"
   - key: "readability-identifier-naming.ScopedEnumConstantCase"
-    value: "UPPER_CASE"
+    value: "CamelCase"
   - key: "readability-identifier-naming.StaticConstantCase"
     value: "lower_case"
   - key: "readability-identifier-naming.StaticVariableCase"
@@ -159,5 +159,7 @@ CheckOptions:
     value: "lower_case"
   - key: "misc-include-cleaner.IgnoreHeaders"
     value: "\
-      fmt/std.h\
+      asio/io_context.hpp;\
+      bark/asio_io_context_wrapper.hpp;\
+      fmt/std.h;\
       "

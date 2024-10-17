@@ -5,17 +5,22 @@
 #include <memory>
 #include <thread>
 
-#include "bark/tags.hpp"
-#include "bark/udp_client.hpp"
+#include "bark/feature_detection.hpp"
 
+#if BARK_GCC_VERSION > 0 || BARK_CLANG_VERSION > 0
 // TODO(mikael): Keep an eye on https://github.com/rigtorp/MPMCQueue/issues/49 to see if this is still needed
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#    pragma GCC diagnostic push
+#endif
 #include <rigtorp/MPMCQueue.h>
-#pragma GCC diagnostic pop
+#if BARK_GCC_VERSION > 0 || BARK_CLANG_VERSION > 0
+#    pragma GCC diagnostic pop
+#endif
 
 #include "bark/datagram.hpp"
 #include "bark/i_datadog_client.hpp"
+#include "bark/tags.hpp"
+#include "bark/udp_client.hpp"
 
 namespace bark
 {

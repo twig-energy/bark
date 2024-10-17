@@ -9,11 +9,10 @@
 
 #include "bark/udp_client.hpp"
 
+#include "bark/asio_io_context_wrapper.hpp"
+// ^ must be before asio includes, as it protects against gcc warnings
+
 #include <asio/buffer.hpp>
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wnull-dereference"
-#include <asio/io_context.hpp>
-#pragma GCC diagnostic pop
 #include <asio/ip/udp.hpp>
 #include <fmt/base.h>
 #include <fmt/std.h>
@@ -23,17 +22,19 @@ namespace bark
 
 UDPClient::UDPClient(std::string_view host, uint16_t port)
     : _io_context(std::make_unique<asio::io_context>())
-    , _socket(*this->_io_context)
     , _receiver_endpoint(
-          *asio::ip::udp::resolver(*this->_io_context).resolve(asio::ip::udp::v4(), host, std::to_string(port)).begin())
+          std::make_unique<asio::ip::udp::endpoint>(*asio::ip::udp::resolver(*this->_io_context)
+                                                         .resolve(asio::ip::udp::v4(), host, std::to_string(port))
+                                                         .begin()))
+    , _socket(std::make_unique<asio::ip::udp::socket>(*this->_io_context))
 {
-    this->_socket.open(asio::ip::udp::v4());
+    this->_socket->open(asio::ip::udp::v4());
 }
 
 auto UDPClient::send(std::string_view msg) -> bool
 {
     auto error = std::error_code {};
-    auto bytes_sent = this->_socket.send_to(asio::buffer(msg), _receiver_endpoint, 0, error);
+    auto bytes_sent = this->_socket->send_to(asio::buffer(msg), *this->_receiver_endpoint, 0, error);
     if (error) [[unlikely]] {
         fmt::println(stderr, "Failed at sending {}. {}", error.message(), std::source_location::current());
     }
@@ -44,4 +45,5 @@ auto UDPClient::make_local_udp_client(uint16_t port) -> UDPClient
 {
     return {"localhost", port};
 }
+
 }  // namespace bark

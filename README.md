@@ -24,7 +24,7 @@ auto main() -> int
     client.send(Count("count.name", 22).with(SampleRate {0.5}));
 
     // Sending an event datagram
-    client.send(Event("event.title", "event.value").with(Priority::NORMAL).with(AlertType::INFO));
+    client.send(Event("event.title", "event.value").with(Priority::Normal).with(AlertType::Info));
 
     return 0;
 }

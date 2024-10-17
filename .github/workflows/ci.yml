@@ -16,12 +16,12 @@ on:
   workflow_dispatch:
 
 env:
-  VCPKG_COMMIT: "66f543e2ac43a2d43d46e08c7f4d5e9ed8cba9b9"
+  VCPKG_COMMIT: "c82f74667287d3dc386bce81e44964370c91a289"
 
 jobs:
   lint:
     if: github.ref != 'refs/heads/main' # skip on main build
-    runs-on: ubuntu22_4c_16gb
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4
@@ -56,7 +56,7 @@ jobs:
         run: echo "$(git diff HEAD origin/main -- CMakeLists.txt)" | grep VERSION -wq || (echo "version is not bumped. Please update it in ./CMakeLists.txt and commit the changes." && exit 1)
 
   check-readme:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -71,7 +71,7 @@ jobs:
     needs: lint
     if: ${{ !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') }} # Don't skip on main build, even though lint is skipped.
 
-    runs-on: ubuntu22_4c_16gb
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4
@@ -97,10 +97,7 @@ jobs:
             vcpkg-Linux-test-clang-18-
 
       - name: Configure
-        env:
-          GH_TOKEN: ${{ secrets.ANDERS_WIND_REPO_ACCESS_TOKEN }}
         run: |
-          gh auth setup-git
           cmake --preset=ci-sanitize
 
       - name: Build
@@ -121,7 +118,7 @@ jobs:
     needs: lint
     if: ${{ !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') }} # Don't skip on main build, even though lint is skipped.
 
-    runs-on: ubuntu22_4c_16gb
+    runs-on: ubuntu-24.04
     env:
       BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory
 
@@ -153,10 +150,7 @@ jobs:
             vcpkg-Linux-test-clang-18-
 
       - name: Configure
-        env:
-          GH_TOKEN: ${{ secrets.ANDERS_WIND_REPO_ACCESS_TOKEN }}
         run: |
-          gh auth setup-git
           cmake --preset=ci-coverage
 
       - name: Build with build-wrapper
@@ -180,7 +174,7 @@ jobs:
   vcpkg-build:
     needs: [lint]
 
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4
@@ -206,10 +200,7 @@ jobs:
           version: "18"
 
       - name: Configure
-        env:
-          GH_TOKEN: ${{ secrets.ANDERS_WIND_REPO_ACCESS_TOKEN }}
         run: |
-          gh auth setup-git
           cmake --preset=ci-vcpkg
 
       - name: Build
@@ -221,9 +212,18 @@ jobs:
 
     strategy:
       matrix:
-        compiler: ["gcc-13", "clang-18"]
+        os:
+          - "ubuntu-24.04"
+        compiler:
+          - "gcc-11"
+          - "gcc-13"
+          - "clang-18"
 
-    runs-on: ubuntu22_4c_16gb
+        include:
+          - os: "windows-2022"
+            compiler: "msvc"
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4
@@ -231,37 +231,32 @@ jobs:
           lfs: true
 
       - name: General Build Dependencies
+        if: contains(matrix.os, 'ubuntu')
         run: |
-          sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-          sudo apt-get update -q
           sudo apt-get install ninja-build -y -q
 
-      - name: Install GCC
-        if: matrix.compiler == 'gcc-13'
-        run: >-
-          sudo apt-get install ninja-build gcc-13 g++-13 g++-13-multilib -y -q
-
-      - name: Install LLVM and Clang
-        if: matrix.compiler == 'clang-18'
-        uses: ./.github/actions/install-clang
+      - uses: ./.github/actions/install-gcc
+        if: ${{ contains(matrix.compiler, 'gcc') && contains(matrix.os, 'ubuntu') }}
         with:
-          version: "18"
+          version: ${{ matrix.compiler }}
+
+      - uses: ./.github/actions/install-clang
+        if: ${{ contains(matrix.compiler, 'clang') && contains(matrix.os, 'ubuntu') }}
+        with:
+          version: ${{ matrix.compiler }}
 
       - name: Install vcpkg
         uses: friendlyanon/setup-vcpkg@v1
         with:
           committish: "${{ env.VCPKG_COMMIT }}"
-          cache-version: "test-${{ matrix.compiler }}"
+          cache-version: "test-${{ contains(matrix.os, 'ubuntu') && 'Linux' || 'Windows' }}-${{ matrix.compiler }}"
           cache-restore-keys: |
-            vcpkg-Linux-test-${{ matrix.compiler }}-
+            vcpkg-${{ contains(matrix.os, 'ubuntu') && 'Linux' || 'Windows' }}-test-${{ matrix.compiler }}-
 
       - name: Configure
-        env:
-          GH_TOKEN: ${{ secrets.ANDERS_WIND_REPO_ACCESS_TOKEN }}
         shell: pwsh
         run: |
-          gh auth setup-git
-          cmake "--preset=ci-ubuntu-${{ matrix.compiler }}"
+          cmake "--preset=ci-$("${{ matrix.os }}".split("-")[0])-${{ matrix.compiler }}"
 
       - name: Build
         run: cmake --build build --config Release -j 4
@@ -274,4 +269,9 @@ jobs:
         run: ctest --output-on-failure --no-tests=error -C Release -j 4
 
       - name: Benchmarks
+        if: ${{ !contains(matrix.os, 'windows') }}
         run: ./build/benchmarks/bark_benchmarks --benchmark_display_aggregates_only=true
+
+      - name: Benchmarks
+        if: ${{ contains(matrix.os, 'windows') }}
+        run: ./build/benchmarks/Release/bark_benchmarks --benchmark_display_aggregates_only=true

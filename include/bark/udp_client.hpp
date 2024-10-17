@@ -5,10 +5,9 @@
 #include <memory>
 #include <string_view>
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wnull-dereference"
-#include <asio/io_context.hpp>
-#pragma GCC diagnostic pop
+#include "bark/asio_io_context_wrapper.hpp"
+// ^ must be before asio includes, as it protects against gcc warnings
+
 #include <asio/ip/udp.hpp>
 
 namespace bark
@@ -19,8 +18,8 @@ constexpr static const uint16_t dogstatsd_udp_port = 8125;
 class UDPClient
 {
     std::unique_ptr<asio::io_context> _io_context;
-    asio::ip::udp::socket _socket;
-    asio::ip::udp::endpoint _receiver_endpoint;
+    std::unique_ptr<asio::ip::udp::endpoint> _receiver_endpoint;
+    std::unique_ptr<asio::ip::udp::socket> _socket;
 
   public:
     UDPClient(std::string_view host, uint16_t port);

@@ -5,6 +5,7 @@
 
 #include "./benchmark_helpers.hpp"
 #include "bark/count.hpp"
+#include "bark/feature_detection.hpp"
 #include "bark/gauge.hpp"
 #include "bark/histogram.hpp"
 #include "bark/sample_rate.hpp"
@@ -17,7 +18,8 @@ namespace
 {
 
 template<typename T>
-auto create_metric(std::size_t iteration) -> T
+    requires std::is_same_v<T, Count> || std::is_same_v<T, Gauge> || std::is_same_v<T, Histogram>
+BARK_CONSTEXPR auto create_metric(std::size_t iteration) -> T
 {
     auto tags = Tags::from_list({"tag1:hello", "tag2:world"});
 
@@ -39,8 +41,6 @@ auto create_metric(std::size_t iteration) -> T
         return T("histogram_metric", values[iteration % values.size()])
             .with(SampleRate {rates[iteration % rates.size()]})
             .with(std::move(tags));
-    } else {
-        static_assert(false, "Unsupported metric type");
     }
 }
 

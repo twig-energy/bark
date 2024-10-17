@@ -5,6 +5,7 @@
 #include <string_view>
 #include <utility>
 
+#include "bark/feature_detection.hpp"
 #include "bark/sample_rate.hpp"
 #include "bark/tags.hpp"
 
@@ -20,7 +21,7 @@ struct Histogram
     double sample_rate = 1.0;
     Tags tags;
 
-    constexpr Histogram(std::string metric_, double value_) noexcept
+    BARK_CONSTEXPR Histogram(std::string metric_, double value_) noexcept
         : metric(std::move(metric_))
         , value(value_)
     {
@@ -36,7 +37,7 @@ struct Histogram
         return *this;
     }
 
-    constexpr auto with(Tags tags_) -> Histogram&
+    BARK_CONSTEXPR auto with(Tags tags_) -> Histogram&
     {
         this->tags = std::move(tags_);
         return *this;
