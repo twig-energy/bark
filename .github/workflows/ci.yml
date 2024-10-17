@@ -286,5 +286,9 @@ jobs:
         run: ctest --output-on-failure --no-tests=error -C Release -j 4
 
       - name: Benchmarks
-        shell: pwsh
+        if: ${{ !contains(matrix.os, 'windows') }}
         run: ./build/benchmarks/bark_benchmarks --benchmark_display_aggregates_only=true
+
+      - name: Benchmarks
+        if: ${{ contains(matrix.os, 'windows') }}
+        run: ./build/benchmarks/Release/bark_benchmarks --benchmark_display_aggregates_only=true
