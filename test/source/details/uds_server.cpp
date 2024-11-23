@@ -24,7 +24,7 @@ UDSServer::UDSServer(asio::io_context& io_context,
                      const std::filesystem::path& socket_path,
                      std::function<void(std::string_view)> receive_msg_callback,
                      size_t buffer_size)
-    : _endpoint(socket_path.c_str())
+    : _endpoint(socket_path.string())
     , _socket(io_context, this->_endpoint)
     , _receive_msg_callback(std::move(receive_msg_callback))
     , _recv_buffer(buffer_size)

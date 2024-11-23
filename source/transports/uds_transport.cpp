@@ -25,7 +25,7 @@ namespace bark::transports
 UDSTransport::UDSTransport(const std::filesystem::path& socket_path, Tags global_tags)
     : _global_tags(std::move(global_tags))
     , _io_context(std::make_unique<asio::io_context>())
-    , _endpoint(std::make_unique<asio::local::datagram_protocol::endpoint>(socket_path.c_str()))
+    , _endpoint(std::make_unique<asio::local::datagram_protocol::endpoint>(socket_path.string()))
     , _socket(std::make_unique<asio::local::datagram_protocol::socket>(*this->_io_context))
 {
     this->_socket->open();
