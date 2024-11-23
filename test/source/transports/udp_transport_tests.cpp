@@ -3,16 +3,16 @@
 #include <string_view>
 #include <utility>
 
-#include "bark/udp_client.hpp"
+#include "bark/transports/udp_transport.hpp"
 
 #include <doctest/doctest.h>
 
-#include "./details/raii_async_context.hpp"
+#include "../details/raii_async_context.hpp"
 
 namespace bark
 {
 
-TEST_SUITE("UDPClient")
+TEST_SUITE("UDPTransport")
 {
     TEST_CASE("when sending a message over UDP, the server should receive it")
     {
@@ -27,7 +27,7 @@ TEST_SUITE("UDPClient")
                 barrier.arrive_and_drop();
             });
 
-        auto client = UDPClient::make_local_udp_client(port);
+        auto client = transports::UDPTransport::make_local_udp_transport(port);
         CHECK(client.send(sent_msg));
 
         barrier.arrive_and_wait();
@@ -46,7 +46,7 @@ TEST_SUITE("UDPClient")
                 barrier.arrive_and_drop();
             });
 
-        auto client = UDPClient::make_local_udp_client(port);
+        auto client = transports::UDPTransport::make_local_udp_transport(port);
         CHECK(client.send(sent_msg));
         CHECK(client.send(sent_msg));
         CHECK(client.send(sent_msg));
@@ -68,7 +68,7 @@ TEST_SUITE("UDPClient")
                 barrier.arrive_and_drop();
             });
 
-        auto client = UDPClient::make_local_udp_client(port);
+        auto client = transports::UDPTransport::make_local_udp_transport(port);
         CHECK(client.send(sent_msg));
         auto moved_client = std::move(client);
         CHECK(moved_client.send(sent_msg));

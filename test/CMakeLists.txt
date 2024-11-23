@@ -16,12 +16,13 @@ find_package(doctest REQUIRED)
 
 # ---- Tests ----
 
+add_library(bark_test_lib source/details/udp_server.cpp source/details/uds_server.cpp)
+target_link_libraries(bark_test_lib PUBLIC twig::bark)
+
 add_executable(
     bark_test
-    source/asio_client_tests.cpp
     source/client_tests.cpp
     source/count_tests.cpp
-    source/details/udp_server.cpp
     source/event_tests.cpp
     source/gauge_tests.cpp
     source/histogram_tests.cpp
@@ -29,9 +30,10 @@ add_executable(
     source/mpmc_client_tests.cpp
     source/spsc_client_tests.cpp
     source/tags_tests.cpp
-    source/udp_client_tests.cpp
+    source/transports/udp_transport_tests.cpp
+    source/transports/uds_transport_tests.cpp
 )
-target_link_libraries(bark_test PRIVATE twig::bark doctest::doctest)
+target_link_libraries(bark_test PRIVATE bark_test_lib doctest::doctest)
 target_compile_features(bark_test PRIVATE cxx_std_20)
 
 add_test(NAME bark_test COMMAND bark_test)

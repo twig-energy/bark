@@ -5,23 +5,67 @@
 #include "bark/datagram.hpp"
 #include "bark/i_datadog_client.hpp"
 #include "bark/tags.hpp"
-#include "bark/udp_client.hpp"
+#include "bark/transports/async_udp_transport.hpp"
+#include "bark/transports/async_uds_transport.hpp"
+#include "bark/transports/constants.hpp"
+#include "bark/transports/datagram_transport.hpp"
+#include "bark/transports/udp_transport.hpp"
+#include "bark/transports/uds_transport.hpp"
 
 namespace bark
 {
 
+template<datagram_transport Transport>
 class Client final : public IDatadogClient
 {
-    UDPClient _udp_client;
+    Transport _transport;
     Tags _global_tags;
 
   public:
-    explicit Client(UDPClient&& udp_client, Tags global_tags = no_tags);
+    explicit Client(Transport&& transport, Tags global_tags = no_tags)
+        : _transport(std::move(transport))
+        , _global_tags(std::move(global_tags))
+    {
+    }
 
-    auto send(const Datagram& datagram) -> void override;
-    auto send(Datagram&& datagram) -> void override;
+    auto send(const Datagram& datagram) -> void override
+    {
+        auto serialized = std::visit([this](const auto& serializable_datagram)
+                                     { return serializable_datagram.serialize(this->_global_tags); },
+                                     datagram);
 
-    static auto make_local_client(Tags global_tags = no_tags, uint16_t port = dogstatsd_udp_port) -> Client;
+        if constexpr (sync_datagram_transport<Transport>) {
+            this->_transport.send(serialized);
+        } else {
+            this->_transport.send_async(std::move(serialized));
+        }
+    }
+
+    auto send(Datagram&& datagram) -> void override
+    {
+        auto serialized = std::visit([this](const auto& serializable_datagram)
+                                     { return serializable_datagram.serialize(this->_global_tags); },
+                                     std::move(datagram));
+
+        if constexpr (sync_datagram_transport<Transport>) {
+            this->_transport.send(serialized);
+        } else {
+            this->_transport.send_async(std::move(serialized));
+        }
+    }
 };
+
+using UDPClient = Client<transports::UDPTransport>;
+
+inline auto make_local_udp_client(Tags global_tags = no_tags,
+                                  uint16_t port = transports::dogstatsd_udp_port) -> UDPClient
+{
+    return UDPClient {transports::UDPTransport::make_local_udp_transport(port), std::move(global_tags)};
+}
+
+extern template class Client<transports::AsyncUDPTransport>;
+extern template class Client<transports::AsyncUDSTransport>;
+extern template class Client<transports::UDPTransport>;
+extern template class Client<transports::UDSTransport>;
 
 }  // namespace bark

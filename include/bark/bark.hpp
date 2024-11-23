@@ -6,7 +6,6 @@
  */
 
 // NOLINTBEGIN(misc-include-cleaner)
-#include "bark/asio_client.hpp"
 #include "bark/client.hpp"
 #include "bark/count.hpp"
 #include "bark/datagram.hpp"
@@ -20,5 +19,7 @@
 #include "bark/sample_rate.hpp"
 #include "bark/spsc_client.hpp"
 #include "bark/tags.hpp"
-#include "bark/udp_client.hpp"
+#include "bark/transports/datagram_transport.hpp"
+#include "bark/transports/udp_transport.hpp"
+#include "bark/transports/uds_transport.hpp"
 // NOLINTEND(misc-include-cleaner)

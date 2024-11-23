@@ -1,16 +1,23 @@
 #pragma once
 
+#include <chrono>
 #include <cstddef>
 #include <cstdint>
+#include <exception>
+#include <iostream>
 #include <memory>
+#include <stop_token>
 #include <thread>
+#include <utility>
 
 #include <rigtorp/SPSCQueue.h>
 
+#include "bark/client.hpp"
 #include "bark/datagram.hpp"
 #include "bark/i_datadog_client.hpp"
 #include "bark/tags.hpp"
-#include "bark/udp_client.hpp"
+#include "bark/transports/constants.hpp"
+#include "bark/transports/datagram_transport.hpp"
 
 namespace bark
 {
@@ -21,14 +28,42 @@ class SPSCClient final : public IDatadogClient
     std::jthread _worker;
 
   public:
-    SPSCClient(UDPClient&& udp_client, std::size_t queue_size, Tags global_tags = no_tags);
+    template<sync_datagram_transport Transport>
 
-    auto send(const Datagram& datagram) -> void override;
+    SPSCClient(Transport&& transport, std::size_t queue_size, Tags global_tags = no_tags)
+        : _queue(std::make_unique<rigtorp::SPSCQueue<Datagram>>(queue_size))
+        , _worker(
+              [queue_ptr = this->_queue.get(),
+               client = Client<Transport> {std::forward<Transport>(transport), std::move(global_tags)}](
+                  const std::stop_token& stop_token) mutable
+              {
+                  try {
+                      while (!stop_token.stop_requested()) {
+                          std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
+                          while (!queue_ptr->empty()) {
+                              client.send(*queue_ptr->front());
+                              queue_ptr->pop();
+                          }
+                      }
+                  } catch (const std::exception& ex) {
+                      std::cerr << ex.what() << '\n' << std::flush;
+                      // TODO(mikael): Log error
+                  }
+              })
+    {
+    }
+
     auto send(Datagram&& datagram) -> void override;
 
-    static auto make_local_client(std::size_t queue_size,
-                                  Tags global_tags = no_tags,
-                                  uint16_t port = dogstatsd_udp_port) -> SPSCClient;
+    auto send(const Datagram& datagram) -> void override;
+
+    static auto make_local_udp_client(std::size_t queue_size,
+                                      Tags global_tags = no_tags,
+                                      uint16_t port = transports::dogstatsd_udp_port) -> SPSCClient;
 };
+
+extern template SPSCClient::SPSCClient(transports::UDPTransport&&, std::size_t, Tags);
+extern template SPSCClient::SPSCClient(transports::UDSTransport&&, std::size_t, Tags);
 
 }  // namespace bark

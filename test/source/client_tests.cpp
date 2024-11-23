@@ -29,7 +29,7 @@ TEST_SUITE("Client")
                                                           barrier.arrive_and_drop();
                                                       });
 
-            auto client = Client::make_local_client(no_tags, port);
+            auto client = make_local_udp_client(no_tags, port);
             client.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
             barrier.arrive_and_wait();
         }
@@ -50,7 +50,7 @@ TEST_SUITE("Client")
                                                           barrier.arrive_and_drop();
                                                       });
 
-            auto client = Client::make_local_client(no_tags, port);
+            auto client = make_local_udp_client(no_tags, port);
             auto moved = std::move(client);
             moved.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
             barrier.arrive_and_wait();
@@ -70,7 +70,7 @@ TEST_SUITE("Client")
                                                       barrier.arrive_and_drop();
                                                   });
 
-        auto client = Client::make_local_client(Tags::from_list({"language:cpp", "foo:bar"}), port);
+        auto client = make_local_udp_client(Tags::from_list({"language:cpp", "foo:bar"}), port);
         client.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
         barrier.arrive_and_wait();
     }

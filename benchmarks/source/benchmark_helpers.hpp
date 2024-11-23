@@ -3,8 +3,18 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <filesystem>
 #include <random>
+#include <string_view>
 #include <vector>
+
+#include "../../test/source/details/raii_async_context.hpp"
+#include "bark/number_of_io_threads.hpp"
+#include "bark/transports/async_udp_transport.hpp"
+#include "bark/transports/async_uds_transport.hpp"
+#include "bark/transports/datagram_transport.hpp"
+#include "bark/transports/udp_transport.hpp"
+#include "bark/transports/uds_transport.hpp"
 
 namespace bark
 {
@@ -33,6 +43,37 @@ inline auto random_int32_t_vector(std::size_t elements, int32_t min, int32_t max
     std::ranges::generate(values, [&]() { return dis(gen); });
 
     return values;
+}
+
+inline const std::filesystem::path uds_socket_path {"/tmp/bark_benchmarks.sock"};
+inline const auto port = int16_t {18125};
+
+template<datagram_transport Transport>
+auto create_consumer()
+{
+    if constexpr (std::is_same_v<Transport, transports::UDSTransport>
+                  || std::is_same_v<Transport, transports::AsyncUDSTransport>)
+    {
+        return bark::make_uds_server(uds_socket_path, [](std::string_view) {});
+    } else {
+        return bark::make_local_udp_server(port, [](std::string_view) {});
+    }
+}
+
+template<datagram_transport Transport>
+auto create_transport() -> Transport
+{
+    if constexpr (std::is_same_v<Transport, transports::UDPTransport>) {
+        return transports::UDPTransport::make_local_udp_transport(port);
+    } else if constexpr (std::is_same_v<Transport, transports::AsyncUDPTransport>) {
+        return transports::AsyncUDPTransport::make_async_local_udp_transport(NumberOfIOThreads {1}, port);
+    } else if constexpr (std::is_same_v<Transport, transports::UDSTransport>) {
+        return transports::UDSTransport {uds_socket_path};
+    } else if constexpr (std::is_same_v<Transport, transports::AsyncUDSTransport>) {
+        return transports::AsyncUDSTransport::make_async_uds_transport(uds_socket_path, NumberOfIOThreads {1});
+    } else {
+        static_assert(false, "Unknown transport type");
+    }
 }
 
 }  // namespace bark

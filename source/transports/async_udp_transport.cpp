@@ -9,29 +9,24 @@
 #include <string_view>
 #include <system_error>
 #include <utility>
-#include <variant>
-#include <vector>
+
+#include "bark/transports/async_udp_transport.hpp"
 
 #include "bark/asio_io_context_wrapper.hpp"
 // ^ must be before asio includes, as it protects against gcc warnings
-
 #include <asio/buffer.hpp>
 #include <asio/ip/udp.hpp>
 #include <asio/post.hpp>
 #include <fmt/base.h>
 #include <fmt/std.h>
 
-#include "bark/asio_client.hpp"
-#include "bark/datagram.hpp"
 #include "bark/number_of_io_threads.hpp"
-#include "bark/tags.hpp"
 
-namespace bark
+namespace bark::transports
 {
 
-AsioClient::AsioClient(std::string_view host, uint16_t port, NumberOfIOThreads num_io_threads, Tags global_tags)
-    : _global_tags(std::make_unique<Tags>(std::move(global_tags)))
-    , _io_context(std::make_unique<asio::io_context>(static_cast<int>(num_io_threads.value)))
+AsyncUDPTransport::AsyncUDPTransport(std::string_view host, uint16_t port, NumberOfIOThreads num_io_threads)
+    : _io_context(std::make_unique<asio::io_context>(static_cast<int>(num_io_threads.value)))
     , _receiver_endpoint(
           std::make_unique<asio::ip::udp::endpoint>(*asio::ip::udp::resolver(*this->_io_context)
                                                          .resolve(asio::ip::udp::v4(), host, std::to_string(port))
@@ -43,6 +38,7 @@ AsioClient::AsioClient(std::string_view host, uint16_t port, NumberOfIOThreads n
     }
 
     this->_socket->open(asio::ip::udp::v4());
+    this->_socket->connect(*this->_receiver_endpoint);
 
     this->_io_threads.reserve(num_io_threads.value);
     for (auto i = 0ULL; i < num_io_threads.value; i++) {
@@ -56,30 +52,24 @@ AsioClient::AsioClient(std::string_view host, uint16_t port, NumberOfIOThreads n
     }
 }
 
-auto AsioClient::send(const Datagram& datagram) -> void
+auto AsyncUDPTransport::send_async(std::string_view msg) -> void
 {
-    this->send(Datagram {datagram});
+    this->send_async(std::string {msg});
 }
 
-auto AsioClient::send(Datagram&& datagram) -> void
+auto AsyncUDPTransport::send_async(std::string&& msg) -> void
 {
     asio::post(  //
         *this->_io_context,
-        [global_tags_ptr = this->_global_tags.get(),
-         socket_ptr = this->_socket.get(),
+        [socket_ptr = this->_socket.get(),
          receiver_endpoint_ptr = this->_receiver_endpoint.get(),
-         message = std::move(datagram)]() mutable
+         message = std::move(msg)]() mutable
         {
-            auto serialized = std::visit([global_tags_ptr](const auto& serializable_datagram)
-                                         { return serializable_datagram.serialize(*global_tags_ptr); },
-                                         message);
+            auto buffer = asio::buffer(message);
 
-            auto buffer = asio::buffer(serialized);
-
-            socket_ptr->async_send_to(  //
+            socket_ptr->async_send(  //
                 buffer,
-                *receiver_endpoint_ptr,
-                [msg = std::move(serialized)](const std::error_code& error, std::size_t)
+                [msg = std::move(message)](const std::error_code& error, std::size_t)
                 {
                     // Move in `serialized`, to make the callback clean up, such that we are sure we are not using a
                     // cleaned up string.
@@ -91,9 +81,10 @@ auto AsioClient::send(Datagram&& datagram) -> void
         });
 }
 
-auto AsioClient::make_local_client(NumberOfIOThreads num_io_threads, Tags global_tags, uint16_t port) -> AsioClient
+auto AsyncUDPTransport::make_async_local_udp_transport(NumberOfIOThreads number_of_threads,
+                                                       uint16_t port) -> AsyncUDPTransport
 {
-    return {"localhost", port, num_io_threads, std::move(global_tags)};
+    return {"localhost", port, number_of_threads};
 }
 
-}  // namespace bark
+}  // namespace bark::transports

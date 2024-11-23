@@ -26,7 +26,6 @@ find_package(SPSCQueue CONFIG REQUIRED)
 
 add_library(
     bark
-    source/asio_client.cpp
     source/client.cpp
     source/count.cpp
     source/event.cpp
@@ -34,7 +33,10 @@ add_library(
     source/histogram.cpp
     source/mpmc_client.cpp
     source/spsc_client.cpp
-    source/udp_client.cpp
+    source/transports/async_udp_transport.cpp
+    source/transports/async_uds_transport.cpp
+    source/transports/udp_transport.cpp
+    source/transports/uds_transport.cpp
 )
 add_library(twig::bark ALIAS bark)
 

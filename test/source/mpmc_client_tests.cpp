@@ -31,7 +31,7 @@ TEST_SUITE("MPMCClient")
                                                       });
 
             auto queue_size = size_t {1};
-            auto client = MPMCClient::make_local_client(queue_size, no_tags, port);
+            auto client = MPMCClient::make_local_udp_client(queue_size, no_tags, port);
             client.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
             barrier.arrive_and_wait();
         }
@@ -53,7 +53,7 @@ TEST_SUITE("MPMCClient")
                                                       });
 
             auto queue_size = size_t {1};
-            auto client = MPMCClient ::make_local_client(queue_size, no_tags, port);
+            auto client = MPMCClient::make_local_udp_client(queue_size, no_tags, port);
             client.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
             client.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
             barrier.arrive_and_wait();
@@ -75,7 +75,7 @@ TEST_SUITE("MPMCClient")
                                                           barrier.arrive_and_drop();
                                                       });
             auto queue_size = size_t {1};
-            auto client = MPMCClient::make_local_client(queue_size, no_tags, port);
+            auto client = MPMCClient::make_local_udp_client(queue_size, no_tags, port);
             auto moved = std::move(client);
             moved.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
             barrier.arrive_and_wait();
@@ -107,7 +107,7 @@ TEST_SUITE("MPMCClient")
             });
 
         {
-            auto client = MPMCClient::make_local_client(2, no_tags, port);
+            auto client = MPMCClient::make_local_udp_client(2, no_tags, port);
 
             // send the first so we can wait for the server to receive
             client.send(Gauge("gauge.name", 43.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
