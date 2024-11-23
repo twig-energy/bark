@@ -72,8 +72,6 @@ auto create_transport() -> Transport
     } else if constexpr (std::is_same_v<Transport, transports::AsyncUDSTransport>) {
         return transports::AsyncUDSTransport::make_async_uds_transport(benchmark_uds_socket_path,
                                                                        NumberOfIOThreads {1});
-    } else {
-        static_assert(false, "Unknown transport type");
     }
 }
 
