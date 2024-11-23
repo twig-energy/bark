@@ -59,11 +59,6 @@ AsyncUDPTransport::AsyncUDPTransport(std::string_view host,
     }
 }
 
-auto AsyncUDPTransport::send_async(const Datagram& datagram) -> void
-{
-    this->send_async(Datagram {datagram});
-}
-
 auto AsyncUDPTransport::send_async(Datagram&& datagram) -> void
 {
     asio::post(  //

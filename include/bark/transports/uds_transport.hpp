@@ -24,7 +24,6 @@ class UDSTransport
   public:
     explicit UDSTransport(const std::filesystem::path& socket_path, Tags global_tags = no_tags);
 
-    auto send(const Datagram& datagram) -> bool;
     auto send(Datagram&& datagram) -> bool;
 };
 

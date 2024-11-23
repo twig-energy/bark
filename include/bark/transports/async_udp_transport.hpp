@@ -40,7 +40,6 @@ class AsyncUDPTransport
                       NumberOfIOThreads num_io_threads,
                       Tags global_tags = no_tags);
 
-    auto send_async(const Datagram& datagram) -> void;
     auto send_async(Datagram&& datagram) -> void;
 
     static auto make_async_local_udp_transport(NumberOfIOThreads number_of_threads,

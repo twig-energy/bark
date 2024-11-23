@@ -32,11 +32,6 @@ UDSTransport::UDSTransport(const std::filesystem::path& socket_path, Tags global
     this->_socket->connect(*this->_endpoint);
 }
 
-auto UDSTransport::send(const Datagram& datagram) -> bool
-{
-    return this->send(Datagram {datagram});
-}
-
 auto UDSTransport::send(Datagram&& datagram) -> bool
 {
     auto serialized = std::visit([this](const auto& serializable_datagram)

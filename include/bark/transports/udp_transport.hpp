@@ -26,7 +26,6 @@ class UDPTransport
   public:
     UDPTransport(std::string_view host, uint16_t port, Tags global_tags = no_tags);
 
-    auto send(const Datagram& datagram) -> bool;
     auto send(Datagram&& datagram) -> bool;
 
     static auto make_local_udp_transport(uint16_t port = dogstatsd_udp_port,

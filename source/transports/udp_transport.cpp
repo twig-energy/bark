@@ -37,11 +37,6 @@ UDPTransport::UDPTransport(std::string_view host, uint16_t port, Tags global_tag
     this->_socket->connect(*this->_receiver_endpoint);
 }
 
-auto UDPTransport::send(const Datagram& datagram) -> bool
-{
-    return this->send(Datagram {datagram});
-}
-
 auto UDPTransport::send(Datagram&& datagram) -> bool
 {
     auto serialized = std::visit([this](const auto& serializable_datagram)

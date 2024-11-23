@@ -53,11 +53,6 @@ AsyncUDSTransport::AsyncUDSTransport(const std::filesystem::path& socket_path,
     }
 }
 
-auto AsyncUDSTransport::send_async(const Datagram& datagram) -> void
-{
-    this->send_async(Datagram {datagram});
-}
-
 auto AsyncUDSTransport::send_async(Datagram&& datagram) -> void
 {
     asio::post(  //

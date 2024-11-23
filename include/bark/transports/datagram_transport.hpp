@@ -11,18 +11,12 @@ namespace bark
 template<typename T>
 concept sync_datagram_transport = requires(T t) {
     {
-        t.send(std::declval<const Datagram&>())
-    } -> std::same_as<bool>;
-    {
         t.send(std::declval<Datagram&&>())
     } -> std::same_as<bool>;
 };
 
 template<typename T>
 concept async_datagram_transport = requires(T t) {
-    {
-        t.send_async(std::declval<const Datagram&>())
-    } -> std::same_as<void>;
     {
         t.send_async(std::declval<Datagram&&>())
     } -> std::same_as<void>;

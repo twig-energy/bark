@@ -4,12 +4,14 @@
 #include <cstddef>
 #include <cstdint>
 #include <exception>
-#include <iostream>
 #include <memory>
+#include <source_location>
 #include <stop_token>
 #include <thread>
 #include <utility>
 
+#include <fmt/base.h>
+#include <fmt/std.h>
 #include <rigtorp/SPSCQueue.h>
 
 #include "bark/client.hpp"
@@ -46,8 +48,7 @@ class SPSCClient final : public IDatadogClient
                           }
                       }
                   } catch (const std::exception& ex) {
-                      std::cerr << ex.what() << '\n' << std::flush;
-                      // TODO(mikael): Log error
+                      fmt::println(stderr, "{}. {}", ex.what(), std::source_location::current());
                   }
               })
     {

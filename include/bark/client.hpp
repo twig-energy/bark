@@ -29,9 +29,9 @@ class Client final : public IDatadogClient
     auto send(const Datagram& datagram) -> void override
     {
         if constexpr (sync_datagram_transport<Transport>) {
-            this->_transport.send(datagram);
+            this->_transport.send(Datagram {datagram});
         } else {
-            this->_transport.send_async(datagram);
+            this->_transport.send_async(Datagram {datagram});
         }
     }
 
