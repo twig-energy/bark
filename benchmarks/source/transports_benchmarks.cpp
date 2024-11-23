@@ -1,3 +1,6 @@
+#include <cstddef>
+#include <utility>
+#include <vector>
 
 #include <benchmark/benchmark.h>
 
@@ -16,6 +19,8 @@ namespace bark
 namespace
 {
 
+const auto number_of_iterations = std::size_t {25000};
+
 template<datagram_transport T>
 auto benchmark_transport_send_metric(benchmark::State& state) -> void
 {
@@ -23,22 +28,29 @@ auto benchmark_transport_send_metric(benchmark::State& state) -> void
     auto consumer = create_consumer<T>();
     auto transport = std::make_unique<T>(create_transport<T>());
 
-    const auto value = Gauge("metric_name", 200.0).with(Tags::from_list({"tag1:hello", "tag2:world"}));
+    auto values = std::vector<Gauge>(number_of_iterations,
+                                     Gauge("metric_name", 200.0).with(Tags::from_list({"tag1:hello", "tag2:world"})));
 
-    for (auto _ : state) {
+    auto i = std::size_t {0};
+    for (auto a : state) {
         if constexpr (sync_datagram_transport<T>) {
-            transport->send(value);
+            transport->send(std::move(values[i]));
         } else {
-            transport->send_async(value);
+            transport->send_async(std::move(values[i]));
         }
+        i++;
     }
 }
 
 }  // namespace
 
-BENCHMARK(benchmark_transport_send_metric<transports::UDPTransport>)->Iterations(10000)->Repetitions(16);
-BENCHMARK(benchmark_transport_send_metric<transports::UDSTransport>)->Iterations(10000)->Repetitions(16);
-BENCHMARK(benchmark_transport_send_metric<transports::AsyncUDPTransport>)->Iterations(10000)->Repetitions(16);
-BENCHMARK(benchmark_transport_send_metric<transports::AsyncUDSTransport>)->Iterations(10000)->Repetitions(16);
+BENCHMARK(benchmark_transport_send_metric<transports::UDPTransport>)->Iterations(number_of_iterations)->Repetitions(16);
+BENCHMARK(benchmark_transport_send_metric<transports::UDSTransport>)->Iterations(number_of_iterations)->Repetitions(16);
+BENCHMARK(benchmark_transport_send_metric<transports::AsyncUDPTransport>)
+    ->Iterations(number_of_iterations)
+    ->Repetitions(16);
+BENCHMARK(benchmark_transport_send_metric<transports::AsyncUDSTransport>)
+    ->Iterations(number_of_iterations)
+    ->Repetitions(16);
 
 }  // namespace bark

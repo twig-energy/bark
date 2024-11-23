@@ -1,5 +1,6 @@
 
 #include <cstddef>
+#include <vector>
 
 #include "bark/client.hpp"
 
@@ -50,10 +51,16 @@ auto benchmark_client_send_metric(benchmark::State& state) -> void
     auto consumer = create_consumer<Transport>();
     auto client = create_client<T, Transport>();
 
+    auto metrics = std::vector<Gauge>();
+    metrics.reserve(number_of_iterations);
+    for (auto i = std::size_t {0}; i < number_of_iterations; i++) {
+        metrics.emplace_back(
+            Gauge("metric_name", values[i % values.size()]).with(Tags::from_list({"tag1:hello", "tag2:world"})));
+    }
+
     auto iteration = std::size_t {0};
     for (auto _ : state) {
-        client.send(Gauge("metric_name", values[iteration % values.size()])
-                        .with(Tags::from_list({"tag1:hello", "tag2:world"})));
+        client.send(std::move(metrics[iteration]));
         iteration++;
     }
 }
@@ -65,8 +72,13 @@ auto benchmark_client_send_event(benchmark::State& state) -> void
     auto consumer = create_consumer<Transport>();
     auto client = create_client<T, Transport>();
 
+    auto events = std::vector<Event>(number_of_iterations,
+                                     Event("event", "text").with(Tags::from_list({"tag1:hello", "tag2:world"})));
+
+    auto i = std::size_t {0};
     for (auto _ : state) {
-        client.send(Event("event", "text").with(Tags::from_list({"tag1:hello", "tag2:world"})));
+        client.send(std::move(events[i]));
+        i++;
     }
 }
 
