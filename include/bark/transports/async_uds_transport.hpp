@@ -3,8 +3,6 @@
 #include <cstring>
 #include <filesystem>
 #include <memory>
-#include <string>
-#include <string_view>
 #include <thread>
 #include <vector>
 
@@ -13,13 +11,16 @@
 #include <asio/executor_work_guard.hpp>
 #include <asio/local/datagram_protocol.hpp>
 
+#include "bark/datagram.hpp"
 #include "bark/number_of_io_threads.hpp"
+#include "bark/tags.hpp"
 
 namespace bark::transports
 {
 
 class AsyncUDSTransport
 {
+    std::unique_ptr<Tags> _global_tags;
     std::unique_ptr<asio::io_context> _io_context;
     std::unique_ptr<asio::local::datagram_protocol::socket> _socket;
     std::vector<std::jthread> _io_threads;
@@ -31,13 +32,16 @@ class AsyncUDSTransport
             asio::make_work_guard(*this->_io_context));
 
   public:
-    explicit AsyncUDSTransport(const std::filesystem::path& socket_path, NumberOfIOThreads num_io_threads);
+    explicit AsyncUDSTransport(const std::filesystem::path& socket_path,
+                               NumberOfIOThreads num_io_threads,
+                               Tags global_tags = no_tags);
 
-    auto send_async(std::string_view msg) -> void;
-    auto send_async(std::string&& msg) -> void;
+    auto send_async(const Datagram& datagram) -> void;
+    auto send_async(Datagram&& datagram) -> void;
 
     static auto make_async_uds_transport(const std::filesystem::path& socket_path,
-                                         NumberOfIOThreads num_io_threads) -> AsyncUDSTransport;
+                                         NumberOfIOThreads num_io_threads,
+                                         Tags global_tags = no_tags) -> AsyncUDSTransport;
 };
 
 }  // namespace bark::transports

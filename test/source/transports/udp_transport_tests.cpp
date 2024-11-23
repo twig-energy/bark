@@ -18,6 +18,7 @@ TEST_SUITE("UDPTransport")
     {
         auto barrier = std::barrier<>(2);
         auto port = uint16_t {18127};
+        auto metric = Gauge("hello", 42);
         constexpr std::string_view sent_msg = "hello:42|g";
         auto server = bark::make_local_udp_server(  //
             port,
@@ -28,7 +29,7 @@ TEST_SUITE("UDPTransport")
             });
 
         auto client = transports::UDPTransport::make_local_udp_transport(port);
-        CHECK(client.send(sent_msg));
+        CHECK(client.send(std::move(metric)));
 
         barrier.arrive_and_wait();
     }
@@ -37,6 +38,7 @@ TEST_SUITE("UDPTransport")
     {
         auto barrier = std::barrier<>(5);
         auto port = uint16_t {18127};
+        auto metric = Gauge("hello", 42);
         constexpr std::string_view sent_msg = "hello:42|g";
         auto server = bark::make_local_udp_server(  //
             port,
@@ -47,10 +49,10 @@ TEST_SUITE("UDPTransport")
             });
 
         auto client = transports::UDPTransport::make_local_udp_transport(port);
-        CHECK(client.send(sent_msg));
-        CHECK(client.send(sent_msg));
-        CHECK(client.send(sent_msg));
-        CHECK(client.send(sent_msg));
+        CHECK(client.send(metric));
+        CHECK(client.send(metric));
+        CHECK(client.send(metric));
+        CHECK(client.send(std::move(metric)));
 
         barrier.arrive_and_wait();
     }
@@ -59,6 +61,7 @@ TEST_SUITE("UDPTransport")
     {
         auto barrier = std::barrier<>(3);
         auto port = uint16_t {18127};
+        auto metric = Gauge("hello", 42);
         constexpr std::string_view sent_msg = "hello:42|g";
         auto server = bark::make_local_udp_server(  //
             port,
@@ -69,9 +72,9 @@ TEST_SUITE("UDPTransport")
             });
 
         auto client = transports::UDPTransport::make_local_udp_transport(port);
-        CHECK(client.send(sent_msg));
+        CHECK(client.send(metric));
         auto moved_client = std::move(client);
-        CHECK(moved_client.send(sent_msg));
+        CHECK(moved_client.send(std::move(metric)));
 
         barrier.arrive_and_wait();
     }

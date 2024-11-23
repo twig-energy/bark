@@ -26,10 +26,10 @@ auto MPMCClient::send(Datagram&& datagram) -> void
 
 auto MPMCClient::make_local_udp_client(std::size_t queue_size, Tags global_tags, uint16_t port) -> MPMCClient
 {
-    return {transports::UDPTransport::make_local_udp_transport(port), queue_size, std::move(global_tags)};
+    return {transports::UDPTransport::make_local_udp_transport(port, std::move(global_tags)), queue_size};
 }
 
-template MPMCClient::MPMCClient(transports::UDPTransport&&, std::size_t, Tags);
-template MPMCClient::MPMCClient(transports::UDSTransport&&, std::size_t, Tags);
+template MPMCClient::MPMCClient(transports::UDPTransport&&, std::size_t);
+template MPMCClient::MPMCClient(transports::UDSTransport&&, std::size_t);
 
 }  // namespace bark

@@ -23,8 +23,7 @@ auto benchmark_transport_send_metric(benchmark::State& state) -> void
     auto consumer = create_consumer<T>();
     auto transport = std::make_unique<T>(create_transport<T>());
 
-    const auto value =
-        Gauge("metric_name", 200.0).with(Tags::from_list({"tag1:hello", "tag2:world"})).serialize(no_tags);
+    const auto value = Gauge("metric_name", 200.0).with(Tags::from_list({"tag1:hello", "tag2:world"}));
 
     for (auto _ : state) {
         if constexpr (sync_datagram_transport<T>) {

@@ -18,6 +18,7 @@ TEST_SUITE("UDSTransport")
     {
         auto barrier = std::barrier<>(2);
         auto socket_path = std::filesystem::path {"/tmp/bark_tests.sock"};
+        auto metric = Gauge("hello", 42);
         constexpr std::string_view sent_msg = "hello:42|g";
         auto server = bark::make_uds_server(  //
             socket_path,
@@ -28,7 +29,7 @@ TEST_SUITE("UDSTransport")
             });
 
         auto client = transports::UDSTransport {socket_path};
-        CHECK(client.send(sent_msg));
+        CHECK(client.send(std::move(metric)));
 
         barrier.arrive_and_wait();
     }
@@ -37,6 +38,7 @@ TEST_SUITE("UDSTransport")
     {
         auto barrier = std::barrier<>(5);
         auto socket_path = std::filesystem::path {"/tmp/bark_tests.sock"};
+        auto metric = Gauge("hello", 42);
         constexpr std::string_view sent_msg = "hello:42|g";
         auto server = bark::make_uds_server(  //
             socket_path,
@@ -47,10 +49,10 @@ TEST_SUITE("UDSTransport")
             });
 
         auto client = transports::UDSTransport {socket_path};
-        CHECK(client.send(sent_msg));
-        CHECK(client.send(sent_msg));
-        CHECK(client.send(sent_msg));
-        CHECK(client.send(sent_msg));
+        CHECK(client.send(metric));
+        CHECK(client.send(metric));
+        CHECK(client.send(metric));
+        CHECK(client.send(std::move(metric)));
 
         barrier.arrive_and_wait();
     }
@@ -59,6 +61,7 @@ TEST_SUITE("UDSTransport")
     {
         auto barrier = std::barrier<>(3);
         auto socket_path = std::filesystem::path {"/tmp/bark_tests.sock"};
+        auto metric = Gauge("hello", 42);
         constexpr std::string_view sent_msg = "hello:42|g";
         auto server = bark::make_uds_server(  //
             socket_path,
@@ -69,9 +72,9 @@ TEST_SUITE("UDSTransport")
             });
 
         auto client = transports::UDSTransport {socket_path};
-        CHECK(client.send(sent_msg));
+        CHECK(client.send(metric));
         auto moved_client = std::move(client);
-        CHECK(moved_client.send(sent_msg));
+        CHECK(moved_client.send(std::move(metric)));
 
         barrier.arrive_and_wait();
     }

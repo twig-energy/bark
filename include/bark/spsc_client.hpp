@@ -30,11 +30,10 @@ class SPSCClient final : public IDatadogClient
   public:
     template<sync_datagram_transport Transport>
 
-    SPSCClient(Transport&& transport, std::size_t queue_size, Tags global_tags = no_tags)
+    SPSCClient(Transport&& transport, std::size_t queue_size)
         : _queue(std::make_unique<rigtorp::SPSCQueue<Datagram>>(queue_size))
         , _worker(
-              [queue_ptr = this->_queue.get(),
-               client = Client<Transport> {std::forward<Transport>(transport), std::move(global_tags)}](
+              [queue_ptr = this->_queue.get(), client = Client<Transport> {std::forward<Transport>(transport)}](
                   const std::stop_token& stop_token) mutable
               {
                   try {
@@ -63,7 +62,7 @@ class SPSCClient final : public IDatadogClient
                                       uint16_t port = transports::dogstatsd_udp_port) -> SPSCClient;
 };
 
-extern template SPSCClient::SPSCClient(transports::UDPTransport&&, std::size_t, Tags);
-extern template SPSCClient::SPSCClient(transports::UDSTransport&&, std::size_t, Tags);
+extern template SPSCClient::SPSCClient(transports::UDPTransport&&, std::size_t);
+extern template SPSCClient::SPSCClient(transports::UDSTransport&&, std::size_t);
 
 }  // namespace bark

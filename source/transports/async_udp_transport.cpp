@@ -9,6 +9,7 @@
 #include <string_view>
 #include <system_error>
 #include <utility>
+#include <variant>
 
 #include "bark/transports/async_udp_transport.hpp"
 
@@ -20,13 +21,19 @@
 #include <fmt/base.h>
 #include <fmt/std.h>
 
+#include "bark/datagram.hpp"
 #include "bark/number_of_io_threads.hpp"
+#include "bark/tags.hpp"
 
 namespace bark::transports
 {
 
-AsyncUDPTransport::AsyncUDPTransport(std::string_view host, uint16_t port, NumberOfIOThreads num_io_threads)
-    : _io_context(std::make_unique<asio::io_context>(static_cast<int>(num_io_threads.value)))
+AsyncUDPTransport::AsyncUDPTransport(std::string_view host,
+                                     uint16_t port,
+                                     NumberOfIOThreads num_io_threads,
+                                     Tags global_tags)
+    : _global_tags(std::make_unique<Tags>(std::move(global_tags)))
+    , _io_context(std::make_unique<asio::io_context>(static_cast<int>(num_io_threads.value)))
     , _receiver_endpoint(
           std::make_unique<asio::ip::udp::endpoint>(*asio::ip::udp::resolver(*this->_io_context)
                                                          .resolve(asio::ip::udp::v4(), host, std::to_string(port))
@@ -52,19 +59,23 @@ AsyncUDPTransport::AsyncUDPTransport(std::string_view host, uint16_t port, Numbe
     }
 }
 
-auto AsyncUDPTransport::send_async(std::string_view msg) -> void
+auto AsyncUDPTransport::send_async(const Datagram& datagram) -> void
 {
-    this->send_async(std::string {msg});
+    this->send_async(Datagram {datagram});
 }
 
-auto AsyncUDPTransport::send_async(std::string&& msg) -> void
+auto AsyncUDPTransport::send_async(Datagram&& datagram) -> void
 {
     asio::post(  //
         *this->_io_context,
         [socket_ptr = this->_socket.get(),
          receiver_endpoint_ptr = this->_receiver_endpoint.get(),
-         message = std::move(msg)]() mutable
+         global_tags_ptr = this->_global_tags.get(),
+         datagram = std::move(datagram)]() mutable
         {
+            auto message = std::visit([global_tags_ptr](const auto& serializable_datagram)
+                                      { return serializable_datagram.serialize(*global_tags_ptr); },
+                                      datagram);
             auto buffer = asio::buffer(message);
 
             socket_ptr->async_send(  //
@@ -82,9 +93,10 @@ auto AsyncUDPTransport::send_async(std::string&& msg) -> void
 }
 
 auto AsyncUDPTransport::make_async_local_udp_transport(NumberOfIOThreads number_of_threads,
-                                                       uint16_t port) -> AsyncUDPTransport
+                                                       uint16_t port,
+                                                       Tags global_tags) -> AsyncUDPTransport
 {
-    return {"localhost", port, number_of_threads};
+    return {"localhost", port, number_of_threads, std::move(global_tags)};
 }
 
 }  // namespace bark::transports

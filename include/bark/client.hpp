@@ -19,38 +19,28 @@ template<datagram_transport Transport>
 class Client final : public IDatadogClient
 {
     Transport _transport;
-    Tags _global_tags;
 
   public:
-    explicit Client(Transport&& transport, Tags global_tags = no_tags)
+    explicit Client(Transport&& transport)
         : _transport(std::move(transport))
-        , _global_tags(std::move(global_tags))
     {
     }
 
     auto send(const Datagram& datagram) -> void override
     {
-        auto serialized = std::visit([this](const auto& serializable_datagram)
-                                     { return serializable_datagram.serialize(this->_global_tags); },
-                                     datagram);
-
         if constexpr (sync_datagram_transport<Transport>) {
-            this->_transport.send(serialized);
+            this->_transport.send(datagram);
         } else {
-            this->_transport.send_async(std::move(serialized));
+            this->_transport.send_async(datagram);
         }
     }
 
     auto send(Datagram&& datagram) -> void override
     {
-        auto serialized = std::visit([this](const auto& serializable_datagram)
-                                     { return serializable_datagram.serialize(this->_global_tags); },
-                                     std::move(datagram));
-
         if constexpr (sync_datagram_transport<Transport>) {
-            this->_transport.send(serialized);
+            this->_transport.send(std::move(datagram));
         } else {
-            this->_transport.send_async(std::move(serialized));
+            this->_transport.send_async(std::move(datagram));
         }
     }
 };
@@ -60,7 +50,7 @@ using UDPClient = Client<transports::UDPTransport>;
 inline auto make_local_udp_client(Tags global_tags = no_tags,
                                   uint16_t port = transports::dogstatsd_udp_port) -> UDPClient
 {
-    return UDPClient {transports::UDPTransport::make_local_udp_transport(port), std::move(global_tags)};
+    return UDPClient {transports::UDPTransport::make_local_udp_transport(port, std::move(global_tags))};
 }
 
 extern template class Client<transports::AsyncUDPTransport>;

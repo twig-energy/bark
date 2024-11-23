@@ -1,9 +1,9 @@
 #pragma once
 
 #include <concepts>
-#include <string>
-#include <string_view>
 #include <utility>
+
+#include "bark/datagram.hpp"
 
 namespace bark
 {
@@ -11,14 +11,20 @@ namespace bark
 template<typename T>
 concept sync_datagram_transport = requires(T t) {
     {
-        t.send(std::declval<std::string_view>())
+        t.send(std::declval<const Datagram&>())
+    } -> std::same_as<bool>;
+    {
+        t.send(std::declval<Datagram&&>())
     } -> std::same_as<bool>;
 };
 
 template<typename T>
 concept async_datagram_transport = requires(T t) {
     {
-        t.send_async(std::declval<std::string&&>())
+        t.send_async(std::declval<const Datagram&>())
+    } -> std::same_as<void>;
+    {
+        t.send_async(std::declval<Datagram&&>())
     } -> std::same_as<void>;
 };
 
