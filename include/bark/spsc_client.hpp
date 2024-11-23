@@ -16,6 +16,7 @@
 
 #include "bark/client.hpp"
 #include "bark/datagram.hpp"
+#include "bark/feature_detection.hpp"
 #include "bark/i_datadog_client.hpp"
 #include "bark/tags.hpp"
 #include "bark/transports/constants.hpp"
@@ -43,7 +44,14 @@ class SPSCClient final : public IDatadogClient
                           std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
                           while (!queue_ptr->empty()) {
+#if BARK_GCC_VERSION > 0
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wnull-dereference"
+#endif
                               client.send(*queue_ptr->front());
+#if BARK_GCC_VERSION > 0
+#    pragma GCC diagnostic pop
+#endif
                               queue_ptr->pop();
                           }
                       }

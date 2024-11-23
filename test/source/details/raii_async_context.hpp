@@ -10,7 +10,6 @@
 // ^ must be before asio includes, as it protects against gcc warnings
 
 #include <asio/executor_work_guard.hpp>
-#include <asio/io_service.hpp>
 
 #include "./udp_server.hpp"
 #include "./uds_server.hpp"
@@ -43,7 +42,6 @@ class RAIIAsyncContext
             // at the io_context.run() call when the constructor is completed.
             [io_context_ptr = this->_io_context.get(), &server_creator_func, &is_initialized, &cond_var]
             {
-                const auto work = asio::io_service::work(*io_context_ptr);
                 auto server = server_creator_func(*io_context_ptr);
                 is_initialized = true;
                 cond_var.notify_one();  // now we can let the main thread continue

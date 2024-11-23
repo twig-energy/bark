@@ -8,6 +8,7 @@
 #include <doctest/doctest.h>
 
 #include "../details/raii_async_context.hpp"
+#include "bark/number_of_io_threads.hpp"
 
 namespace bark
 {
