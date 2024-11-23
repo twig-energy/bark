@@ -61,10 +61,11 @@ auto AsyncUDSTransport::send_async(Datagram&& datagram) -> void
          global_tags_ptr = this->_global_tags.get(),
          datagram = std::move(datagram)]() mutable
         {
-            auto message = std::visit([global_tags_ptr](const auto& serializable_datagram)
-                                      { return serializable_datagram.serialize(*global_tags_ptr); },
-                                      datagram);
-            auto buffer = asio::buffer(message);
+            auto message =
+                std::make_unique<std::string>(std::visit([global_tags_ptr](const auto& serializable_datagram)
+                                                         { return serializable_datagram.serialize(*global_tags_ptr); },
+                                                         datagram));
+            auto buffer = asio::buffer(*message);
 
             socket_ptr->async_send(  //
                 buffer,

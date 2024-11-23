@@ -30,6 +30,8 @@ add_executable(
     source/mpmc_client_tests.cpp
     source/spsc_client_tests.cpp
     source/tags_tests.cpp
+    source/transports/async_udp_transport_tests.cpp
+    source/transports/async_uds_transport_tests.cpp
     source/transports/udp_transport_tests.cpp
     source/transports/uds_transport_tests.cpp
 )
