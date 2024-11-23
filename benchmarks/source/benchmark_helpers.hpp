@@ -70,8 +70,7 @@ auto create_transport() -> Transport
     } else if constexpr (std::is_same_v<Transport, transports::UDSTransport>) {
         return transports::UDSTransport {benchmark_uds_socket_path};
     } else if constexpr (std::is_same_v<Transport, transports::AsyncUDSTransport>) {
-        return transports::AsyncUDSTransport::make_async_uds_transport(benchmark_uds_socket_path,
-                                                                       NumberOfIOThreads {1});
+        return transports::AsyncUDSTransport {benchmark_uds_socket_path, NumberOfIOThreads {1}};
     }
 }
 

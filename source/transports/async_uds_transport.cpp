@@ -32,6 +32,7 @@ AsyncUDSTransport::AsyncUDSTransport(const std::filesystem::path& socket_path,
                                      Tags global_tags)
     : _global_tags(std::make_unique<Tags>(std::move(global_tags)))
     , _io_context(std::make_unique<asio::io_context>())
+    , _endpoint(std::make_unique<asio::local::datagram_protocol::endpoint>(socket_path.c_str()))
     , _socket(std::make_unique<asio::local::datagram_protocol::socket>(*this->_io_context))
 {
     if (num_io_threads.value == 0) {
@@ -39,7 +40,7 @@ AsyncUDSTransport::AsyncUDSTransport(const std::filesystem::path& socket_path,
     }
 
     this->_socket->open();
-    this->_socket->connect(socket_path.c_str());
+    this->_socket->connect(*this->_endpoint);
 
     this->_io_threads.reserve(num_io_threads.value);
     for (auto i = 0ULL; i < num_io_threads.value; i++) {
@@ -79,13 +80,6 @@ auto AsyncUDSTransport::send_async(Datagram&& datagram) -> void
                     }
                 });
         });
-}
-
-auto AsyncUDSTransport::make_async_uds_transport(const std::filesystem::path& socket_path,
-                                                 NumberOfIOThreads num_io_threads,
-                                                 Tags global_tags) -> AsyncUDSTransport
-{
-    return AsyncUDSTransport {socket_path, num_io_threads, std::move(global_tags)};
 }
 
 }  // namespace bark::transports

@@ -22,6 +22,7 @@ class AsyncUDSTransport
 {
     std::unique_ptr<Tags> _global_tags;
     std::unique_ptr<asio::io_context> _io_context;
+    std::unique_ptr<asio::local::datagram_protocol::endpoint> _endpoint;
     std::unique_ptr<asio::local::datagram_protocol::socket> _socket;
     std::vector<std::jthread> _io_threads;
 
@@ -37,10 +38,6 @@ class AsyncUDSTransport
                                Tags global_tags = no_tags);
 
     auto send_async(Datagram&& datagram) -> void;
-
-    static auto make_async_uds_transport(const std::filesystem::path& socket_path,
-                                         NumberOfIOThreads num_io_threads,
-                                         Tags global_tags = no_tags) -> AsyncUDSTransport;
 };
 
 }  // namespace bark::transports
