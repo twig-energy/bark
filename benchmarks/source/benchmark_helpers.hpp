@@ -45,7 +45,7 @@ inline auto random_int32_t_vector(std::size_t elements, int32_t min, int32_t max
     return values;
 }
 
-inline const std::filesystem::path benchmark_uds_socket_path {std::tmpnam(nullptr)};
+inline const std::filesystem::path benchmark_uds_socket_path {"bark_benchmarks.sock"};
 inline const auto benchmark_port = int16_t {18125};
 
 template<datagram_transport Transport>

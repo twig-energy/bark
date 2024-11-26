@@ -17,7 +17,7 @@ TEST_SUITE("UDSTransport")
     TEST_CASE("when sending a message over UDS, the server should receive it")
     {
         auto barrier = std::barrier<>(2);
-        auto socket_path = std::filesystem::path {std::tmpnam(nullptr)};
+        auto socket_path = std::filesystem::path {"bark_test.sock"};
         auto metric = Gauge("hello", 42);
         constexpr std::string_view sent_msg = "hello:42|g";
         auto server = bark::make_uds_server(  //
@@ -37,7 +37,7 @@ TEST_SUITE("UDSTransport")
     TEST_CASE("when multiple messages over UDS, the server should receive them")
     {
         auto barrier = std::barrier<>(5);
-        auto socket_path = std::filesystem::path {std::tmpnam(nullptr)};
+        auto socket_path = std::filesystem::path {"bark_test.sock"};
         auto metric = Gauge("hello", 42);
         constexpr std::string_view sent_msg = "hello:42|g";
         auto server = bark::make_uds_server(  //
@@ -60,7 +60,7 @@ TEST_SUITE("UDSTransport")
     TEST_CASE("when moved the client should still work")
     {
         auto barrier = std::barrier<>(3);
-        auto socket_path = std::filesystem::path {std::tmpnam(nullptr)};
+        auto socket_path = std::filesystem::path {"bark_test.sock"};
         auto metric = Gauge("hello", 42);
         constexpr std::string_view sent_msg = "hello:42|g";
         auto server = bark::make_uds_server(  //
