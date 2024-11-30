@@ -8,7 +8,10 @@
 #include <doctest/doctest.h>
 
 #include "../details/raii_async_context.hpp"
+#include "bark/feature_detection.hpp"
 #include "bark/number_of_io_threads.hpp"
+
+#if BARK_UDS_ENABLED
 
 namespace bark
 {
@@ -82,3 +85,5 @@ TEST_SUITE("AsyncUDSTransport")
 }
 
 }  // namespace bark
+
+#endif  // BARK_UDS_ENABLED

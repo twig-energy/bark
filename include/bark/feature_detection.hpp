@@ -1,5 +1,7 @@
 #pragma once
 
+#include <asio/detail/config.hpp>
+
 // NOLINTBEGIN(cppcoreguidelines-macro-usage,cppcoreguidelines-macro-to-enum,modernize-macro-to-enum)
 
 #if defined(__clang__) && !defined(__ibmxl__)
@@ -47,6 +49,12 @@
 #    define BARK_CONSTEXPR constexpr
 #else
 #    define BARK_CONSTEXPR
+#endif
+
+#ifdef ASIO_HAS_LOCAL_SOCKETS
+#    define BARK_UDS_ENABLED 1
+#else
+#    define BARK_UDS_ENABLED 0
 #endif
 
 // NOLINTEND(cppcoreguidelines-macro-usage,cppcoreguidelines-macro-to-enum,modernize-macro-to-enum)

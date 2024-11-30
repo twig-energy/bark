@@ -12,6 +12,10 @@
 #include <asio/local/datagram_protocol.hpp>
 #include <fmt/core.h>
 
+#include "bark/feature_detection.hpp"
+
+#if BARK_UDS_ENABLED
+
 namespace bark
 {
 
@@ -38,3 +42,5 @@ class UDSServer
 };
 
 }  // namespace bark
+
+#endif  // BARK_UDS_ENABLED

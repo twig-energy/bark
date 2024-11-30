@@ -16,6 +16,9 @@
 #include <fmt/std.h>
 
 #include "./uds_server.hpp"
+#include "bark/feature_detection.hpp"
+
+#if BARK_UDS_ENABLED
 
 namespace bark
 {
@@ -58,3 +61,5 @@ auto UDSServer::handle_receive(const std::error_code& error, std::size_t bytes_t
 }
 
 }  // namespace bark
+
+#endif  // BARK_UDS_ENABLED

@@ -9,7 +9,10 @@
 #include <asio/local/datagram_protocol.hpp>
 
 #include "bark/datagram.hpp"
+#include "bark/feature_detection.hpp"
 #include "bark/tags.hpp"
+
+#if BARK_UDS_ENABLED
 
 namespace bark::transports
 {
@@ -28,3 +31,5 @@ class UDSTransport
 };
 
 }  // namespace bark::transports
+
+#endif  // BARK_UDS_ENABLED
