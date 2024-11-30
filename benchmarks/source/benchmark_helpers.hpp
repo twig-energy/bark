@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "../../test/source/details/raii_async_context.hpp"
+#include "bark/feature_detection.hpp"
 #include "bark/number_of_io_threads.hpp"
 #include "bark/transports/async_udp_transport.hpp"
 #include "bark/transports/async_uds_transport.hpp"
@@ -51,12 +52,16 @@ inline const auto benchmark_port = int16_t {18125};
 template<datagram_transport Transport>
 auto create_consumer()
 {
-    if constexpr (std::is_same_v<Transport, transports::UDSTransport>
-                  || std::is_same_v<Transport, transports::AsyncUDSTransport>)
+    if constexpr (std::is_same_v<Transport, transports::UDPTransport>
+                  || std::is_same_v<Transport, transports::AsyncUDPTransport>)
     {
-        return bark::make_uds_server(benchmark_uds_socket_path, [](std::string_view) {});
-    } else {
         return bark::make_local_udp_server(benchmark_port, [](std::string_view) {});
+    } else {
+#if BARK_UDS_ENABLED
+        return bark::make_uds_server(benchmark_uds_socket_path, [](std::string_view) {});
+#else
+        return 0;
+#endif
     }
 }
 
@@ -67,10 +72,12 @@ auto create_transport() -> Transport
         return transports::UDPTransport::make_local_udp_transport(benchmark_port);
     } else if constexpr (std::is_same_v<Transport, transports::AsyncUDPTransport>) {
         return transports::AsyncUDPTransport::make_async_local_udp_transport(NumberOfIOThreads {1}, benchmark_port);
+#if BARK_UDS_ENABLED
     } else if constexpr (std::is_same_v<Transport, transports::UDSTransport>) {
         return transports::UDSTransport {benchmark_uds_socket_path};
     } else if constexpr (std::is_same_v<Transport, transports::AsyncUDSTransport>) {
         return transports::AsyncUDSTransport {benchmark_uds_socket_path, NumberOfIOThreads {1}};
+#endif  // BARK_UDS_ENABLED
     }
 }
 

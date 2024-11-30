@@ -21,8 +21,11 @@
 #include <fmt/std.h>
 
 #include "bark/datagram.hpp"
+#include "bark/feature_detection.hpp"
 #include "bark/number_of_io_threads.hpp"
 #include "bark/tags.hpp"
+
+#if BARK_UDS_ENABLED
 
 namespace bark::transports
 {
@@ -83,3 +86,5 @@ auto AsyncUDSTransport::send_async(Datagram&& datagram) -> void
 }
 
 }  // namespace bark::transports
+
+#endif  // BARK_UDS_ENABLED

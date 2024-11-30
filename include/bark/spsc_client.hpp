@@ -72,6 +72,11 @@ class SPSCClient final : public IDatadogClient
 };
 
 extern template SPSCClient::SPSCClient(transports::UDPTransport&&, std::size_t);
+
+#if BARK_UDS_ENABLED
+
 extern template SPSCClient::SPSCClient(transports::UDSTransport&&, std::size_t);
+
+#endif  // BARK_UDS_ENABLED
 
 }  // namespace bark

@@ -17,7 +17,10 @@
 #include <fmt/std.h>
 
 #include "bark/datagram.hpp"
+#include "bark/feature_detection.hpp"
 #include "bark/tags.hpp"
+
+#if BARK_UDS_ENABLED
 
 namespace bark::transports
 {
@@ -47,3 +50,5 @@ auto UDSTransport::send(Datagram&& datagram) -> bool
 }
 
 }  // namespace bark::transports
+
+#endif  // BARK_UDS_ENABLED

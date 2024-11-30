@@ -5,6 +5,7 @@
 #include "bark/spsc_client.hpp"
 
 #include "bark/datagram.hpp"
+#include "bark/feature_detection.hpp"
 #include "bark/tags.hpp"
 #include "bark/transports/udp_transport.hpp"
 
@@ -29,6 +30,11 @@ auto SPSCClient::make_local_udp_client(std::size_t queue_size, Tags global_tags,
 }
 
 template SPSCClient::SPSCClient(transports::UDPTransport&&, std::size_t);
+
+#if BARK_UDS_ENABLED
+
 template SPSCClient::SPSCClient(transports::UDSTransport&&, std::size_t);
+
+#endif  // BARK_UDS_ENABLED
 
 }  // namespace bark

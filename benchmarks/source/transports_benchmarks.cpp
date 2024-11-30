@@ -5,6 +5,7 @@
 #include <benchmark/benchmark.h>
 
 #include "./benchmark_helpers.hpp"
+#include "bark/feature_detection.hpp"
 #include "bark/gauge.hpp"
 #include "bark/tags.hpp"
 #include "bark/transports/async_udp_transport.hpp"
@@ -45,12 +46,17 @@ auto benchmark_transport_send_metric(benchmark::State& state) -> void
 }  // namespace
 
 BENCHMARK(benchmark_transport_send_metric<transports::UDPTransport>)->Iterations(number_of_iterations)->Repetitions(16);
-BENCHMARK(benchmark_transport_send_metric<transports::UDSTransport>)->Iterations(number_of_iterations)->Repetitions(16);
 BENCHMARK(benchmark_transport_send_metric<transports::AsyncUDPTransport>)
     ->Iterations(number_of_iterations)
     ->Repetitions(16);
+
+#if BARK_UDS_ENABLED
+
+BENCHMARK(benchmark_transport_send_metric<transports::UDSTransport>)->Iterations(number_of_iterations)->Repetitions(16);
 BENCHMARK(benchmark_transport_send_metric<transports::AsyncUDSTransport>)
     ->Iterations(number_of_iterations)
     ->Repetitions(16);
+
+#endif  // BARK_UDS_ENABLED
 
 }  // namespace bark

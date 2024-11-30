@@ -8,6 +8,7 @@
 
 #include "./benchmark_helpers.hpp"
 #include "bark/event.hpp"
+#include "bark/feature_detection.hpp"
 #include "bark/gauge.hpp"
 #include "bark/mpmc_client.hpp"
 #include "bark/spsc_client.hpp"
@@ -87,55 +88,65 @@ auto benchmark_client_send_event(benchmark::State& state) -> void
 BENCHMARK(benchmark_client_send_metric<Client<transports::UDPTransport>, transports::UDPTransport>)
     ->Iterations(number_of_iterations)
     ->Repetitions(32);
-BENCHMARK(benchmark_client_send_metric<Client<transports::UDSTransport>, transports::UDSTransport>)
-    ->Iterations(number_of_iterations)
-    ->Repetitions(32);
 BENCHMARK(benchmark_client_send_metric<Client<transports::AsyncUDPTransport>, transports::AsyncUDPTransport>)
-    ->Iterations(number_of_iterations)
-    ->Repetitions(32);
-BENCHMARK(benchmark_client_send_metric<Client<transports::AsyncUDSTransport>, transports::AsyncUDSTransport>)
     ->Iterations(number_of_iterations)
     ->Repetitions(32);
 
 BENCHMARK(benchmark_client_send_metric<SPSCClient, transports::UDPTransport>)
     ->Iterations(number_of_iterations)
     ->Repetitions(32);
-BENCHMARK(benchmark_client_send_metric<SPSCClient, transports::UDSTransport>)
-    ->Iterations(number_of_iterations)
-    ->Repetitions(32);
 
 BENCHMARK(benchmark_client_send_metric<MPMCClient, transports::UDPTransport>)
-    ->Iterations(number_of_iterations)
-    ->Repetitions(32);
-BENCHMARK(benchmark_client_send_metric<MPMCClient, transports::UDSTransport>)
     ->Iterations(number_of_iterations)
     ->Repetitions(32);
 
 BENCHMARK(benchmark_client_send_event<Client<transports::UDPTransport>, transports::UDPTransport>)
     ->Iterations(number_of_iterations)
     ->Repetitions(32);
-BENCHMARK(benchmark_client_send_event<Client<transports::UDSTransport>, transports::UDSTransport>)
-    ->Iterations(number_of_iterations)
-    ->Repetitions(32);
 BENCHMARK(benchmark_client_send_event<Client<transports::AsyncUDPTransport>, transports::AsyncUDPTransport>)
-    ->Iterations(number_of_iterations)
-    ->Repetitions(32);
-BENCHMARK(benchmark_client_send_event<Client<transports::AsyncUDSTransport>, transports::AsyncUDSTransport>)
     ->Iterations(number_of_iterations)
     ->Repetitions(32);
 
 BENCHMARK(benchmark_client_send_event<SPSCClient, transports::UDPTransport>)
     ->Iterations(number_of_iterations)
     ->Repetitions(32);
-BENCHMARK(benchmark_client_send_event<SPSCClient, transports::UDSTransport>)
-    ->Iterations(number_of_iterations)
-    ->Repetitions(32);
 
 BENCHMARK(benchmark_client_send_event<MPMCClient, transports::UDPTransport>)
     ->Iterations(number_of_iterations)
     ->Repetitions(32);
+
+#if BARK_UDS_ENABLED
+
+BENCHMARK(benchmark_client_send_metric<Client<transports::UDSTransport>, transports::UDSTransport>)
+    ->Iterations(number_of_iterations)
+    ->Repetitions(32);
+BENCHMARK(benchmark_client_send_metric<Client<transports::AsyncUDSTransport>, transports::AsyncUDSTransport>)
+    ->Iterations(number_of_iterations)
+    ->Repetitions(32);
+
+BENCHMARK(benchmark_client_send_metric<SPSCClient, transports::UDSTransport>)
+    ->Iterations(number_of_iterations)
+    ->Repetitions(32);
+
+BENCHMARK(benchmark_client_send_metric<MPMCClient, transports::UDSTransport>)
+    ->Iterations(number_of_iterations)
+    ->Repetitions(32);
+
+BENCHMARK(benchmark_client_send_event<Client<transports::UDSTransport>, transports::UDSTransport>)
+    ->Iterations(number_of_iterations)
+    ->Repetitions(32);
+BENCHMARK(benchmark_client_send_event<Client<transports::AsyncUDSTransport>, transports::AsyncUDSTransport>)
+    ->Iterations(number_of_iterations)
+    ->Repetitions(32);
+
+BENCHMARK(benchmark_client_send_event<SPSCClient, transports::UDSTransport>)
+    ->Iterations(number_of_iterations)
+    ->Repetitions(32);
+
 BENCHMARK(benchmark_client_send_event<MPMCClient, transports::UDSTransport>)
     ->Iterations(number_of_iterations)
     ->Repetitions(32);
+
+#endif  // BARK_UDS_ENABLED
 
 }  // namespace bark

@@ -13,6 +13,7 @@
 
 #include "./udp_server.hpp"
 #include "./uds_server.hpp"
+#include "bark/feature_detection.hpp"
 
 namespace bark
 {

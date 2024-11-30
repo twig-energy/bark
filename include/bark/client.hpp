@@ -3,6 +3,7 @@
 #include <cstdint>
 
 #include "bark/datagram.hpp"
+#include "bark/feature_detection.hpp"
 #include "bark/i_datadog_client.hpp"
 #include "bark/tags.hpp"
 #include "bark/transports/async_udp_transport.hpp"
@@ -54,8 +55,13 @@ inline auto make_local_udp_client(Tags global_tags = no_tags,
 }
 
 extern template class Client<transports::AsyncUDPTransport>;
-extern template class Client<transports::AsyncUDSTransport>;
 extern template class Client<transports::UDPTransport>;
+
+#if BARK_UDS_ENABLED
+
+extern template class Client<transports::AsyncUDSTransport>;
 extern template class Client<transports::UDSTransport>;
+
+#endif  // BARK_UDS_ENABLED
 
 }  // namespace bark

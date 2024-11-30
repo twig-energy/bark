@@ -73,6 +73,11 @@ class MPMCClient final : public IDatadogClient
 };
 
 extern template MPMCClient::MPMCClient(transports::UDPTransport&&, std::size_t);
+
+#if BARK_UDS_ENABLED
+
 extern template MPMCClient::MPMCClient(transports::UDSTransport&&, std::size_t);
+
+#endif  // BARK_UDS_ENABLED
 
 }  // namespace bark
