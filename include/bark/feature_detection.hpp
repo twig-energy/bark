@@ -51,7 +51,7 @@
 #    define BARK_CONSTEXPR
 #endif
 
-#if ASIO_HAS_LOCAL_SOCKETS
+#if ASIO_HAS_LOCAL_SOCKETS && BARK_MSC_VERSION == 0
 #    define BARK_UDS_ENABLED 1
 #else
 #    define BARK_UDS_ENABLED 0

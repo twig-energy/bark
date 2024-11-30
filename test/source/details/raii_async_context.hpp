@@ -79,7 +79,7 @@ auto make_local_udp_server(uint16_t port, ReceiveCallbackT callback)
                             { return UDPServer(io_context, port, std::move(callback), 512); });
 }
 
-#ifdef BARK_UDS_ENABLED
+#if BARK_UDS_ENABLED
 
 template<typename ReceiveCallbackT>
 auto make_uds_server(std::filesystem::path socket_path, ReceiveCallbackT callback) -> RAIIAsyncContext
