@@ -32,7 +32,6 @@ class SPSCClient final : public IDatadogClient
 
   public:
     template<sync_datagram_transport Transport>
-
     SPSCClient(Transport&& transport, std::size_t queue_size)
         : _queue(std::make_unique<rigtorp::SPSCQueue<Datagram>>(queue_size))
         , _worker(
@@ -44,14 +43,9 @@ class SPSCClient final : public IDatadogClient
                           std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
                           while (!queue_ptr->empty()) {
-#if BARK_GCC_VERSION > 0
-#    pragma GCC diagnostic push
-#    pragma GCC diagnostic ignored "-Wnull-dereference"
-#endif
+                              BARK_GCC_DIAGNOSTIC_IGNORE_BEGIN("-Wnull-dereference")
                               client.send(*queue_ptr->front());
-#if BARK_GCC_VERSION > 0
-#    pragma GCC diagnostic pop
-#endif
+                              BARK_GCC_DIAGNOSTIC_IGNORE_END()
                               queue_ptr->pop();
                           }
                       }

@@ -2,13 +2,6 @@
 
 #include "bark/feature_detection.hpp"
 
-#if BARK_GCC_VERSION > 0
-#    pragma GCC diagnostic push
-#    pragma GCC diagnostic ignored "-Wnull-dereference"
-#endif
-
+BARK_GCC_DIAGNOSTIC_IGNORE_BEGIN("-Wnull-dereference")
 #include <asio/io_context.hpp>  // IWYU pragma: export
-
-#if BARK_GCC_VERSION > 0
-#    pragma GCC diagnostic pop
-#endif
+BARK_GCC_DIAGNOSTIC_IGNORE_END()

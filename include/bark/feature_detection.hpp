@@ -12,8 +12,14 @@
 
 #if defined(__GNUC__) && !defined(__clang__) && !defined(__INTEL_COMPILER)
 #    define BARK_GCC_VERSION (__GNUC__ * 100 + __GNUC_MINOR__)
+#    define BARK_STRINGIFY(x) #x
+#    define BARK_GCC_DIAGNOSTIC_IGNORE_BEGIN(x) \
+        _Pragma("GCC diagnostic push") _Pragma(BARK_STRINGIFY(GCC diagnostic ignored x))
+#    define BARK_GCC_DIAGNOSTIC_IGNORE_END() _Pragma("GCC diagnostic pop")
 #else
 #    define BARK_GCC_VERSION 0
+#    define BARK_GCC_DIAGNOSTIC_IGNORE_BEGIN(x)
+#    define BARK_GCC_DIAGNOSTIC_IGNORE_END()
 #endif
 
 #if defined(__ICL)

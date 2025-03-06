@@ -40,10 +40,7 @@ concept is_metric_like = requires(T t) {
 template<is_metric_like T>
 inline auto serialize(const T& metric, const Tags& global_tags) -> std::string
 {
-#if BARK_GCC_VERSION > 0
-#    pragma GCC diagnostic push
-#    pragma GCC diagnostic ignored "-Wfloat-equal"
-#endif
+    BARK_GCC_DIAGNOSTIC_IGNORE_BEGIN("-Wfloat-equal")
     auto out = fmt::memory_buffer {};
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
     if constexpr (has_sample_rate<T>) {
@@ -79,9 +76,7 @@ inline auto serialize(const T& metric, const Tags& global_tags) -> std::string
     }
 
     return fmt::to_string(out);
-#if BARK_GCC_VERSION > 0
-#    pragma GCC diagnostic pop
-#endif
+    BARK_GCC_DIAGNOSTIC_IGNORE_END()
 }
 
 inline auto serialize(const Event& event, const Tags& global_tags) -> std::string
