@@ -29,9 +29,8 @@ AsyncUDSTransport::AsyncUDSTransport(const std::filesystem::path& socket_path,
                                      NumberOfIOThreads num_io_threads,
                                      Tags global_tags)
     : _global_tags(std::make_unique<Tags>(std::move(global_tags)))
-    , _io_context(std::make_unique<asio::io_context>())
+    , _io_context(std::make_unique<asio::io_context>(static_cast<int>(num_io_threads.value)))
     , _endpoint(std::make_unique<asio::local::datagram_protocol::endpoint>(socket_path.string()))
-    , _socket(std::make_unique<asio::local::datagram_protocol::socket>(*this->_io_context))
 {
     if (num_io_threads.value == 0) {
         throw std::invalid_argument("Cannot have 0 IO threads on AsioClient");

@@ -19,9 +19,9 @@ namespace bark::transports
 class UDPTransport
 {
     Tags _global_tags;
-    std::unique_ptr<asio::io_context> _io_context;
+    std::unique_ptr<asio::io_context> _io_context = std::make_unique<asio::io_context>();
     std::unique_ptr<asio::ip::udp::endpoint> _receiver_endpoint;
-    std::unique_ptr<asio::ip::udp::socket> _socket;
+    std::unique_ptr<asio::ip::udp::socket> _socket = std::make_unique<asio::ip::udp::socket>(*this->_io_context);
 
   public:
     UDPTransport(std::string_view host, uint16_t port, Tags global_tags = no_tags);

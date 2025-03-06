@@ -20,9 +20,10 @@ namespace bark::transports
 class UDSTransport
 {
     Tags _global_tags;
-    std::unique_ptr<asio::io_context> _io_context;
+    std::unique_ptr<asio::io_context> _io_context = std::make_unique<asio::io_context>();
     std::unique_ptr<asio::local::datagram_protocol::endpoint> _endpoint;
-    std::unique_ptr<asio::local::datagram_protocol::socket> _socket;
+    std::unique_ptr<asio::local::datagram_protocol::socket> _socket =
+        std::make_unique<asio::local::datagram_protocol::socket>(*this->_io_context);
 
   public:
     explicit UDSTransport(const std::filesystem::path& socket_path, Tags global_tags = no_tags);
