@@ -16,7 +16,7 @@ namespace bark::transports
 {
 
 template<typename SocketT>
-auto sync_send(SocketT& socket, Datagram&& datagram, const Tags& global_tags) -> bool
+auto sync_send(SocketT& socket, const Tags& global_tags, Datagram&& datagram) -> bool
 {
     auto serialized = std::visit([&global_tags](const auto& serializable_datagram)
                                  { return serializable_datagram.serialize(global_tags); },

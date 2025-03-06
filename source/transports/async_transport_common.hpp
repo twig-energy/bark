@@ -20,22 +20,19 @@ namespace bark::transports
 {
 
 template<typename SocketT>
-auto async_send(asio::io_context& io_context,
-                const std::unique_ptr<SocketT>& socket,
-                Datagram&& datagram,
-                const std::unique_ptr<Tags>& global_tags) -> void
+auto async_send(asio::io_context& io_context, SocketT& socket, const Tags& global_tags, Datagram&& datagram) -> void
 {
     asio::post(
         io_context,
-        [socket_ptr = socket.get(), global_tags_ptr = global_tags.get(), datagram = std::move(datagram)]() mutable
+        [&socket, &global_tags, datagram_ = std::move(datagram)]()
         {
             auto message =
-                std::make_unique<std::string>(std::visit([global_tags_ptr](const auto& serializable_datagram)
-                                                         { return serializable_datagram.serialize(*global_tags_ptr); },
-                                                         datagram));
+                std::make_unique<std::string>(std::visit([&global_tags](const auto& serializable_datagram)
+                                                         { return serializable_datagram.serialize(global_tags); },
+                                                         datagram_));
             auto buffer = asio::buffer(*message);
 
-            socket_ptr->async_send(
+            socket.async_send(
                 buffer,
                 [msg = std::move(message)](const std::error_code& error, std::size_t)
                 {

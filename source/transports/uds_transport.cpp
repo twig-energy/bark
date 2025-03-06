@@ -34,7 +34,7 @@ UDSTransport::UDSTransport(const std::filesystem::path& socket_path, Tags global
 
 auto UDSTransport::send(Datagram&& datagram) -> bool
 {
-    return sync_send(*this->_socket, std::move(datagram), this->_global_tags);
+    return sync_send(*this->_socket, this->_global_tags, std::move(datagram));
 }
 
 }  // namespace bark::transports

@@ -36,7 +36,7 @@ UDPTransport::UDPTransport(std::string_view host, uint16_t port, Tags global_tag
 
 auto UDPTransport::send(Datagram&& datagram) -> bool
 {
-    return sync_send(*this->_socket, std::move(datagram), this->_global_tags);
+    return sync_send(*this->_socket, this->_global_tags, std::move(datagram));
 }
 
 auto UDPTransport::make_local_udp_transport(uint16_t port, Tags global_tags) -> UDPTransport

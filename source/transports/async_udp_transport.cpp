@@ -57,7 +57,7 @@ AsyncUDPTransport::AsyncUDPTransport(std::string_view host,
 
 auto AsyncUDPTransport::send_async(Datagram&& datagram) -> void
 {
-    async_send(*this->_io_context, this->_socket, std::move(datagram), this->_global_tags);
+    async_send(*this->_io_context, *this->_socket, *this->_global_tags, std::move(datagram));
 }
 
 auto AsyncUDPTransport::make_async_local_udp_transport(NumberOfIOThreads number_of_threads,

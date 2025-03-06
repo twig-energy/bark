@@ -54,7 +54,7 @@ AsyncUDSTransport::AsyncUDSTransport(const std::filesystem::path& socket_path,
 
 auto AsyncUDSTransport::send_async(Datagram&& datagram) -> void
 {
-    async_send(*this->_io_context, this->_socket, std::move(datagram), this->_global_tags);
+    async_send(*this->_io_context, *this->_socket, *this->_global_tags, std::move(datagram));
 }
 
 }  // namespace bark::transports
