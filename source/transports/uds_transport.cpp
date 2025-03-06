@@ -11,6 +11,7 @@
 
 #include "bark/asio_io_context_wrapper.hpp"
 // ^ must be before asio includes, as it protects against gcc warnings
+
 #include <asio/buffer.hpp>
 #include <asio/local/datagram_protocol.hpp>
 #include <fmt/base.h>

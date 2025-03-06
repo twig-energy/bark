@@ -5,7 +5,7 @@
  *
  */
 
-// NOLINTBEGIN(misc-include-cleaner)
+// IWYU pragma: begin_keep
 #include "bark/client.hpp"
 #include "bark/count.hpp"
 #include "bark/datagram.hpp"
@@ -25,4 +25,4 @@
 #include "bark/transports/datagram_transport.hpp"
 #include "bark/transports/udp_transport.hpp"
 #include "bark/transports/uds_transport.hpp"
-// NOLINTEND(misc-include-cleaner)
+// IWYU pragma: end_keep

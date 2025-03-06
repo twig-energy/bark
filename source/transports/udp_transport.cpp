@@ -10,16 +10,17 @@
 #include <variant>
 
 #include "bark/transports/udp_transport.hpp"
-//
+
 #include "bark/asio_io_context_wrapper.hpp"
-#include "bark/datagram.hpp"
-#include "bark/tags.hpp"
 // ^ must be before asio includes, as it protects against gcc warnings
 
 #include <asio/buffer.hpp>
 #include <asio/ip/udp.hpp>
 #include <fmt/base.h>
 #include <fmt/std.h>
+
+#include "bark/datagram.hpp"
+#include "bark/tags.hpp"
 
 namespace bark::transports
 {

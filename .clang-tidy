@@ -159,7 +159,5 @@ CheckOptions:
     value: "lower_case"
   - key: "misc-include-cleaner.IgnoreHeaders"
     value: "\
-      asio/io_context.hpp;\
-      bark/asio_io_context_wrapper.hpp;\
       fmt/std.h;\
       "
