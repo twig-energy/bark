@@ -2,23 +2,19 @@
 #include <cstdio>
 #include <cstring>
 #include <memory>
-#include <source_location>
 #include <string>
 #include <string_view>
-#include <system_error>
 #include <utility>
-#include <variant>
 
 #include "bark/transports/udp_transport.hpp"
 
 #include "bark/asio_io_context_wrapper.hpp"
 // ^ must be before asio includes, as it protects against gcc warnings
 
-#include <asio/buffer.hpp>
 #include <asio/ip/udp.hpp>
-#include <fmt/base.h>
 #include <fmt/std.h>
 
+#include "./sync_transport_common.hpp"
 #include "bark/datagram.hpp"
 #include "bark/tags.hpp"
 
@@ -40,16 +36,7 @@ UDPTransport::UDPTransport(std::string_view host, uint16_t port, Tags global_tag
 
 auto UDPTransport::send(Datagram&& datagram) -> bool
 {
-    auto serialized = std::visit([this](const auto& serializable_datagram)
-                                 { return serializable_datagram.serialize(this->_global_tags); },
-                                 std::move(datagram));
-
-    auto error = std::error_code {};
-    auto bytes_sent = this->_socket->send(asio::buffer(serialized), 0, error);
-    if (error) [[unlikely]] {
-        fmt::println(stderr, "Failed at sending {}. {}", error.message(), std::source_location::current());
-    }
-    return bytes_sent == serialized.size();
+    return sync_send(*this->_socket, std::move(datagram), this->_global_tags);
 }
 
 auto UDPTransport::make_local_udp_transport(uint16_t port, Tags global_tags) -> UDPTransport

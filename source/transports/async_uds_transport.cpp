@@ -2,25 +2,19 @@
 #include <cstring>
 #include <filesystem>
 #include <memory>
-#include <source_location>
 #include <stdexcept>
 #include <stop_token>
-#include <string>
-#include <system_error>
 #include <utility>
-#include <variant>
 
 #include "bark/transports/async_uds_transport.hpp"
 
 #include "bark/asio_io_context_wrapper.hpp"
 // ^ must be before asio includes, as it protects against gcc warnings
 
-#include <asio/buffer.hpp>
 #include <asio/local/datagram_protocol.hpp>
-#include <asio/post.hpp>
-#include <fmt/base.h>
 #include <fmt/std.h>
 
+#include "./async_transport_common.hpp"
 #include "bark/datagram.hpp"
 #include "bark/feature_detection.hpp"
 #include "bark/number_of_io_threads.hpp"
@@ -60,30 +54,7 @@ AsyncUDSTransport::AsyncUDSTransport(const std::filesystem::path& socket_path,
 
 auto AsyncUDSTransport::send_async(Datagram&& datagram) -> void
 {
-    asio::post(  //
-        *this->_io_context,
-        [socket_ptr = this->_socket.get(),
-         global_tags_ptr = this->_global_tags.get(),
-         datagram = std::move(datagram)]() mutable
-        {
-            auto message =
-                std::make_unique<std::string>(std::visit([global_tags_ptr](const auto& serializable_datagram)
-                                                         { return serializable_datagram.serialize(*global_tags_ptr); },
-                                                         datagram));
-            auto buffer = asio::buffer(*message);
-
-            socket_ptr->async_send(  //
-                buffer,
-                [msg = std::move(message)](const std::error_code& error, std::size_t)
-                {
-                    // Move in `serialized`, to make the callback clean up, such that we are sure we are not using a
-                    // cleaned up string.
-                    if (error) [[unlikely]] {
-                        fmt::println(
-                            stderr, "Failed at sending {}. {}", error.message(), std::source_location::current());
-                    }
-                });
-        });
+    async_send(*this->_io_context, this->_socket, std::move(datagram), this->_global_tags);
 }
 
 }  // namespace bark::transports
