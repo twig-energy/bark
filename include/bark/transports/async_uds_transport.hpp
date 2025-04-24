@@ -1,33 +1,33 @@
 #pragma once
 
-#include <cstdint>
 #include <cstring>
+#include <filesystem>
 #include <memory>
-#include <string_view>
 #include <thread>
 #include <vector>
 
 #include "bark/asio_io_context_wrapper.hpp"
 // ^ must be before asio includes, as it protects against gcc warnings
-
 #include <asio/executor_work_guard.hpp>
-#include <asio/ip/udp.hpp>
+#include <asio/local/datagram_protocol.hpp>
 
 #include "bark/datagram.hpp"
-#include "bark/i_datadog_client.hpp"
+#include "bark/feature_detection.hpp"
 #include "bark/number_of_io_threads.hpp"
 #include "bark/tags.hpp"
-#include "bark/udp_client.hpp"
 
-namespace bark
+#if BARK_UDS_ENABLED
+
+namespace bark::transports
 {
 
-class AsioClient final : public IDatadogClient
+class AsyncUDSTransport
 {
     std::unique_ptr<Tags> _global_tags;
     std::unique_ptr<asio::io_context> _io_context;
-    std::unique_ptr<asio::ip::udp::endpoint> _receiver_endpoint;
-    std::unique_ptr<asio::ip::udp::socket> _socket;
+    std::unique_ptr<asio::local::datagram_protocol::endpoint> _endpoint;
+    std::unique_ptr<asio::local::datagram_protocol::socket> _socket =
+        std::make_unique<asio::local::datagram_protocol::socket>(*this->_io_context);
     std::vector<std::jthread> _io_threads;
 
     // This is registered after the threads, since it's destruction will allow the worker threads to stop when no more
@@ -37,14 +37,13 @@ class AsioClient final : public IDatadogClient
             asio::make_work_guard(*this->_io_context));
 
   public:
-    AsioClient(std::string_view host, uint16_t port, NumberOfIOThreads num_io_threads, Tags global_tags = no_tags);
+    explicit AsyncUDSTransport(const std::filesystem::path& socket_path,
+                               NumberOfIOThreads num_io_threads,
+                               Tags global_tags = no_tags);
 
-    auto send(const Datagram& datagram) -> void override;
-    auto send(Datagram&& datagram) -> void override;
-
-    static auto make_local_client(NumberOfIOThreads num_io_threads,
-                                  Tags global_tags = no_tags,
-                                  uint16_t port = dogstatsd_udp_port) -> AsioClient;
+    auto send_async(Datagram&& datagram) -> void;
 };
 
-}  // namespace bark
+}  // namespace bark::transports
+
+#endif  // BARK_UDS_ENABLED

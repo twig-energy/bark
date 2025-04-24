@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.14)
 include(cmake/prelude.cmake)
 project(
     bark
-    VERSION 0.3.0
+    VERSION 1.0.0
     DESCRIPTION "Datadog Agent client for C++"
     HOMEPAGE_URL "https://github.com/twig-energy/bark"
     LANGUAGES CXX
@@ -26,7 +26,6 @@ find_package(SPSCQueue CONFIG REQUIRED)
 
 add_library(
     bark
-    source/asio_client.cpp
     source/client.cpp
     source/count.cpp
     source/event.cpp
@@ -34,7 +33,10 @@ add_library(
     source/histogram.cpp
     source/mpmc_client.cpp
     source/spsc_client.cpp
-    source/udp_client.cpp
+    source/transports/async_udp_transport.cpp
+    source/transports/async_uds_transport.cpp
+    source/transports/udp_transport.cpp
+    source/transports/uds_transport.cpp
 )
 add_library(twig::bark ALIAS bark)
 

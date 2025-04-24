@@ -18,6 +18,11 @@ add_executable(
     source/client_benchmarks.cpp
     source/event_benchmarks.cpp
     source/metric_benchmarks.cpp
-    source/udp_client_benchmarks.cpp
+    source/transports_benchmarks.cpp
 )
-target_link_libraries(bark_benchmarks twig::bark benchmark::benchmark_main)
+target_link_libraries(
+    bark_benchmarks
+    twig::bark
+    bark_test_lib
+    benchmark::benchmark_main
+)

@@ -5,8 +5,7 @@
  *
  */
 
-// NOLINTBEGIN(misc-include-cleaner)
-#include "bark/asio_client.hpp"
+// IWYU pragma: begin_keep
 #include "bark/client.hpp"
 #include "bark/count.hpp"
 #include "bark/datagram.hpp"
@@ -20,5 +19,10 @@
 #include "bark/sample_rate.hpp"
 #include "bark/spsc_client.hpp"
 #include "bark/tags.hpp"
-#include "bark/udp_client.hpp"
-// NOLINTEND(misc-include-cleaner)
+#include "bark/transports/async_udp_transport.hpp"
+#include "bark/transports/async_uds_transport.hpp"
+#include "bark/transports/constants.hpp"
+#include "bark/transports/datagram_transport.hpp"
+#include "bark/transports/udp_transport.hpp"
+#include "bark/transports/uds_transport.hpp"
+// IWYU pragma: end_keep

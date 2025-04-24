@@ -1,5 +1,7 @@
 #pragma once
 
+#include <asio/detail/config.hpp>
+
 // NOLINTBEGIN(cppcoreguidelines-macro-usage,cppcoreguidelines-macro-to-enum,modernize-macro-to-enum)
 
 #if defined(__clang__) && !defined(__ibmxl__)
@@ -10,8 +12,14 @@
 
 #if defined(__GNUC__) && !defined(__clang__) && !defined(__INTEL_COMPILER)
 #    define BARK_GCC_VERSION (__GNUC__ * 100 + __GNUC_MINOR__)
+#    define BARK_STRINGIFY(x) #x
+#    define BARK_GCC_DIAGNOSTIC_IGNORE_BEGIN(x) \
+        _Pragma("GCC diagnostic push") _Pragma(BARK_STRINGIFY(GCC diagnostic ignored x))
+#    define BARK_GCC_DIAGNOSTIC_IGNORE_END() _Pragma("GCC diagnostic pop")
 #else
 #    define BARK_GCC_VERSION 0
+#    define BARK_GCC_DIAGNOSTIC_IGNORE_BEGIN(x)
+#    define BARK_GCC_DIAGNOSTIC_IGNORE_END()
 #endif
 
 #if defined(__ICL)
@@ -47,6 +55,12 @@
 #    define BARK_CONSTEXPR constexpr
 #else
 #    define BARK_CONSTEXPR
+#endif
+
+#if ASIO_HAS_LOCAL_SOCKETS
+#    define BARK_UDS_ENABLED 1
+#else
+#    define BARK_UDS_ENABLED 0
 #endif
 
 // NOLINTEND(cppcoreguidelines-macro-usage,cppcoreguidelines-macro-to-enum,modernize-macro-to-enum)

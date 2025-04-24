@@ -3,8 +3,19 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <filesystem>
 #include <random>
+#include <string_view>
 #include <vector>
+
+#include "../../test/source/details/raii_async_context.hpp"
+#include "bark/feature_detection.hpp"
+#include "bark/number_of_io_threads.hpp"
+#include "bark/transports/async_udp_transport.hpp"
+#include "bark/transports/async_uds_transport.hpp"
+#include "bark/transports/datagram_transport.hpp"
+#include "bark/transports/udp_transport.hpp"
+#include "bark/transports/uds_transport.hpp"
 
 namespace bark
 {
@@ -33,6 +44,41 @@ inline auto random_int32_t_vector(std::size_t elements, int32_t min, int32_t max
     std::ranges::generate(values, [&]() { return dis(gen); });
 
     return values;
+}
+
+inline const std::filesystem::path benchmark_uds_socket_path {"bark_benchmarks.sock"};
+inline const auto benchmark_port = int16_t {18125};
+
+template<datagram_transport Transport>
+auto create_consumer()
+{
+    if constexpr (std::is_same_v<Transport, transports::UDPTransport>
+                  || std::is_same_v<Transport, transports::AsyncUDPTransport>)
+    {
+        return bark::make_local_udp_server(benchmark_port, [](std::string_view) {});
+    } else {
+#if BARK_UDS_ENABLED
+        return bark::make_uds_server(benchmark_uds_socket_path, [](std::string_view) {});
+#else
+        return 0;
+#endif
+    }
+}
+
+template<datagram_transport Transport>
+auto create_transport() -> Transport
+{
+    if constexpr (std::is_same_v<Transport, transports::UDPTransport>) {
+        return transports::UDPTransport::make_local_udp_transport(benchmark_port);
+    } else if constexpr (std::is_same_v<Transport, transports::AsyncUDPTransport>) {
+        return transports::AsyncUDPTransport::make_async_local_udp_transport(NumberOfIOThreads {1}, benchmark_port);
+#if BARK_UDS_ENABLED
+    } else if constexpr (std::is_same_v<Transport, transports::UDSTransport>) {
+        return transports::UDSTransport {benchmark_uds_socket_path};
+    } else if constexpr (std::is_same_v<Transport, transports::AsyncUDSTransport>) {
+        return transports::AsyncUDSTransport {benchmark_uds_socket_path, NumberOfIOThreads {1}};
+#endif  // BARK_UDS_ENABLED
+    }
 }
 
 }  // namespace bark

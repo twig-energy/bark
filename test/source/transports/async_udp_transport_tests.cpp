@@ -3,21 +3,23 @@
 #include <string_view>
 #include <utility>
 
-#include "bark/udp_client.hpp"
+#include "bark/transports/async_udp_transport.hpp"
 
 #include <doctest/doctest.h>
 
-#include "./details/raii_async_context.hpp"
+#include "../details/raii_async_context.hpp"
+#include "bark/number_of_io_threads.hpp"
 
 namespace bark
 {
 
-TEST_SUITE("UDPClient")
+TEST_SUITE("AsyncUDPTransport")
 {
     TEST_CASE("when sending a message over UDP, the server should receive it")
     {
         auto barrier = std::barrier<>(2);
         auto port = uint16_t {18127};
+        auto metric = Gauge("hello", 42);
         constexpr std::string_view sent_msg = "hello:42|g";
         auto server = bark::make_local_udp_server(  //
             port,
@@ -27,8 +29,8 @@ TEST_SUITE("UDPClient")
                 barrier.arrive_and_drop();
             });
 
-        auto client = UDPClient::make_local_udp_client(port);
-        CHECK(client.send(sent_msg));
+        auto client = transports::AsyncUDPTransport::make_async_local_udp_transport(NumberOfIOThreads {1}, port);
+        client.send_async(std::move(metric));
 
         barrier.arrive_and_wait();
     }
@@ -37,6 +39,7 @@ TEST_SUITE("UDPClient")
     {
         auto barrier = std::barrier<>(5);
         auto port = uint16_t {18127};
+        auto metric = Gauge("hello", 42);
         constexpr std::string_view sent_msg = "hello:42|g";
         auto server = bark::make_local_udp_server(  //
             port,
@@ -46,11 +49,11 @@ TEST_SUITE("UDPClient")
                 barrier.arrive_and_drop();
             });
 
-        auto client = UDPClient::make_local_udp_client(port);
-        CHECK(client.send(sent_msg));
-        CHECK(client.send(sent_msg));
-        CHECK(client.send(sent_msg));
-        CHECK(client.send(sent_msg));
+        auto client = transports::AsyncUDPTransport::make_async_local_udp_transport(NumberOfIOThreads {1}, port);
+        client.send_async(metric);
+        client.send_async(metric);
+        client.send_async(metric);
+        client.send_async(std::move(metric));
 
         barrier.arrive_and_wait();
     }
@@ -59,6 +62,7 @@ TEST_SUITE("UDPClient")
     {
         auto barrier = std::barrier<>(3);
         auto port = uint16_t {18127};
+        auto metric = Gauge("hello", 42);
         constexpr std::string_view sent_msg = "hello:42|g";
         auto server = bark::make_local_udp_server(  //
             port,
@@ -68,10 +72,10 @@ TEST_SUITE("UDPClient")
                 barrier.arrive_and_drop();
             });
 
-        auto client = UDPClient::make_local_udp_client(port);
-        CHECK(client.send(sent_msg));
+        auto client = transports::AsyncUDPTransport::make_async_local_udp_transport(NumberOfIOThreads {1}, port);
+        client.send_async(metric);
         auto moved_client = std::move(client);
-        CHECK(moved_client.send(sent_msg));
+        moved_client.send_async(std::move(metric));
 
         barrier.arrive_and_wait();
     }
