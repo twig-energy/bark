@@ -3,7 +3,7 @@ name: "Install LLVM and Clang"
 description: "Installs LLVM and Clang on CI runners"
 inputs:
   version:
-    description: "Which version of LLVM to install. E.g '18 or 'clang-18'."
+    description: "Which version of LLVM to install. E.g '19 or 'clang-19'."
     required: true
 runs:
   using: "composite"

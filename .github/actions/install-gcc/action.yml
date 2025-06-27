@@ -3,7 +3,7 @@ name: "Install GCC"
 description: "Installs GCC on CI runners"
 inputs:
   version:
-    description: "Which version of GCC to install. E.g. '13' or 'gcc-13'"
+    description: "Which version of GCC to install. E.g. '14' or 'gcc-14'"
     required: true
 runs:
   using: "composite"

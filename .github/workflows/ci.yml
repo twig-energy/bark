@@ -31,25 +31,23 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-
-      - name: Install codespell
-        run: pip3 install codespell
+          python-version: "3.12"
 
       - name: Install LLVM and Clang
         uses: ./.github/actions/install-clang
         with:
-          version: "18"
+          version: "19"
 
       - name: Format Check
-        run: cmake -D FORMAT_COMMAND=clang-format-18 -P cmake/lint.cmake
+        run: cmake -D FORMAT_COMMAND=clang-format-19 -P cmake/lint.cmake
 
       - name: Dependency Setup Check
         run: python3 ./tools/check_install_packages_match.py
 
       - name: Spell check
-        if: ${{ !cancelled() }}
-        run: cmake -P cmake/spell.cmake
+        run: |
+          pip3 install codespell
+          cmake -P cmake/spell.cmake
 
       - name: Test version bumped
         if: github.ref != 'refs/heads/main'
@@ -85,16 +83,16 @@ jobs:
       - name: Install LLVM and Clang
         uses: ./.github/actions/install-clang
         with:
-          version: "18"
+          version: "19"
 
       - name: Install vcpkg
         uses: friendlyanon/setup-vcpkg@v1
         with:
           committish: "${{ env.VCPKG_COMMIT }}"
-          cache-version: "sanitize-clang-18"
+          cache-version: "sanitize-clang-19"
           cache-restore-keys: |
-            vcpkg-Linux-sanitize-clang-18-
-            vcpkg-Linux-test-clang-18-
+            vcpkg-Linux-sanitize-clang-19-
+            vcpkg-Linux-test-clang-19-
 
       - name: Configure
         run: |
@@ -135,7 +133,7 @@ jobs:
       - name: Install LLVM and Clang
         uses: ./.github/actions/install-clang
         with:
-          version: "18"
+          version: "19"
 
       - name: Install sonar-scanner and build-wrapper
         uses: SonarSource/sonarcloud-github-c-cpp@v3
@@ -144,10 +142,10 @@ jobs:
         uses: friendlyanon/setup-vcpkg@v1
         with:
           committish: "${{ env.VCPKG_COMMIT }}"
-          cache-version: "sonar-clang-18"
+          cache-version: "sonar-clang-19"
           cache-restore-keys: |
-            vcpkg-Linux-sonar-clang-18-
-            vcpkg-Linux-test-clang-18-
+            vcpkg-Linux-sonar-clang-19-
+            vcpkg-Linux-test-clang-19-
 
       - name: Configure
         run: |
@@ -189,15 +187,15 @@ jobs:
         uses: friendlyanon/setup-vcpkg@v1
         with:
           committish: "${{ env.VCPKG_COMMIT }}"
-          cache-version: "vcpkg-build-clang-18"
+          cache-version: "vcpkg-build-clang-19"
           cache-restore-keys: |
-            vcpkg-Linux-vcpkg-build-clang-18-
-            vcpkg-Linux-test-clang-18-
+            vcpkg-Linux-vcpkg-build-clang-19-
+            vcpkg-Linux-test-clang-19-
 
       - name: Install LLVM and Clang
         uses: ./.github/actions/install-clang
         with:
-          version: "18"
+          version: "19"
 
       - name: Configure
         run: |
@@ -216,8 +214,8 @@ jobs:
           - "ubuntu-24.04"
         compiler:
           - "gcc-11"
-          - "gcc-13"
-          - "clang-18"
+          - "gcc-14"
+          - "clang-19"
 
         include:
           - os: "windows-2022"
