@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.30)
 include(cmake/prelude.cmake)
 project(
     bark
-    VERSION 0.3.0
+    VERSION 0.4.0
     DESCRIPTION "Datadog Agent client for C++"
     HOMEPAGE_URL "https://github.com/twig-energy/bark"
     LANGUAGES CXX
