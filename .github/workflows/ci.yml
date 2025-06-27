@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 
 env:
-  VCPKG_COMMIT: "c82f74667287d3dc386bce81e44964370c91a289"
+  VCPKG_COMMIT: "ef7dbf94b9198bc58f45951adcf1f041fcbc5ea0"
 
 jobs:
   lint:
