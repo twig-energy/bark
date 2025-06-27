@@ -3,15 +3,21 @@ name: "Install LLVM and Clang"
 description: "Installs LLVM and Clang on CI runners"
 inputs:
   version:
-    description: "Which version of LLVM to install. E.g '19 or 'clang-19'."
+    description: "Which version of LLVM to install. E.g. '19'"
     required: true
 runs:
   using: "composite"
   steps:
     - name: Install LLVM and Clang
       shell: bash
+      env:
+        LLVM_VERSION: ${{ inputs.version }}
       run: |
-        LLVM_VERSION=`echo ${{ inputs.version }} | cut -d'-' -f 2`
+        # if clang-version is already installed return
+        if which clang-$LLVM_VERSION > /dev/null; then
+          exit 0
+        fi
+
         wget https://apt.llvm.org/llvm.sh
         chmod +x llvm.sh
         sudo ./llvm.sh $LLVM_VERSION
