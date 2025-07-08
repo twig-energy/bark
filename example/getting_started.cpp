@@ -1,5 +1,3 @@
-// NOLINTBEGIN(misc-include-cleaner)
-
 #include "bark/bark.hpp"
 
 auto main() -> int
@@ -23,5 +21,3 @@ auto main() -> int
 
     return 0;
 }
-
-// NOLINTEND(misc-include-cleaner)

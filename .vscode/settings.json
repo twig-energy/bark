@@ -1,7 +1,7 @@
 {
     "testMate.cpp.test.executables": "build/**/test/*",
-    "clang-format.executable": "clang-format-18",
-    "clangd.path": "clangd-18",
+    "clang-format.executable": "clang-format-19",
+    "clangd.path": "clangd-19",
     "clangd.arguments": [
         "-compile-commands-dir=${workspaceFolder}/build/dev"
     ],

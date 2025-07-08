@@ -2,7 +2,7 @@
   "version": 5,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 24,
+    "minor": 30,
     "patch": 0
   },
   "configurePresets": [
@@ -25,7 +25,7 @@
       "name": "clang-tidy",
       "hidden": true,
       "cacheVariables": {
-        "CMAKE_CXX_CLANG_TIDY": "clang-tidy-18;--header-filter=^${sourceDir}/(include|src|source|test)"
+        "CMAKE_CXX_CLANG_TIDY": "clang-tidy-19;--header-filter=^${sourceDir}/(include|src|source|test)"
       }
     },
     {
@@ -81,6 +81,19 @@
       }
     },
     {
+      "name": "clang-19",
+      "hidden": true,
+      "environment": {
+        "CXX": "clang++-19",
+        "CC": "clang-19",
+        "LLVM_SYMBOLIZER_PATH": "llvm-symbolizer-19"
+      },
+      "cacheVariables": {
+        "LLVM_COV_COMMAND": "llvm-cov-19",
+        "LLVM_PROFDATA_COMMAND": "llvm-profdata-19"
+      }
+    },
+    {
       "name": "gcc-11",
       "hidden": true,
       "environment": {
@@ -102,6 +115,14 @@
       "environment": {
         "CXX": "g++-13",
         "CC": "gcc-13"
+      }
+    },
+    {
+      "name": "gcc-14",
+      "hidden": true,
+      "environment": {
+        "CXX": "g++-14",
+        "CC": "gcc-14"
       }
     },
     {
@@ -169,7 +190,7 @@
       "name": "coverage-linux",
       "binaryDir": "${sourceDir}/build/coverage",
       "inherits": [
-        "clang-18",
+        "clang-19",
         "dev-mode",
         "ci-linux"
       ],
@@ -215,7 +236,7 @@
       "inherits": [
         "vcpkg",
         "ci-linux",
-        "clang-18"
+        "clang-19"
       ]
     },
     {
@@ -225,7 +246,7 @@
         "sanitize-linux",
         "dev-mode",
         "vcpkg",
-        "clang-18"
+        "clang-19"
       ]
     },
     {
@@ -234,14 +255,14 @@
       "hidden": true
     },
     {
-      "name": "ci-ubuntu-clang-18",
+      "name": "ci-ubuntu-clang-19",
       "inherits": [
         "ci-build",
         "ci-linux",
         "clang-tidy",
         "vcpkg",
         "dev-mode",
-        "clang-18"
+        "clang-19"
       ]
     },
     {
@@ -258,13 +279,13 @@
       }
     },
     {
-      "name": "ci-ubuntu-gcc-13",
+      "name": "ci-ubuntu-gcc-14",
       "inherits": [
         "ci-build",
         "ci-linux",
         "vcpkg",
         "dev-mode",
-        "gcc-13"
+        "gcc-14"
       ]
     },
     {
@@ -282,7 +303,7 @@
         "ci-build",
         "ci-linux",
         "vcpkg",
-        "gcc-13"
+        "gcc-14"
       ]
     }
   ]

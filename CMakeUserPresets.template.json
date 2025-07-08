@@ -2,8 +2,8 @@
   "version": 3,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 22,
-    "patch": 1
+    "minor": 30,
+    "patch": 0
   },
   "configurePresets": [
     {
@@ -25,7 +25,7 @@
       "inherits": [
         "dev-common",
         "ci-linux",
-        "clang-18"
+        "clang-19"
       ],
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
@@ -55,7 +55,7 @@
       "name": "dev-gcc",
       "binaryDir": "${sourceDir}/build/dev-gcc",
       "inherits": [
-        "gcc-13",
+        "gcc-14",
         "dev-linux"
       ]
     },

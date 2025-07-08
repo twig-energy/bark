@@ -15,7 +15,7 @@
 #include <asio/buffer.hpp>
 #include <asio/ip/udp.hpp>
 #include <fmt/base.h>
-#include <fmt/std.h>
+#include <fmt/std.h>  // IWYU pragma: keep - formatting of std::source_location
 
 namespace bark
 {

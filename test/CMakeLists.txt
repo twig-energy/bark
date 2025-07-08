@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.30)
 
 project(barkTests LANGUAGES CXX)
 
@@ -31,7 +31,7 @@ add_executable(
     source/tags_tests.cpp
     source/udp_client_tests.cpp
 )
-target_link_libraries(bark_test PRIVATE twig::bark doctest::doctest)
+target_link_libraries(bark_test PRIVATE doctest::doctest twig::bark)
 target_compile_features(bark_test PRIVATE cxx_std_20)
 
 add_test(NAME bark_test COMMAND bark_test)

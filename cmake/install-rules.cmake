@@ -29,6 +29,7 @@ install(
             COMPONENT bark_Development
     INCLUDES #
     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+    FILE_SET HEADERS
 )
 
 write_basic_package_version_file("${package}ConfigVersion.cmake" COMPATIBILITY SameMajorVersion)

@@ -4,7 +4,7 @@ A modern, low latency datadog stats library for c++
 
 ## Getting Started
 
-```cpp :file=./example/getting_started.cpp:line_start=2:line_end=-2
+```cpp :file=./example/getting_started.cpp:line_start=0:line_end=23
 #include "bark/bark.hpp"
 
 auto main() -> int

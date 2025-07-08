@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 
 env:
-  VCPKG_COMMIT: "c82f74667287d3dc386bce81e44964370c91a289"
+  VCPKG_COMMIT: "ef7dbf94b9198bc58f45951adcf1f041fcbc5ea0"
 
 jobs:
   lint:
@@ -31,25 +31,23 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-
-      - name: Install codespell
-        run: pip3 install codespell
+          python-version: "3.12"
 
       - name: Install LLVM and Clang
         uses: ./.github/actions/install-clang
         with:
-          version: "18"
+          version: "19"
 
       - name: Format Check
-        run: cmake -D FORMAT_COMMAND=clang-format-18 -P cmake/lint.cmake
+        run: cmake -D FORMAT_COMMAND=clang-format-19 -P cmake/lint.cmake
 
       - name: Dependency Setup Check
         run: python3 ./tools/check_install_packages_match.py
 
       - name: Spell check
-        if: ${{ !cancelled() }}
-        run: cmake -P cmake/spell.cmake
+        run: |
+          pip3 install codespell
+          cmake -P cmake/spell.cmake
 
       - name: Test version bumped
         if: github.ref != 'refs/heads/main'
@@ -79,22 +77,21 @@ jobs:
           lfs: true
 
       - name: General Build Dependencies
-        run: >-
-          sudo apt-get update -q && sudo apt-get install ninja-build -y -q
+        run: sudo apt-get install ninja-build -y -q
 
       - name: Install LLVM and Clang
         uses: ./.github/actions/install-clang
         with:
-          version: "18"
+          version: "19"
 
       - name: Install vcpkg
         uses: friendlyanon/setup-vcpkg@v1
         with:
           committish: "${{ env.VCPKG_COMMIT }}"
-          cache-version: "sanitize-clang-18"
+          cache-version: "sanitize-clang-19"
           cache-restore-keys: |
-            vcpkg-Linux-sanitize-clang-18-
-            vcpkg-Linux-test-clang-18-
+            vcpkg-Linux-sanitize-clang-19-
+            vcpkg-Linux-test-clang-19-
 
       - name: Configure
         run: |
@@ -129,25 +126,24 @@ jobs:
           lfs: true
 
       - name: General Build Dependencies
-        run: >-
-          sudo apt-get update -q && sudo apt-get install ninja-build -y -q
+        run: sudo apt-get install ninja-build -y -q
 
       - name: Install LLVM and Clang
         uses: ./.github/actions/install-clang
         with:
-          version: "18"
+          version: "19"
 
-      - name: Install sonar-scanner and build-wrapper
-        uses: SonarSource/sonarcloud-github-c-cpp@v3
+      - name: Install Sonar build-wrapper
+        uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v5
 
       - name: Install vcpkg
         uses: friendlyanon/setup-vcpkg@v1
         with:
           committish: "${{ env.VCPKG_COMMIT }}"
-          cache-version: "sonar-clang-18"
+          cache-version: "sonar-clang-19"
           cache-restore-keys: |
-            vcpkg-Linux-sonar-clang-18-
-            vcpkg-Linux-test-clang-18-
+            vcpkg-Linux-sonar-clang-19-
+            vcpkg-Linux-test-clang-19-
 
       - name: Configure
         run: |
@@ -163,12 +159,12 @@ jobs:
       - name: Test and code coverage
         run: cmake --build build/coverage -t ccov-all -j 4
 
-      - name: Run sonar-scanner
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          sonar-scanner \
+        with:
+          args: >
             --define sonar.cfamily.compile-commands=${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json
 
   vcpkg-build:
@@ -182,22 +178,21 @@ jobs:
           lfs: true
 
       - name: General Build Dependencies
-        run: >-
-          sudo apt-get update -q && sudo apt-get install ninja-build -y -q
+        run: sudo apt-get install ninja-build -y -q
 
       - name: Install vcpkg
         uses: friendlyanon/setup-vcpkg@v1
         with:
           committish: "${{ env.VCPKG_COMMIT }}"
-          cache-version: "vcpkg-build-clang-18"
+          cache-version: "vcpkg-build-clang-19"
           cache-restore-keys: |
-            vcpkg-Linux-vcpkg-build-clang-18-
-            vcpkg-Linux-test-clang-18-
+            vcpkg-Linux-vcpkg-build-clang-19-
+            vcpkg-Linux-test-clang-19-
 
       - name: Install LLVM and Clang
         uses: ./.github/actions/install-clang
         with:
-          version: "18"
+          version: "19"
 
       - name: Configure
         run: |
@@ -213,17 +208,17 @@ jobs:
     strategy:
       matrix:
         os:
-          - "ubuntu-24.04"
+          - { name: "ubuntu", version: "24.04"}
         compiler:
-          - "gcc-11"
-          - "gcc-13"
-          - "clang-18"
+          - { name: "gcc", version: "11" }
+          - { name: "gcc", version: "14" }
+          - { name: "clang", version: "19" }
 
         include:
-          - os: "windows-2022"
-            compiler: "msvc"
+          - os: { name: "windows", version: "2022"}
+            compiler: { name: "msvc", version: "" }
 
-    runs-on: ${{ matrix.os }}
+    runs-on: "${{ matrix.os.name }}-${{ matrix.os.version }}"
 
     steps:
       - uses: actions/checkout@v4
@@ -231,32 +226,31 @@ jobs:
           lfs: true
 
       - name: General Build Dependencies
-        if: contains(matrix.os, 'ubuntu')
-        run: |
-          sudo apt-get install ninja-build -y -q
+        if: ${{ matrix.os.name == 'ubuntu' }}
+        run: sudo apt-get install ninja-build -y -q
 
       - uses: ./.github/actions/install-gcc
-        if: ${{ contains(matrix.compiler, 'gcc') && contains(matrix.os, 'ubuntu') }}
+        if: ${{ matrix.compiler.name == 'gcc' && matrix.os.name == 'ubuntu' }}
         with:
-          version: ${{ matrix.compiler }}
+          version: ${{ matrix.compiler.version }}
 
       - uses: ./.github/actions/install-clang
-        if: ${{ contains(matrix.compiler, 'clang') && contains(matrix.os, 'ubuntu') }}
+        if: ${{ matrix.compiler.name == 'clang' && matrix.os.name == 'ubuntu' }}
         with:
-          version: ${{ matrix.compiler }}
+          version: ${{ matrix.compiler.version }}
 
       - name: Install vcpkg
         uses: friendlyanon/setup-vcpkg@v1
         with:
           committish: "${{ env.VCPKG_COMMIT }}"
-          cache-version: "test-${{ contains(matrix.os, 'ubuntu') && 'Linux' || 'Windows' }}-${{ matrix.compiler }}"
+          cache-version: "test-${{ matrix.compiler.name }}-${{ matrix.compiler.version }}"
           cache-restore-keys: |
-            vcpkg-${{ contains(matrix.os, 'ubuntu') && 'Linux' || 'Windows' }}-test-${{ matrix.compiler }}-
+            vcpkg-${{ matrix.os.name == 'ubuntu' && 'Linux' || 'Windows' }}-test-${{ matrix.compiler.name }}-${{ matrix.compiler.version }}-
 
       - name: Configure
         shell: pwsh
         run: |
-          cmake "--preset=ci-$("${{ matrix.os }}".split("-")[0])-${{ matrix.compiler }}"
+          cmake "--preset=ci-${{ matrix.os.name }}-${{ matrix.compiler.name }}${{ matrix.compiler.version && '-' || '' }}${{ matrix.compiler.version }}"
 
       - name: Build
         run: cmake --build build --config Release -j 4
@@ -269,9 +263,9 @@ jobs:
         run: ctest --output-on-failure --no-tests=error -C Release -j 4
 
       - name: Benchmarks
-        if: ${{ !contains(matrix.os, 'windows') }}
+        if: ${{ matrix.os.name != 'windows' }}
         run: ./build/benchmarks/bark_benchmarks --benchmark_display_aggregates_only=true
 
       - name: Benchmarks
-        if: ${{ contains(matrix.os, 'windows') }}
+        if: ${{ matrix.os.name == 'windows' }}
         run: ./build/benchmarks/Release/bark_benchmarks --benchmark_display_aggregates_only=true
