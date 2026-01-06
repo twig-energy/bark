@@ -21,9 +21,9 @@ struct Histogram
     double sample_rate = 1.0;
     Tags tags;
 
-    BARK_CONSTEXPR Histogram(std::string metric_, double value_) noexcept
+    BARK_CONSTEXPR Histogram(std::string metric_, auto value_) noexcept
         : metric(std::move(metric_))
-        , value(value_)
+        , value(static_cast<double>(value_))
     {
     }
 

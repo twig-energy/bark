@@ -18,9 +18,9 @@ struct Gauge
     double value;
     Tags tags;
 
-    BARK_CONSTEXPR Gauge(std::string metric_, double value_) noexcept
+    BARK_CONSTEXPR Gauge(std::string metric_, auto value_) noexcept
         : metric(std::move(metric_))
-        , value(value_)
+        , value(static_cast<double>(value_))
     {
     }
 
