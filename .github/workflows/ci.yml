@@ -134,7 +134,7 @@ jobs:
           version: "19"
 
       - name: Install Sonar build-wrapper
-        uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v5
+        uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v6
 
       - name: Install vcpkg
         uses: friendlyanon/setup-vcpkg@v1
@@ -160,7 +160,7 @@ jobs:
         run: cmake --build build/coverage -t ccov-all -j 4
 
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v5
+        uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
