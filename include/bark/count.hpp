@@ -45,6 +45,8 @@ struct Count
     }
 
     auto serialize(const Tags& global_tags) const -> std::string;
+
+    BARK_CONSTEXPR auto operator==(const Count&) const -> bool = default;
 };
 
 }  // namespace bark

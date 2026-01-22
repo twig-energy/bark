@@ -61,6 +61,8 @@ struct Event
     }
 
     auto serialize(const Tags& global_tags) const -> std::string;
+
+    BARK_CONSTEXPR auto operator==(const Event&) const -> bool = default;
 };
 
 }  // namespace bark

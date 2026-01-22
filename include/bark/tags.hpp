@@ -84,10 +84,12 @@ class Tags
         return Tags {std::move(tags_string)};
     }
 
-    constexpr auto str() const -> const std::string&
+    BARK_CONSTEXPR auto str() const -> const std::string&
     {
         return this->_tags;
     }
+
+    BARK_CONSTEXPR auto operator==(const Tags&) const -> bool = default;
 };
 
 inline const auto no_tags = Tags();

@@ -31,6 +31,8 @@ struct Gauge
     }
 
     auto serialize(const Tags& global_tags) const -> std::string;
+
+    BARK_CONSTEXPR auto operator==(const Gauge&) const -> bool = default;
 };
 
 }  // namespace bark
