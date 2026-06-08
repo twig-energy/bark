@@ -15,9 +15,9 @@
 #include "bark/asio_io_context_wrapper.hpp"
 // ^ must be before asio includes, as it protects against gcc warnings
 
-#include <asio/buffer.hpp>
-#include <asio/ip/udp.hpp>
-#include <asio/post.hpp>
+#include <boost/asio/buffer.hpp>
+#include <boost/asio/ip/udp.hpp>
+#include <boost/asio/post.hpp>
 #include <fmt/base.h>
 #include <fmt/std.h>  // IWYU pragma: keep - formatting of std::source_location
 
@@ -31,18 +31,18 @@ namespace bark
 
 AsioClient::AsioClient(std::string_view host, uint16_t port, NumberOfIOThreads num_io_threads, Tags global_tags)
     : _global_tags(std::make_unique<Tags>(std::move(global_tags)))
-    , _io_context(std::make_unique<asio::io_context>(static_cast<int>(num_io_threads.value)))
-    , _receiver_endpoint(
-          std::make_unique<asio::ip::udp::endpoint>(*asio::ip::udp::resolver(*this->_io_context)
-                                                         .resolve(asio::ip::udp::v4(), host, std::to_string(port))
-                                                         .begin()))
-    , _socket(std::make_unique<asio::ip::udp::socket>(*this->_io_context))
+    , _io_context(std::make_unique<boost::asio::io_context>(static_cast<int>(num_io_threads.value)))
+    , _receiver_endpoint(std::make_unique<boost::asio::ip::udp::endpoint>(
+          *boost::asio::ip::udp::resolver(*this->_io_context)
+               .resolve(boost::asio::ip::udp::v4(), host, std::to_string(port))
+               .begin()))
+    , _socket(std::make_unique<boost::asio::ip::udp::socket>(*this->_io_context))
 {
     if (num_io_threads.value == 0) {
         throw std::invalid_argument("Cannot have 0 IO threads on AsioClient");
     }
 
-    this->_socket->open(asio::ip::udp::v4());
+    this->_socket->open(boost::asio::ip::udp::v4());
 
     this->_io_threads.reserve(num_io_threads.value);
     for (auto i = 0ULL; i < num_io_threads.value; i++) {
@@ -63,7 +63,7 @@ auto AsioClient::send(const Datagram& datagram) -> void
 
 auto AsioClient::send(Datagram&& datagram) -> void
 {
-    asio::post(  //
+    boost::asio::post(  //
         *this->_io_context,
         [global_tags_ptr = this->_global_tags.get(),
          socket_ptr = this->_socket.get(),
@@ -74,7 +74,7 @@ auto AsioClient::send(Datagram&& datagram) -> void
                                          { return serializable_datagram.serialize(*global_tags_ptr); },
                                          message);
 
-            auto buffer = asio::buffer(serialized);
+            auto buffer = boost::asio::buffer(serialized);
 
             socket_ptr->async_send_to(  //
                 buffer,

@@ -2,7 +2,7 @@
   "name": "bark",
   "version-semver": "0.1.0",
   "dependencies": [
-    "asio",
+    "boost-asio",
     "fmt",
     "mpmcqueue",
     "spscqueue"
@@ -17,5 +17,5 @@
       ]
     }
   },
-  "builtin-baseline": "ef7dbf94b9198bc58f45951adcf1f041fcbc5ea0"
+  "builtin-baseline": "f3e10653cc27d62a37a3763cd84b38bca07c6075"
 }

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.30)
 include(cmake/prelude.cmake)
 project(
     bark
-    VERSION 0.5.0
+    VERSION 0.6.0
     DESCRIPTION "Datadog Agent client for C++"
     HOMEPAGE_URL "https://github.com/twig-energy/bark"
     LANGUAGES CXX
@@ -17,7 +17,7 @@ include(cmake/dev-mode.cmake)
 
 # ---- Dependencies ----
 
-find_package(asio CONFIG REQUIRED)
+find_package(Boost CONFIG REQUIRED COMPONENTS asio)
 find_package(fmt REQUIRED)
 find_package(MPMCQueue CONFIG REQUIRED)
 find_package(SPSCQueue CONFIG REQUIRED)
@@ -91,7 +91,7 @@ target_compile_features(bark PUBLIC cxx_std_23)
 
 target_link_libraries(
     bark
-    PUBLIC asio::asio MPMCQueue::MPMCQueue SPSCQueue::SPSCQueue
+    PUBLIC Boost::asio MPMCQueue::MPMCQueue SPSCQueue::SPSCQueue
     PRIVATE fmt::fmt
 )
 

@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 
 env:
-  VCPKG_COMMIT: "ef7dbf94b9198bc58f45951adcf1f041fcbc5ea0"
+  VCPKG_COMMIT: "f3e10653cc27d62a37a3763cd84b38bca07c6075"
 
 jobs:
   lint:
@@ -46,7 +46,7 @@ jobs:
 
       - name: Spell check
         run: |
-          pip3 install codespell
+          pip3 install codespell --only-binary :all:
           cmake -P cmake/spell.cmake
 
       - name: Test version bumped

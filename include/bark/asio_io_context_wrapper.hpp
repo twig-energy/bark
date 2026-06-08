@@ -7,7 +7,7 @@
 #    pragma GCC diagnostic ignored "-Wnull-dereference"
 #endif
 
-#include <asio/io_context.hpp>  // IWYU pragma: export
+#include <boost/asio/io_context.hpp>  // IWYU pragma: export
 
 #if BARK_GCC_VERSION > 0
 #    pragma GCC diagnostic pop
