@@ -37,7 +37,7 @@ We provide a number of Client implementations for different use cases:
 | `Client`     | None                                | The publishing thread only   | Sends metrics on the publishing thread         |
 | `SPSCClient` | Single Producer Single Consumer     | The publishing thread + 1    | Fixed queue size. Drops new messages when full |
 | `MPMCClient` | Multiple Producer Multiple Consumer | The publishing thread + 1    | Fixed queue size. Drops new messages when full |
-| `AsioClient` | `boost::asio::io_context`                  | The publishing thread + `N`  | `N` is supplied when creating the client       |
+| `AsioClient` | `boost::asio::io_context`           | The publishing thread + `N`  | `N` is supplied when creating the client       |
 | `NoOpClient` | None                                | (The publishing thread)/None | Useful for testing                             |
 
 All of these clients implement the `IDatadogClient` interface. You are not required to use it, but it is there to allow mocking and ease of use for those that need it.
