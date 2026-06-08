@@ -17,7 +17,7 @@ include(cmake/dev-mode.cmake)
 
 # ---- Dependencies ----
 
-find_package(asio CONFIG REQUIRED)
+find_package(Boost CONFIG REQUIRED COMPONENTS asio)
 find_package(fmt REQUIRED)
 find_package(MPMCQueue CONFIG REQUIRED)
 find_package(SPSCQueue CONFIG REQUIRED)
@@ -91,7 +91,7 @@ target_compile_features(bark PUBLIC cxx_std_23)
 
 target_link_libraries(
     bark
-    PUBLIC asio::asio MPMCQueue::MPMCQueue SPSCQueue::SPSCQueue
+    PUBLIC Boost::asio MPMCQueue::MPMCQueue SPSCQueue::SPSCQueue
     PRIVATE fmt::fmt
 )
 

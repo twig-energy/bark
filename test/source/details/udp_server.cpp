@@ -10,8 +10,8 @@
 #include "bark/asio_io_context_wrapper.hpp"
 // ^ must be before asio includes, as it protects against gcc warnings
 
-#include <asio/buffer.hpp>
-#include <asio/ip/udp.hpp>
+#include <boost/asio/buffer.hpp>
+#include <boost/asio/ip/udp.hpp>
 #include <fmt/base.h>
 #include <fmt/std.h>  // IWYU pragma: keep - formatting of std::source_location
 
@@ -20,11 +20,11 @@
 namespace bark
 {
 
-UDPServer::UDPServer(asio::io_context& io_context,
+UDPServer::UDPServer(boost::asio::io_context& io_context,
                      int32_t port,
                      std::function<void(std::string_view)> receive_msg_callback,
                      size_t buffer_size)
-    : _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), static_cast<uint16_t>(port)))
+    : _socket(io_context, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), static_cast<uint16_t>(port)))
     , _receive_msg_callback(std::move(receive_msg_callback))
     , _recv_buffer(buffer_size)
 {
@@ -33,7 +33,7 @@ UDPServer::UDPServer(asio::io_context& io_context,
 
 auto UDPServer::start_receive() -> void
 {
-    this->_socket.async_receive_from(asio::buffer(_recv_buffer),
+    this->_socket.async_receive_from(boost::asio::buffer(_recv_buffer),
                                      this->_latest_senders_endpoint,
                                      [this](const std::error_code& error, std::size_t bytes_transferred)
                                      { handle_receive(error, bytes_transferred); });

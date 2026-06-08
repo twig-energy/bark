@@ -9,7 +9,7 @@
 #include "bark/asio_io_context_wrapper.hpp"
 // ^ must be before asio includes, as it protects against gcc warnings
 
-#include <asio/ip/udp.hpp>
+#include <boost/asio/ip/udp.hpp>
 #include <fmt/core.h>
 
 namespace bark
@@ -17,13 +17,13 @@ namespace bark
 
 class UDPServer
 {
-    asio::ip::udp::socket _socket;
+    boost::asio::ip::udp::socket _socket;
     std::function<void(std::string_view)> _receive_msg_callback;
     std::vector<char> _recv_buffer;
-    asio::ip::udp::endpoint _latest_senders_endpoint;
+    boost::asio::ip::udp::endpoint _latest_senders_endpoint;
 
   public:
-    UDPServer(asio::io_context& io_context,
+    UDPServer(boost::asio::io_context& io_context,
               int32_t port,
               std::function<void(std::string_view)> receive_msg_callback,
               size_t buffer_size);

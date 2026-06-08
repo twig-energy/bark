@@ -1,5 +1,5 @@
 include(CMakeFindDependencyMacro)
-find_dependency(asio)
+find_dependency(boost COMPONENTS asio)
 find_dependency(fmt)
 find_dependency(MPMCQueue)
 find_dependency(SPSCQueue)
