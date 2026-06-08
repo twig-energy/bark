@@ -46,7 +46,7 @@ jobs:
 
       - name: Spell check
         run: |
-          pip3 install codespell
+          pip3 install codespell --only-binary :all:
           cmake -P cmake/spell.cmake
 
       - name: Test version bumped
